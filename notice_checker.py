@@ -77,7 +77,7 @@ SKIP_FILE_EXTENSIONS = [
  
 # Directories with the following paths (relative to the PROJECT_ROOT_PATH) will be skipped
 SKIP_DIRECTORIES = [
-    "build", ".git", "gradle", ".idea", ".gradle"
+    "build", ".git", "gradle", ".idea", ".gradle", "todos\old_code"
 ]
 
 # Defines how many lines will be read from a file while checking for copyright notices.
