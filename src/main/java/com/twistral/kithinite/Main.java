@@ -14,21 +14,24 @@
 // limitations under the License.
 
 
-package com.twistral;
+package com.twistral.kithinite;
 
 
-import com.badlogic.gdx.backends.lwjgl.LwjglApplication;
-import com.badlogic.gdx.backends.lwjgl.LwjglApplicationConfiguration;
+import com.badlogic.gdx.ApplicationAdapter;
+import com.badlogic.gdx.graphics.Color;
+import com.twistral.tempest.TempestUtils;
 
-public class HelloTest {
 
-    public static void main(String[] args) {
-        LwjglApplicationConfiguration config = new LwjglApplicationConfiguration();
-        config.width = 800;
-        config.height = 200;
-        config.title = Main.getHelloWorld();
-        config.resizable = false;
-        new LwjglApplication(new Main(), config);
+public class Main extends ApplicationAdapter {
+
+    @Override
+    public void render() {
+        TempestUtils.clear(Color.BROWN);
     }
 
+    public static String getHelloWorld() {
+        return "Hello World";
+    }
 }
+
+
