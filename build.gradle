@@ -29,7 +29,7 @@ repositories {
 dependencies {
     // My other libraries
     //implementation 'com.github.oziris78:tephrium:v1.0.0'
-    //implementation 'com.github.oziris78:tempest-gdx:v1.0.0'
+    implementation 'com.github.oziris78:tempest-gdx:v1.0.0'
 
     // libGDX libraries
     implementation "com.badlogicgames.gdx:gdx:$gdxVersion"         // Apache-2.0
