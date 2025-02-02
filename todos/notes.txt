@@ -1,0 +1,7 @@
+
+
+
+- Consider changing the project's name
+- Consider upgrading Gradle version in the future
+
+

@@ -57,6 +57,7 @@ SKIP_FILES = [
     "LICENSE", "AUTHORS",
     # repo stuff
     "README.md", ".gitignore",
+    "todos/notes.txt",
     # proj integrity stuff
     "notice_checker.bat",
     # gradle stuff
