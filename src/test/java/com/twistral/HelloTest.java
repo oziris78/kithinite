@@ -17,27 +17,18 @@
 package com.twistral;
 
 
-import com.badlogic.gdx.ApplicationAdapter;
-import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.graphics.GL20;
+import com.badlogic.gdx.backends.lwjgl.LwjglApplication;
+import com.badlogic.gdx.backends.lwjgl.LwjglApplicationConfiguration;
 
+public class HelloTest {
 
-public class Main extends ApplicationAdapter {
-
-    @Override
-    public void create() {
-        Gdx.app.log("HelloWorld", "Hello, World!");
+    public static void main(String[] args) {
+        LwjglApplicationConfiguration config = new LwjglApplicationConfiguration();
+        config.width = 800;
+        config.height = 200;
+        config.title = Main.getHelloWorld();
+        config.resizable = false;
+        new LwjglApplication(new Main(), config);
     }
 
-    @Override
-    public void render() {
-        Gdx.gl.glClearColor(0, 0, 0, 1);
-        Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
-    }
-
-    public static String getHelloWorld() {
-        return "Hello World";
-    }
 }
-
-

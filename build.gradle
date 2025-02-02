@@ -5,24 +5,54 @@
 // -------------------------- \\
 
 
-plugins {
-    id 'java'
-}
+apply plugin: 'java-library'
+apply plugin: 'maven'
 
 
-group 'com.twistral'
+def projectName = 'kithinite'
+group 'com.github.oziris78'
 version '0.0.1'
+
+
+def gdxVersion = '1.9.13'
+sourceCompatibility = 1.8 // java 8
+targetCompatibility = 1.8 // java 8
 
 
 repositories {
     mavenCentral()
+    maven { url 'https://oss.sonatype.org/content/repositories/snapshots/' }
+    maven { url "https://jitpack.io" }
 }
 
 
 dependencies {
-    testImplementation 'org.junit.jupiter:junit-jupiter-api:5.8.1'
-    testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:5.8.1'
+    // My other libraries
+    //implementation 'com.github.oziris78:tephrium:v1.0.0'
+    //implementation 'com.github.oziris78:tempest-gdx:v1.0.0'
+
+    // libGDX libraries
+    implementation "com.badlogicgames.gdx:gdx:$gdxVersion"         // Apache-2.0
+    //implementation "com.badlogicgames.gdx:gdx-box2d:$gdxVersion"   // Apache-2.0
+
+    // Core libGDX libraries for desktop
+    testImplementation "com.badlogicgames.gdx:gdx-platform:$gdxVersion:natives-desktop"            // Apache-2.0
+    testImplementation "com.badlogicgames.gdx:gdx-backend-lwjgl:$gdxVersion"                       // Apache-2.0
+    testImplementation "com.badlogicgames.gdx:gdx-box2d-platform:$gdxVersion:natives-desktop"      // Apache-2.0
+    testImplementation "com.badlogicgames.gdx:gdx-freetype-platform:$gdxVersion:natives-desktop"   // Apache-2.0
+    testImplementation "com.badlogicgames.gdx:gdx-freetype:$gdxVersion"                            // Apache-2.0
+
+    // Testing libraries
+    //testImplementation 'org.junit.jupiter:junit-jupiter-api:5.8.1'
+    //testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:5.8.1'
+
+    /* Not added for now, maybe in the future? *wink*
+    implementation 'com.google.code.gson:gson:2.10.1'  // Apache-2.0
+    implementation 'org.jsoup:jsoup:1.15.3'            // MIT
+    implementation 'org.python:jython-standalone:2.7.2'
+    */
 }
+
 
 
 test {
@@ -30,3 +60,30 @@ test {
 }
 
 
+if (JavaVersion.current().isJava8Compatible()) {
+    allprojects {
+        tasks.withType(Javadoc) {
+            options.addStringOption('Xdoclint:none,-missing', '-quiet')
+        }
+    }
+}
+
+if(JavaVersion.current().isJava9Compatible()) {
+    allprojects {
+        tasks.withType(JavaCompile) {
+            options.release.set(8)
+        }
+    }
+}
+
+jar {
+    archiveBaseName.set(projectName)
+    manifest {
+        attributes 'Implementation-Title': projectName, 'Implementation-Version': archiveVersion
+    }
+}
+
+wrapper {
+    gradleVersion = "6.1.1"
+    distributionType = Wrapper.DistributionType.ALL
+}
