@@ -15,6 +15,7 @@ version '0.0.1'
 
 
 def gdxVersion = '1.9.13'
+def shapeDrawerVersion = '2.6.0'
 sourceCompatibility = 1.8 // java 8
 targetCompatibility = 1.8 // java 8
 
@@ -32,8 +33,9 @@ dependencies {
     implementation 'com.github.oziris78:tempest-gdx:v1.0.0'
 
     // libGDX libraries
-    implementation "com.badlogicgames.gdx:gdx:$gdxVersion"         // Apache-2.0
-    //implementation "com.badlogicgames.gdx:gdx-box2d:$gdxVersion"   // Apache-2.0
+    implementation "com.badlogicgames.gdx:gdx:$gdxVersion"            // Apache-2.0
+    implementation "space.earlygrey:shapedrawer:$shapeDrawerVersion"  // MIT
+    //implementation "com.badlogicgames.gdx:gdx-box2d:$gdxVersion"    // Apache-2.0
 
     // Core libGDX libraries for desktop
     testImplementation "com.badlogicgames.gdx:gdx-platform:$gdxVersion:natives-desktop"            // Apache-2.0

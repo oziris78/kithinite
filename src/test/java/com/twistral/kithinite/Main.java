@@ -17,21 +17,19 @@
 package com.twistral.kithinite;
 
 
-import com.badlogic.gdx.ApplicationAdapter;
-import com.badlogic.gdx.graphics.Color;
-import com.twistral.tempest.TempestUtils;
+import com.badlogic.gdx.backends.lwjgl.LwjglApplication;
+import com.badlogic.gdx.backends.lwjgl.LwjglApplicationConfiguration;
 
 
-public class Main extends ApplicationAdapter {
+public class Main {
 
-    @Override
-    public void render() {
-        TempestUtils.clear(Color.BROWN);
+    public static void main(String[] args) {
+        LwjglApplicationConfiguration config = new LwjglApplicationConfiguration();
+        config.title = "Kithinite Test";
+        config.width = 600;
+        config.height = 600;
+        config.resizable = true;
+        new LwjglApplication(new ButtonDemo(), config);
     }
 
-    public static String getHelloWorld() {
-        return "Hello World";
-    }
 }
-
-
