@@ -1,5 +1,4 @@
 
-
 // -------------------------- \\
 // ---- TWISTRAL STUDIOS ---- \\
 // -------------------------- \\
@@ -8,11 +7,9 @@
 apply plugin: 'java-library'
 apply plugin: 'maven'
 
-
 def projectName = 'kithinite'
 group 'com.github.oziris78'
 version '0.0.1'
-
 
 def gdxVersion = '1.9.13'
 def shapeDrawerVersion = '2.6.0'
@@ -48,7 +45,7 @@ dependencies {
     //testImplementation 'org.junit.jupiter:junit-jupiter-api:5.8.1'
     //testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:5.8.1'
 
-    /* Not added for now, maybe in the future? *wink*
+    /*// Not added for now, maybe in the future?
     implementation 'com.google.code.gson:gson:2.10.1'  // Apache-2.0
     implementation 'org.jsoup:jsoup:1.15.3'            // MIT
     implementation 'org.python:jython-standalone:2.7.2'
@@ -89,3 +86,5 @@ wrapper {
     gradleVersion = "6.1.1"
     distributionType = Wrapper.DistributionType.ALL
 }
+
+
