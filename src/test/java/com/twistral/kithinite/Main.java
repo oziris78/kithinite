@@ -26,10 +26,8 @@ public class Main {
     public static void main(String[] args) {
         LwjglApplicationConfiguration config = new LwjglApplicationConfiguration();
         config.title = "Kithinite Test";
-        config.width = 600;
-        config.height = 600;
-        config.resizable = true;
-        new LwjglApplication(new ButtonDemo(), config);
+
+        new LwjglApplication(new BasicExample(), config);
     }
 
 }
