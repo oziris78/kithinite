@@ -18,36 +18,54 @@
 package com.twistral.kithinite;
 
 import com.badlogic.gdx.ApplicationAdapter;
-import com.badlogic.gdx.ApplicationListener;
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Input;
+import com.badlogic.gdx.graphics.Color;
 
 
-public class BasicExample extends ApplicationAdapter {
+public class SwitchLayerTest extends ApplicationAdapter {
 
-    private Layer layer;
+    private boolean renderFirstLayer;
+    private Layer layerA, layerB;
 
     @Override
     public void create() {
-        layer = new Layer();
+        this.renderFirstLayer = true;
+        layerA = new Layer(Color.YELLOW);
+        layerB = new Layer(Color.RED);
     }
 
     @Override
     public void resize(int width, int height) {
-        layer.resize(width, height);
+        layerA.resize(width, height);
+        layerB.resize(width, height);
+    }
+
+    private void update(float dt) {
+        if (Gdx.input.isKeyJustPressed(Input.Keys.SPACE)) {
+            this.renderFirstLayer = !this.renderFirstLayer;
+        }
+
+        layerA.update(dt);
+        layerB.update(dt);
     }
 
     @Override
     public void render() {
-        final float dt = Gdx.graphics.getDeltaTime();
-        // Update
-        layer.update(dt);
-        // Render
-        layer.render();
+        update(Gdx.graphics.getDeltaTime());
+
+        if (renderFirstLayer) {
+            layerA.render();
+        }
+        else {
+            layerB.render();
+        }
     }
 
     @Override
     public void dispose() {
-        layer.dispose();
+        layerA.dispose();
+        layerB.dispose();
     }
 
 }

@@ -35,6 +35,7 @@ public class Layer {
 
     // Layer Details
     private int width, height;
+    private Color bgColor;
 
 
     /*//////////////////////////////////////////////////////////////////////*/
@@ -42,7 +43,11 @@ public class Layer {
     /*//////////////////////////////////////////////////////////////////////*/
 
 
-    public Layer(int width, int height) {
+    public Layer(int width, int height, Color bgColor) {
+        this.width = width;
+        this.height = height;
+        this.bgColor = bgColor;
+
         this.batch = new SpriteBatch();
         this.viewport = new ScreenViewport();
 
@@ -57,9 +62,12 @@ public class Layer {
         this.resize(width, height);
     }
 
+    public Layer(Color bgColor) {
+        this(Gdx.graphics.getWidth(), Gdx.graphics.getHeight(), bgColor);
+    }
 
     public Layer() {
-        this(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
+        this(Gdx.graphics.getWidth(), Gdx.graphics.getHeight(), new Color(0x181818ff));
     }
 
 
@@ -75,7 +83,7 @@ public class Layer {
 
     public void render() {
         batch.begin();
-        drawer.filledRectangle(0, 0, this.width, this.height, Color.YELLOW);
+        drawer.filledRectangle(0, 0, this.width, this.height, this.bgColor);
         batch.end();
     }
 
