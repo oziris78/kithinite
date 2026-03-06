@@ -30,6 +30,11 @@ public class CurrentDev extends ApplicationAdapter {
     @Override
     public void create() {
         layer = new Layer();
+        layer.addRectangleToLayer(Color.OLIVE, 20, 20, 100, 100);
+        layer.addRectangleToLayer(Color.RED,   30, 30, 100, 100);
+        layer.addRectangleToLayer(Color.WHITE, 40, 40, 100, 100);
+        layer.addRectangleToLayer(Color.BLUE,  50, 50, 100, 100);
+        layer.addRectangleToLayer(Color.BROWN, 60, 60, 100, 100);
     }
 
     @Override

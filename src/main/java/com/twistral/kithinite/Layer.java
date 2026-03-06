@@ -18,11 +18,18 @@
 package com.twistral.kithinite;
 
 
-import com.badlogic.gdx.*;
-import com.badlogic.gdx.graphics.*;
-import com.badlogic.gdx.graphics.g2d.*;
-import com.badlogic.gdx.utils.viewport.*;
+import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.graphics.Color;
+import com.badlogic.gdx.graphics.Pixmap;
+import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import com.badlogic.gdx.utils.viewport.ScreenViewport;
+import com.badlogic.gdx.utils.viewport.Viewport;
+import com.twistral.kithinite.pieces.widgets.Rectangle;
 import space.earlygrey.shapedrawer.*;
+
+import java.util.ArrayList;
 
 
 public class Layer {
@@ -33,7 +40,8 @@ public class Layer {
     private final SpriteBatch batch;
     private Texture pixmapTexture;
 
-    // Layer Details
+    // Layer Objects
+    private ArrayList<Rectangle> rectangles = new ArrayList<>(16);
     private int width, height;
     private Color bgColor;
 
@@ -75,6 +83,11 @@ public class Layer {
     /*///////////////////////////  METHODS  ///////////////////////////*/
     /*/////////////////////////////////////////////////////////////////*/
 
+    public void addRectangleToLayer(Color color, int x, int y, int w, int h) {
+        Rectangle r = new Rectangle(color);
+        r.setX(x); r.setY(y); r.setW(w); r.setH(h);
+        this.rectangles.add(r);
+    }
 
     public void update(float dt) {
 
@@ -84,6 +97,11 @@ public class Layer {
     public void render() {
         batch.begin();
         drawer.filledRectangle(0, 0, this.width, this.height, this.bgColor);
+
+        for (Rectangle r : rectangles) {
+            drawer.filledRectangle(r.getX(), r.getY(), r.getW(), r.getH(), r.getColor());
+        }
+
         batch.end();
     }
 
