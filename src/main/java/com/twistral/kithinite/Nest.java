@@ -14,17 +14,13 @@
 // limitations under the License.
 
 
-package com.twistral.kithinite.pieces.nests;
+package com.twistral.kithinite;
 
 
-import com.twistral.kithinite.pieces.Nest;
+public abstract class Nest extends Piece {
 
-
-public class PinNest extends Nest {
-
-    public PinNest() {
-        super(NestType.PIN_NEST);
-
+    public Nest() {
+        super(false);
     }
 
 }

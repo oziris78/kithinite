@@ -14,20 +14,13 @@
 // limitations under the License.
 
 
-package com.twistral.kithinite.pieces;
+package com.twistral.kithinite;
 
 
 public abstract class Widget extends Piece {
 
-    protected final WidgetType type;
-
-    public Widget(WidgetType type) {
-        super(PieceType.WIDGET);
-        this.type = type;
-    }
-
-    protected enum WidgetType {
-        RECTANGLE
+    public Widget() {
+        super(true);
     }
 
 }

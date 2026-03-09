@@ -14,20 +14,36 @@
 // limitations under the License.
 
 
-package com.twistral.kithinite.pieces.widgets;
+package com.twistral.kithinite;
 
 
 import com.badlogic.gdx.graphics.Color;
-import com.twistral.kithinite.pieces.Widget;
+import space.earlygrey.shapedrawer.ShapeDrawer;
 
 
 public class Rectangle extends Widget {
 
     private Color color;
+    private boolean filled;
+
+    public Rectangle(Color color, boolean filled) {
+        this.color = color;
+        this.filled = filled;
+    }
 
     public Rectangle(Color color) {
-        super(WidgetType.RECTANGLE);
-        this.color = color;
+        this(color, true);
+    }
+
+
+    @Override
+    public void render(ShapeDrawer drawer) {
+        if (filled) {
+            drawer.filledRectangle(x, y, width, height, color);
+        }
+        else {
+            drawer.rectangle(x, y, width, height, color);
+        }
     }
 
     public void setColor(Color color) {
@@ -37,5 +53,4 @@ public class Rectangle extends Widget {
     public Color getColor() {
         return color;
     }
-
 }
