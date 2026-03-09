@@ -28,8 +28,6 @@ import com.badlogic.gdx.utils.viewport.ScreenViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
 import space.earlygrey.shapedrawer.*;
 
-import java.util.ArrayList;
-
 
 public class Layer {
 
@@ -42,9 +40,7 @@ public class Layer {
     // Layer Objects
     private int width, height;
     private Color bgColor;
-
-    // in dev things
-    public ArrayList<Piece> pieces = new ArrayList<>(64);
+    private Nest root;
 
 
     /*//////////////////////////////////////////////////////////////////////*/
@@ -52,10 +48,11 @@ public class Layer {
     /*//////////////////////////////////////////////////////////////////////*/
 
 
-    public Layer(int width, int height, Color bgColor) {
+    public Layer(Nest root, int width, int height, Color bgColor) {
         this.width = width;
         this.height = height;
         this.bgColor = bgColor;
+        this.root = root;
 
         this.batch = new SpriteBatch();
         this.viewport = new ScreenViewport();
@@ -72,11 +69,12 @@ public class Layer {
     }
 
     public Layer(Color bgColor) {
-        this(Gdx.graphics.getWidth(), Gdx.graphics.getHeight(), bgColor);
+        this(new PinNest(), Gdx.graphics.getWidth(), Gdx.graphics.getHeight(), bgColor);
     }
 
     public Layer() {
-        this(Gdx.graphics.getWidth(), Gdx.graphics.getHeight(), new Color(0x181818ff));
+        this(new PinNest(), Gdx.graphics.getWidth(),
+                Gdx.graphics.getHeight(), new Color(0x181818ff));
     }
 
 
@@ -92,13 +90,8 @@ public class Layer {
 
     public void render() {
         batch.begin();
-
         drawer.filledRectangle(0, 0, this.width, this.height, this.bgColor);
-
-        for (Piece p : pieces) {
-            p.render(drawer);
-        }
-
+        this.root.render(drawer, 0, 0);
         batch.end();
     }
 
@@ -123,4 +116,17 @@ public class Layer {
     public void resume() {}
 
 
+    /*///////////////////////////////////////////////////////////////////////////*/
+    /*///////////////////////////  GETTERS & SETTERS  ///////////////////////////*/
+    /*///////////////////////////////////////////////////////////////////////////*/
+
+    public Color getBgColor() { return bgColor; }
+    public int getHeight() { return height; }
+    public int getWidth() { return width; }
+    public Nest getRoot() { return root; }
+
+    public void setBgColor(Color bgColor) { this.bgColor = bgColor; }
+    public void setHeight(int height) { this.height = height; }
+    public void setWidth(int width) { this.width = width; }
+    public void setRoot(Nest root) { this.root = root; }
 }

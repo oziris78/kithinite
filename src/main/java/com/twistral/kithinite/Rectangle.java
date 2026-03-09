@@ -35,22 +35,28 @@ public class Rectangle extends Widget {
         this(color, true);
     }
 
-
     @Override
-    public void render(ShapeDrawer drawer) {
+    public void render(ShapeDrawer drawer, int offsetX, int offsetY) {
+        final int drawX = this.x + offsetX;
+        final int drawY = this.y + offsetY;
+
         if (filled) {
-            drawer.filledRectangle(x, y, width, height, color);
+            drawer.filledRectangle(drawX, drawY, width, height, color);
         }
         else {
-            drawer.rectangle(x, y, width, height, color);
+            drawer.rectangle(drawX, drawY, width, height, color);
         }
     }
 
-    public void setColor(Color color) {
-        this.color = color;
-    }
 
-    public Color getColor() {
-        return color;
-    }
+    /*///////////////////////////////////////////////////////////////////////////*/
+    /*///////////////////////////  GETTERS & SETTERS  ///////////////////////////*/
+    /*///////////////////////////////////////////////////////////////////////////*/
+
+    public Rectangle setFilled(boolean filled) { this.filled = filled; return this; }
+    public Rectangle setColor(Color color) { this.color = color; return this; }
+
+    public boolean isFilled() { return filled; }
+    public Color getColor() { return color; }
+
 }

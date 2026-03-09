@@ -17,23 +17,25 @@
 package com.twistral.kithinite;
 
 
+import space.earlygrey.shapedrawer.ShapeDrawer;
+
 import java.util.ArrayList;
 import java.util.List;
 
-public abstract class Nest extends Piece {
+public class PinNest extends Nest {
 
-    protected List<Piece> pieces;
-
-    public Nest() {
-        super(false);
-        this.pieces = new ArrayList<>();
+    public PinNest() {
+        super();
     }
 
-    public Nest add(Piece... pieces) {
-        for (Piece p : pieces) {
-            this.pieces.add(p);
+    @Override
+    public void render(ShapeDrawer drawer, int offsetX, int offsetY) {
+        final int startX = this.x + offsetX;
+        final int startY = this.y + offsetY;
+
+        for (Piece p : this.pieces) {
+            p.render(drawer, startX, startY);
         }
-        return this;
     }
 
 }

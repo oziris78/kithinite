@@ -30,11 +30,11 @@ public class CurrentDev extends ApplicationAdapter {
     @Override
     public void create() {
         layer = new Layer();
-        layer.pieces.add(new Rectangle(Color.OLIVE).setXY(20, 20).setSize(100, 100));
-        layer.pieces.add(new Rectangle(Color.RED).setXY(30, 30).setSize(100, 100));
-        layer.pieces.add(new Rectangle(Color.WHITE).setXY(40, 40).setSize(100, 100));
-        layer.pieces.add(new Rectangle(Color.BLUE).setXY(50, 50).setSize(100, 100));
-        layer.pieces.add(new Rectangle(Color.BROWN).setXY(60, 60).setSize(100, 100));
+        layer.getRoot().add(new Rectangle(Color.OLIVE).setXY(20, 20).setSize(100, 100));
+        layer.getRoot().add(new Rectangle(Color.RED).setXY(30, 30).setSize(100, 100));
+        layer.getRoot().add(new Rectangle(Color.WHITE).setXY(40, 40).setSize(100, 100));
+        layer.getRoot().add(new Rectangle(Color.BLUE).setXY(50, 50).setSize(100, 100));
+        layer.getRoot().add(new Rectangle(Color.BROWN).setXY(60, 60).setSize(100, 100));
     }
 
     @Override
