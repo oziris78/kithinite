@@ -32,6 +32,8 @@ public abstract class Piece {
         this.height = 0;
     }
 
+    public abstract void layout();
+
     public abstract void render(ShapeDrawer drawer, int offsetX, int offsetY);
 
     /*///////////////////////////////////////////////////////////////////////////*/

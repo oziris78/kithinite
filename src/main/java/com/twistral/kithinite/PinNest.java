@@ -29,6 +29,12 @@ public class PinNest extends Nest {
     }
 
     @Override
+    public void layout() {
+        // pin layout logic later
+        super.layout();
+    }
+
+    @Override
     public void render(ShapeDrawer drawer, int offsetX, int offsetY) {
         final int startX = this.x + offsetX;
         final int startY = this.y + offsetY;

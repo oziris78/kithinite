@@ -36,4 +36,11 @@ public abstract class Nest extends Piece {
         return this;
     }
 
+    @Override
+    public void layout() {
+        for (Piece p : this.pieces) {
+            p.layout();
+        }
+    }
+
 }

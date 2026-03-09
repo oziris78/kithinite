@@ -84,7 +84,7 @@ public class Layer {
 
 
     public void update(float dt) {
-
+        this.root.layout();
     }
 
 

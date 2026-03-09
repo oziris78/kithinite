@@ -23,4 +23,9 @@ public abstract class Widget extends Piece {
         super(true);
     }
 
+    @Override
+    public void layout() {
+        // Empty on purpose since widgets cant contain other pieces inside them
+    }
+
 }
