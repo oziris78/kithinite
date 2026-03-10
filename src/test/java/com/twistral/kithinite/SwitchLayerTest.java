@@ -35,12 +35,6 @@ public class SwitchLayerTest extends ApplicationAdapter {
         layerB = new Layer(Color.RED);
     }
 
-    @Override
-    public void resize(int width, int height) {
-        layerA.resize(width, height);
-        layerB.resize(width, height);
-    }
-
     private void update(float dt) {
         if (Gdx.input.isKeyJustPressed(Input.Keys.SPACE)) {
             this.renderFirstLayer = !this.renderFirstLayer;
@@ -60,6 +54,12 @@ public class SwitchLayerTest extends ApplicationAdapter {
         else {
             layerB.render();
         }
+    }
+
+    @Override
+    public void resize(int width, int height) {
+        layerA.resize(width, height);
+        layerB.resize(width, height);
     }
 
     @Override

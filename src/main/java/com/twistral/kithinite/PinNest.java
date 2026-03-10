@@ -20,17 +20,33 @@ package com.twistral.kithinite;
 import space.earlygrey.shapedrawer.ShapeDrawer;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 public class PinNest extends Nest {
 
+    private final HashMap<Piece, Pin> pins;
+
     public PinNest() {
         super();
+        this.pins = new HashMap<>(128);
+    }
+
+    public Pin pin(Piece piece) {
+        if (!this.pins.containsKey(piece)) {
+            this.pins.put(piece, new Pin());
+        }
+        return this.pins.get(piece);
     }
 
     @Override
     public void layout() {
-        // pin layout logic later
+        /* pin layout logic later
+            for each child
+                read Pin from map
+                compute geometry
+                child.layout()
+         */
         super.layout();
     }
 
@@ -43,5 +59,34 @@ public class PinNest extends Nest {
             p.render(drawer, startX, startY);
         }
     }
+
+
+    /*//////////////////////////////////////////////////////////////////////*/
+    /*//////////////////////////  STATIC CLASSES  //////////////////////////*/
+    /*//////////////////////////////////////////////////////////////////////*/
+
+    public static class Pin {
+        private Integer north = null;
+        private Integer south = null;
+        private Integer east = null;
+        private Integer west = null;
+
+        private Pin() {}
+
+        public Pin north(int north) { this.north = north; return this; }
+        public Pin south(int south) { this.south = south; return this; }
+        public Pin east(int east) { this.east = east; return this; }
+        public Pin west(int west) { this.west = west; return this; }
+
+        public Pin all(int x) { return this.north(x).south(x).east(x).west(x); }
+        public Pin horizontal(int x) { return this.east(x).west(x); }
+        public Pin vertical(int x) { return this.north(x).south(x); }
+
+        public int getNorth() { return north; }
+        public int getSouth() { return south; }
+        public int getEast() { return east; }
+        public int getWest() { return west; }
+    }
+
 
 }

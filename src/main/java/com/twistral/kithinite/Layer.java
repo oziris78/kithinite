@@ -49,9 +49,9 @@ public class Layer {
 
 
     public Layer(Nest root, int width, int height, Color bgColor) {
-        this.width = width;
-        this.height = height;
         this.bgColor = bgColor;
+        this.height = height;
+        this.width = width;
         this.root = root;
 
         this.batch = new SpriteBatch();

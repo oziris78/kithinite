@@ -22,7 +22,7 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
 
 
-public class NestceptionOffsetTest extends ApplicationAdapter {
+public class NestInNestOffsetTest extends ApplicationAdapter {
 
     private Layer layer;
 
