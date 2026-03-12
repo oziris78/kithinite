@@ -19,6 +19,7 @@ package com.twistral.kithinite;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.function.Consumer;
 
 public abstract class Nest extends Piece {
 
@@ -37,6 +38,12 @@ public abstract class Nest extends Piece {
     public Nest add(Piece... pieces) {
         for (Piece p : pieces) this.add(p);
         return this;
+    }
+
+    public void forEachPiece(Consumer<Piece> pieceConsumer) {
+        for (Piece p : this.pieces) {
+            pieceConsumer.accept(p);
+        }
     }
 
     @Override

@@ -22,6 +22,7 @@ import space.earlygrey.shapedrawer.ShapeDrawer;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Objects;
 
 public class PinNest extends Nest {
 
@@ -41,17 +42,22 @@ public class PinNest extends Nest {
 
     @Override
     public void layout() {
-        /* pin layout logic later
-            for each child
-                read Pin from map
-                compute geometry
-                child.layout()
-         */
+        for (Piece piece : this.pieces) {
+            final Pin pin = this.pins.get(piece);
+
+            if (pin != null) {
+                // compute geometry
+            }
+
+            piece.layout();
+        }
+
         super.layout();
     }
 
+
     @Override
-    public void render(ShapeDrawer drawer, int offsetX, int offsetY) {
+    protected void renderInternal(ShapeDrawer drawer, int offsetX, int offsetY) {
         final int startX = this.x + offsetX;
         final int startY = this.y + offsetY;
 
@@ -64,6 +70,7 @@ public class PinNest extends Nest {
     /*//////////////////////////////////////////////////////////////////////*/
     /*//////////////////////////  STATIC CLASSES  //////////////////////////*/
     /*//////////////////////////////////////////////////////////////////////*/
+
 
     public static class Pin {
         private Integer north = null;
@@ -86,6 +93,25 @@ public class PinNest extends Nest {
         public int getSouth() { return south; }
         public int getEast() { return east; }
         public int getWest() { return west; }
+
+        @Override
+        public boolean equals(Object o) {
+            if (o == null || getClass() != o.getClass()) return false;
+            Pin pin = (Pin) o;
+            return Objects.equals(north, pin.north) && Objects.equals(south, pin.south)
+                    && Objects.equals(east, pin.east) && Objects.equals(west, pin.west);
+        }
+
+        @Override
+        public int hashCode() {
+            return Objects.hash(north, south, east, west);
+        }
+
+        @Override
+        public String toString() {
+            return "Pin{" + "north=" + north + ", south=" + south +
+                    ", east=" + east + ", west=" + west + '}';
+        }
     }
 
 

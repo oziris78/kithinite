@@ -20,6 +20,8 @@ package com.twistral.kithinite;
 import com.badlogic.gdx.graphics.Color;
 import space.earlygrey.shapedrawer.ShapeDrawer;
 
+import java.util.Objects;
+
 
 public class Rectangle extends Widget {
 
@@ -35,8 +37,9 @@ public class Rectangle extends Widget {
         this(color, true);
     }
 
+
     @Override
-    public void render(ShapeDrawer drawer, int offsetX, int offsetY) {
+    protected void renderInternal(ShapeDrawer drawer, int offsetX, int offsetY) {
         final int drawX = this.x + offsetX;
         final int drawY = this.y + offsetY;
 
@@ -58,5 +61,23 @@ public class Rectangle extends Widget {
 
     public boolean isFilled() { return filled; }
     public Color getColor() { return color; }
+
+    /*////////////////////////////////////////////////////////////////////////*/
+    /*///////////////////////////  OBJECT METHODS  ///////////////////////////*/
+    /*////////////////////////////////////////////////////////////////////////*/
+
+    @Override
+    public boolean equals(Object o) {
+        if (o == null || getClass() != o.getClass()) return false;
+        if (!super.equals(o)) return false;
+        Rectangle rectangle = (Rectangle) o;
+        return filled == rectangle.filled && Objects.equals(color, rectangle.color);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(super.hashCode(), color, filled);
+    }
+
 
 }

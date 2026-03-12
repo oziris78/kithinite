@@ -19,10 +19,13 @@ package com.twistral.kithinite;
 
 import space.earlygrey.shapedrawer.ShapeDrawer;
 
+import java.util.Objects;
+
 public abstract class Piece {
 
     private final boolean isWidget;
     protected int x, y, width, height;
+    protected boolean visible;
 
     public Piece(boolean isWidget) {
         this.isWidget = isWidget;
@@ -30,11 +33,19 @@ public abstract class Piece {
         this.y = 0;
         this.width = 0;
         this.height = 0;
+        this.visible = true;
     }
 
     public abstract void layout();
 
-    public abstract void render(ShapeDrawer drawer, int offsetX, int offsetY);
+    public void render(ShapeDrawer drawer, int offsetX, int offsetY) {
+        if (this.visible) {
+            this.renderInternal(drawer, offsetX, offsetY);
+        }
+    }
+
+    protected abstract void renderInternal(ShapeDrawer drawer, int offsetX, int offsetY);
+
 
     /*///////////////////////////////////////////////////////////////////////////*/
     /*///////////////////////////  GETTERS & SETTERS  ///////////////////////////*/
@@ -52,9 +63,37 @@ public abstract class Piece {
     public Piece setHeight(int height) { this.height = height; return this; }
     public Piece setSize(int width, int height) { return setWidth(width).setHeight(height); }
 
+    public Piece setVisible(boolean visible) { this.visible = visible; return this; }
+
     public int getX() { return x; }
     public int getY() { return y; }
     public int getWidth() { return width; }
     public int getHeight() { return height; }
+    public boolean isVisible() { return visible; }
+
+
+    /*////////////////////////////////////////////////////////////////////////*/
+    /*///////////////////////////  OBJECT METHODS  ///////////////////////////*/
+    /*////////////////////////////////////////////////////////////////////////*/
+
+    @Override
+    public boolean equals(Object o) {
+        if (o == null || getClass() != o.getClass()) return false;
+        Piece piece = (Piece) o;
+        return isWidget == piece.isWidget && x == piece.x && y == piece.y &&
+                width == piece.width && height == piece.height;
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(isWidget, x, y, width, height);
+    }
+
+    @Override
+    public String toString() {
+        return "Piece{" + "isWidget=" + isWidget + ", x=" + x + ", y=" + y +
+                ", width=" + width + ", height=" + height + '}';
+    }
+
 
 }
