@@ -25,7 +25,7 @@ import com.badlogic.gdx.graphics.Color;
 import java.util.Arrays;
 
 
-public class CurrentDev extends ApplicationAdapter {
+public class PinNestTest extends ApplicationAdapter {
 
     private Layer layer;
     private PinNest pinNest;

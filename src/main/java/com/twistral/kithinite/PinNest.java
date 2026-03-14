@@ -30,7 +30,7 @@ public class PinNest extends Nest {
 
     public PinNest() {
         super();
-        this.pins = new HashMap<>(128);
+        this.pins = new HashMap<>();
     }
 
     public Pin pin(Piece piece) {
@@ -46,23 +46,49 @@ public class PinNest extends Nest {
             final Pin pin = this.pins.get(piece);
 
             if (pin != null) {
-                // compute geometry
+                final boolean eastPinned = (pin.east != null);
+                final boolean westPinned = (pin.west != null);
+                final boolean northPinned = (pin.north != null);
+                final boolean southPinned = (pin.south != null);
+                final int nestX = this.x, nestY = this.y,
+                        nestWidth = this.width, nestHeight = this.height;
+
+
+                // Horizontal pinning
+                if (eastPinned && westPinned) {
+                    piece.x = nestX + pin.west;
+                    piece.width = nestWidth - pin.east - pin.west; // Perform strecthing
+                }
+                else if (eastPinned && !westPinned) {
+                    // Only move the piece.x according to the pins
+                    piece.x = nestX + nestWidth - pin.east - piece.width;
+                }
+                else if (!eastPinned && westPinned) {
+                    piece.x = nestX + pin.west;
+                }
+
+                // Vertical pinning
+                if (northPinned && southPinned) {
+                    piece.y = nestY + pin.south;
+                    piece.height = nestHeight - pin.north - pin.south; // Perform strecthing
+                }
+                else if (northPinned && !southPinned) {
+                    piece.y = nestY + nestHeight - pin.north - piece.height;
+                }
+                else if (!northPinned && southPinned) {
+                    piece.y = nestY + pin.south;
+                }
             }
 
             piece.layout();
         }
-
-        super.layout();
     }
 
 
     @Override
-    protected void renderInternal(ShapeDrawer drawer, int offsetX, int offsetY) {
-        final int startX = this.x + offsetX;
-        final int startY = this.y + offsetY;
-
+    protected void renderInternal(ShapeDrawer drawer) {
         for (Piece p : this.pieces) {
-            p.render(drawer, startX, startY);
+            p.render(drawer);
         }
     }
 
@@ -88,11 +114,6 @@ public class PinNest extends Nest {
         public Pin all(int x) { return this.north(x).south(x).east(x).west(x); }
         public Pin horizontal(int x) { return this.east(x).west(x); }
         public Pin vertical(int x) { return this.north(x).south(x); }
-
-        public int getNorth() { return north; }
-        public int getSouth() { return south; }
-        public int getEast() { return east; }
-        public int getWest() { return west; }
 
         @Override
         public boolean equals(Object o) {

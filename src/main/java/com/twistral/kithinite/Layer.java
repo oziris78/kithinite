@@ -52,7 +52,9 @@ public class Layer {
         this.bgColor = bgColor;
         this.height = height;
         this.width = width;
+
         this.root = root;
+        this.root.setSize(width, height);
 
         this.batch = new SpriteBatch();
         this.viewport = new ScreenViewport();
@@ -91,7 +93,7 @@ public class Layer {
     public void render() {
         batch.begin();
         drawer.filledRectangle(0, 0, this.width, this.height, this.bgColor);
-        this.root.render(drawer, 0, 0);
+        this.root.render(drawer);
         batch.end();
     }
 
@@ -99,6 +101,7 @@ public class Layer {
     public void resize(int width, int height) {
         this.width = width;
         this.height = height;
+        this.root.setSize(width, height);
 
         viewport.update(this.width, this.height, true);
         batch.setProjectionMatrix(viewport.getCamera().combined);

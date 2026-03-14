@@ -24,6 +24,8 @@ import java.util.Objects;
 public abstract class Piece {
 
     private final boolean isWidget;
+
+    protected Nest nester;
     protected int x, y, width, height;
     protected boolean visible;
 
@@ -34,17 +36,17 @@ public abstract class Piece {
         this.width = 0;
         this.height = 0;
         this.visible = true;
+        this.nester = null;
     }
 
     public abstract void layout();
 
-    public void render(ShapeDrawer drawer, int offsetX, int offsetY) {
-        if (this.visible) {
-            this.renderInternal(drawer, offsetX, offsetY);
-        }
+    public void render(ShapeDrawer drawer) {
+        if (this.visible)
+            this.renderInternal(drawer);
     }
 
-    protected abstract void renderInternal(ShapeDrawer drawer, int offsetX, int offsetY);
+    protected abstract void renderInternal(ShapeDrawer drawer);
 
 
     /*///////////////////////////////////////////////////////////////////////////*/

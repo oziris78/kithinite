@@ -27,30 +27,30 @@ public abstract class Nest extends Piece {
 
     public Nest() {
         super(false);
-        this.pieces = new ArrayList<>(32);
+        this.pieces = new ArrayList<>();
     }
 
-    public Nest add(Piece piece) {
+    public void add(Piece piece) {
         this.pieces.add(piece);
-        return this;
+        piece.nester = this;
     }
 
-    public Nest add(Piece... pieces) {
-        for (Piece p : pieces) this.add(p);
-        return this;
-    }
-
-    public void forEachPiece(Consumer<Piece> pieceConsumer) {
-        for (Piece p : this.pieces) {
-            pieceConsumer.accept(p);
+    public void remove(Piece piece) {
+        if (piece.nester == this && this.pieces.contains(piece)) {
+            this.pieces.remove(piece);
+            piece.nester = null;
         }
     }
 
-    @Override
-    public void layout() {
-        // Nests are responsible for calling their pieces' layout method
-        for (Piece p : this.pieces) {
-            p.layout();
+    public void add(Piece... pieces) {
+        for (Piece p : pieces) {
+            this.add(p);
+        }
+    }
+
+    public void remove(Piece... pieces) {
+        for (Piece p : pieces) {
+            this.remove(p);
         }
     }
 
