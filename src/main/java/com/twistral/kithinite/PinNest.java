@@ -53,14 +53,12 @@ public class PinNest extends Nest {
                 final int nestX = this.x, nestY = this.y,
                         nestWidth = this.width, nestHeight = this.height;
 
-
                 // Horizontal pinning
                 if (eastPinned && westPinned) {
                     piece.x = nestX + pin.west;
                     piece.width = nestWidth - pin.east - pin.west; // Perform strecthing
                 }
                 else if (eastPinned && !westPinned) {
-                    // Only move the piece.x according to the pins
                     piece.x = nestX + nestWidth - pin.east - piece.width;
                 }
                 else if (!eastPinned && westPinned) {
