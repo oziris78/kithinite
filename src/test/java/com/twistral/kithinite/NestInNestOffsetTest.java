@@ -31,13 +31,13 @@ public class NestInNestOffsetTest extends ApplicationAdapter {
         layer = new Layer();
 
         PinNest nest1 = new PinNest();
-        nest1.add(new Rectangle(Color.BLUE).setXY(50, 50).setSize(100, 100));
-        nest1.add(new Rectangle(Color.BROWN).setXY(60, 60).setSize(100, 100));
+        nest1.add(new Rectangle(Color.BLUE).setXY(50, 50).setSize(100, 100));  // 150 250
+        nest1.add(new Rectangle(Color.BROWN).setXY(60, 60).setSize(100, 100)); // 160 260
 
         PinNest root = new PinNest();
-        root.add(new Rectangle(Color.OLIVE).setXY(20, 20).setSize(100, 100));
-        root.add(new Rectangle(Color.RED).setXY(30, 30).setSize(100, 100));
-        root.add(new Rectangle(Color.WHITE).setXY(40, 40).setSize(100, 100));
+        root.add(new Rectangle(Color.OLIVE).setXY(20, 20).setSize(100, 100)); // 120 20
+        root.add(new Rectangle(Color.RED).setXY(30, 30).setSize(100, 100));   // 130 30
+        root.add(new Rectangle(Color.WHITE).setXY(40, 40).setSize(100, 100)); // 140 40
         root.add(nest1);
 
         nest1.setY(200);

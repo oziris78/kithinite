@@ -26,13 +26,19 @@ public abstract class Piece {
     private final boolean isWidget;
 
     protected Nest nester;
-    protected int x, y, width, height;
+
+    protected int x, y;        // local coords
+    protected int absX, absY;  // absolute coords, computed during layout(), later used in render()
+
+    protected int width, height;
     protected boolean visible;
 
     public Piece(boolean isWidget) {
         this.isWidget = isWidget;
         this.x = 0;
         this.y = 0;
+        this.absX = 0;
+        this.absY = 0;
         this.width = 0;
         this.height = 0;
         this.visible = true;

@@ -40,14 +40,11 @@ public class Rectangle extends Widget {
 
     @Override
     protected void renderInternal(ShapeDrawer drawer) {
-        final int drawX = nester.x + this.x;
-        final int drawY = nester.y + this.y;
-
         if (filled) {
-            drawer.filledRectangle(drawX, drawY, width, height, color);
+            drawer.filledRectangle(absX, absY, width, height, color);
         }
         else {
-            drawer.rectangle(drawX, drawY, width, height, color);
+            drawer.rectangle(absX, absY, width, height, color);
         }
     }
 

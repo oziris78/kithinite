@@ -78,6 +78,8 @@ public class PinNest extends Nest {
                 }
             }
 
+            piece.absX = this.absX + piece.x;
+            piece.absY = this.absY + piece.y;
             piece.layout();
         }
     }

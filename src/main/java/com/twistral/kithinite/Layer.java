@@ -86,6 +86,8 @@ public class Layer {
 
 
     public void update(float dt) {
+        this.root.absX = 0;
+        this.root.absY = 0;
         this.root.layout();
     }
 
