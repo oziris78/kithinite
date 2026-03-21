@@ -27,7 +27,7 @@ public class Main {
         LwjglApplicationConfiguration config = new LwjglApplicationConfiguration();
         config.title = "Kithinite Test";
 
-        new LwjglApplication(new NestInNestOffsetTest(), config);
+        new LwjglApplication(new CurrentDev(), config);
     }
 
 }

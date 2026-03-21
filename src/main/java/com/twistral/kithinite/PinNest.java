@@ -78,8 +78,8 @@ public class PinNest extends Nest {
                 }
             }
 
-            piece.absX = piece.nester.absX + piece.x;
-            piece.absY = piece.nester.absY + piece.y;
+            piece.absX = this.absX + piece.x;
+            piece.absY = this.absY + piece.y;
             piece.layout();
         }
     }
@@ -114,26 +114,6 @@ public class PinNest extends Nest {
         public Pin all(int x) { return this.north(x).south(x).east(x).west(x); }
         public Pin horizontal(int x) { return this.east(x).west(x); }
         public Pin vertical(int x) { return this.north(x).south(x); }
-
-        @Override
-        public boolean equals(Object o) {
-            if (o == null || getClass() != o.getClass()) return false;
-            Pin pin = (Pin) o;
-            return Objects.equals(north, pin.north) && Objects.equals(south, pin.south)
-                    && Objects.equals(east, pin.east) && Objects.equals(west, pin.west);
-        }
-
-        @Override
-        public int hashCode() {
-            return Objects.hash(north, south, east, west);
-        }
-
-        @Override
-        public String toString() {
-            return "Pin{" + "north=" + north + ", south=" + south +
-                    ", east=" + east + ", west=" + west + '}';
-        }
     }
-
 
 }

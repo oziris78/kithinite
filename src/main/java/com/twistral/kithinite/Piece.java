@@ -45,6 +45,7 @@ public abstract class Piece {
         this.nester = null;
     }
 
+    // Responsible for setting x, y, absX, absY, width, height
     public abstract void layout();
 
     public void render(ShapeDrawer drawer) {
@@ -79,32 +80,5 @@ public abstract class Piece {
     public int getHeight() { return height; }
     public boolean isVisible() { return visible; }
 
-
-    /*////////////////////////////////////////////////////////////////////////*/
-    /*///////////////////////////  OBJECT METHODS  ///////////////////////////*/
-    /*////////////////////////////////////////////////////////////////////////*/
-
-    @Override
-    public String toString() {
-        return "Piece{" + "isWidget=" + isWidget + ", nester=" + nester +
-            ", x=" + x + ", y=" + y + ", absX=" + absX + ", absY=" + absY +
-            ", width=" + width + ", height=" + height + ", visible=" + visible + '}';
-    }
-
-    @Override
-    public boolean equals(Object o) {
-        if (o == null || getClass() != o.getClass()) return false;
-        Piece piece = (Piece) o;
-        return isWidget == piece.isWidget && x == piece.x
-                && y == piece.y && absX == piece.absX &&
-                absY == piece.absY && width == piece.width
-                && height == piece.height && visible ==
-                piece.visible && Objects.equals(nester, piece.nester);
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(isWidget, nester, x, y, absX, absY, width, height, visible);
-    }
 
 }

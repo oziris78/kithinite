@@ -137,4 +137,5 @@ public class Layer {
     public void setHeight(int height) { this.height = height; }
     public void setWidth(int width) { this.width = width; }
     public void setRoot(Nest root) { this.root = root; }
+
 }
