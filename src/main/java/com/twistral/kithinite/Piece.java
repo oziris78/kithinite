@@ -28,7 +28,7 @@ public abstract class Piece {
     protected Nest nester;
 
     protected int x, y;        // local coords
-    protected int absX, absY;  // absolute coords, computed during layout(), later used in render()
+    protected int absX, absY;  // absolute coords
 
     protected int width, height;
     protected boolean visible;
@@ -85,23 +85,26 @@ public abstract class Piece {
     /*////////////////////////////////////////////////////////////////////////*/
 
     @Override
+    public String toString() {
+        return "Piece{" + "isWidget=" + isWidget + ", nester=" + nester +
+            ", x=" + x + ", y=" + y + ", absX=" + absX + ", absY=" + absY +
+            ", width=" + width + ", height=" + height + ", visible=" + visible + '}';
+    }
+
+    @Override
     public boolean equals(Object o) {
         if (o == null || getClass() != o.getClass()) return false;
         Piece piece = (Piece) o;
-        return isWidget == piece.isWidget && x == piece.x && y == piece.y &&
-                width == piece.width && height == piece.height;
+        return isWidget == piece.isWidget && x == piece.x
+                && y == piece.y && absX == piece.absX &&
+                absY == piece.absY && width == piece.width
+                && height == piece.height && visible ==
+                piece.visible && Objects.equals(nester, piece.nester);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(isWidget, x, y, width, height);
+        return Objects.hash(isWidget, nester, x, y, absX, absY, width, height, visible);
     }
-
-    @Override
-    public String toString() {
-        return "Piece{" + "isWidget=" + isWidget + ", x=" + x + ", y=" + y +
-                ", width=" + width + ", height=" + height + '}';
-    }
-
 
 }

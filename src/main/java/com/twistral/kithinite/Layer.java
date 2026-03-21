@@ -86,8 +86,10 @@ public class Layer {
 
 
     public void update(float dt) {
-        this.root.absX = 0;
-        this.root.absY = 0;
+        // Use root x/y as offsets to the whole layer
+        this.root.absX = this.root.x;
+        this.root.absY = this.root.y;
+
         this.root.layout();
     }
 
@@ -114,6 +116,7 @@ public class Layer {
         this.pixmapTexture.dispose();
         this.batch.dispose();
     }
+
 
     // TODO: Maybe in the future
     public void pause() {}
