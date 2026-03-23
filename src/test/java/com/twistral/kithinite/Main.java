@@ -26,8 +26,7 @@ public class Main {
     public static void main(String[] args) {
         LwjglApplicationConfiguration config = new LwjglApplicationConfiguration();
         config.title = "Kithinite Test";
-
-        new LwjglApplication(new CurrentDev(), config);
+        new LwjglApplication(new NestInNestTest2(), config);
     }
 
 }

@@ -21,6 +21,7 @@ import com.badlogic.gdx.ApplicationAdapter;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.graphics.Color;
+import com.twistral.tempest.TempestUtils;
 
 import java.util.Arrays;
 
@@ -169,6 +170,7 @@ public class PinNestTest extends ApplicationAdapter {
 
     @Override
     public void render() {
+        TempestUtils.clear();
         handleKeyInputs();
 
         layer.update(Gdx.graphics.getDeltaTime());

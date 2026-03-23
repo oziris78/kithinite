@@ -42,7 +42,11 @@ public class PinNest extends Nest {
 
     @Override
     public void layout() {
+        if (!this.visible) return;
+
         for (Piece piece : this.pieces) {
+            if (!piece.isVisible()) continue;
+
             final Pin pin = this.pins.get(piece);
 
             if (pin != null) {
@@ -50,43 +54,44 @@ public class PinNest extends Nest {
                 final boolean westPinned = (pin.west != null);
                 final boolean northPinned = (pin.north != null);
                 final boolean southPinned = (pin.south != null);
-                final int nestX = this.x, nestY = this.y,
-                        nestWidth = this.width, nestHeight = this.height;
+                final int nestWidth = this.width, nestHeight = this.height;
 
                 // Horizontal pinning
                 if (eastPinned && westPinned) {
-                    piece.x = nestX + pin.west;
+                    piece.x = pin.west;
                     piece.width = nestWidth - pin.east - pin.west; // Perform strecthing
                 }
                 else if (eastPinned && !westPinned) {
-                    piece.x = nestX + nestWidth - pin.east - piece.width;
+                    piece.x = nestWidth - pin.east - piece.width;
                 }
                 else if (!eastPinned && westPinned) {
-                    piece.x = nestX + pin.west;
+                    piece.x = pin.west;
                 }
 
                 // Vertical pinning
                 if (northPinned && southPinned) {
-                    piece.y = nestY + pin.south;
+                    piece.y = pin.south;
                     piece.height = nestHeight - pin.north - pin.south; // Perform strecthing
                 }
                 else if (northPinned && !southPinned) {
-                    piece.y = nestY + nestHeight - pin.north - piece.height;
+                    piece.y = nestHeight - pin.north - piece.height;
                 }
                 else if (!northPinned && southPinned) {
-                    piece.y = nestY + pin.south;
+                    piece.y = pin.south;
                 }
             }
 
-            piece.absX = this.absX + piece.x;
-            piece.absY = this.absY + piece.y;
-            piece.layout();
+            if (piece.isNest()) {
+                piece.layout();
+            }
         }
     }
 
 
     @Override
-    protected void renderInternal(ShapeDrawer drawer) {
+    protected void render(ShapeDrawer drawer) {
+        if (!this.visible) return;
+
         for (Piece p : this.pieces) {
             p.render(drawer);
         }

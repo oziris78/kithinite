@@ -20,9 +20,10 @@ package com.twistral.kithinite;
 import com.badlogic.gdx.ApplicationAdapter;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
+import com.twistral.tempest.TempestUtils;
 
 
-public class NestInNestOffsetTest extends ApplicationAdapter {
+public class NestInNestTest1 extends ApplicationAdapter {
 
     private Layer layer;
 
@@ -52,6 +53,7 @@ public class NestInNestOffsetTest extends ApplicationAdapter {
 
     @Override
     public void render() {
+        TempestUtils.clear();
         final float dt = Gdx.graphics.getDeltaTime();
         layer.update(dt);
         layer.render();

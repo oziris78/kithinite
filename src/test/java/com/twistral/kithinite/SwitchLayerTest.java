@@ -21,6 +21,7 @@ import com.badlogic.gdx.ApplicationAdapter;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.graphics.Color;
+import com.twistral.tempest.TempestUtils;
 
 
 public class SwitchLayerTest extends ApplicationAdapter {
@@ -46,6 +47,7 @@ public class SwitchLayerTest extends ApplicationAdapter {
 
     @Override
     public void render() {
+        TempestUtils.clear();
         update(Gdx.graphics.getDeltaTime());
 
         if (renderFirstLayer) {

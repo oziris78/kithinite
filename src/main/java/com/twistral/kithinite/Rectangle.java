@@ -39,7 +39,9 @@ public class Rectangle extends Widget {
 
 
     @Override
-    protected void renderInternal(ShapeDrawer drawer) {
+    protected void render(ShapeDrawer drawer) {
+        if (!this.visible) return;
+
         if (filled) {
             drawer.filledRectangle(absX, absY, width, height, color);
         }

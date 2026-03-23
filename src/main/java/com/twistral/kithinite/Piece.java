@@ -45,15 +45,11 @@ public abstract class Piece {
         this.nester = null;
     }
 
+
     // Responsible for setting x, y, absX, absY, width, height
     public abstract void layout();
 
-    public void render(ShapeDrawer drawer) {
-        if (this.visible)
-            this.renderInternal(drawer);
-    }
-
-    protected abstract void renderInternal(ShapeDrawer drawer);
+    protected abstract void render(ShapeDrawer drawer);
 
 
     /*///////////////////////////////////////////////////////////////////////////*/
@@ -74,11 +70,14 @@ public abstract class Piece {
 
     public Piece setVisible(boolean visible) { this.visible = visible; return this; }
 
-    public int getX() { return x; }
-    public int getY() { return y; }
-    public int getWidth() { return width; }
-    public int getHeight() { return height; }
-    public boolean isVisible() { return visible; }
+    public int getX() { return this.x; }
+    public int getY() { return this.y; }
+    public int getWidth() { return this.width; }
+    public int getHeight() { return this.height; }
+    public boolean isVisible() { return this.visible; }
 
+    // Read-only variables:
+    public int getAbsX() { return this.absX; } // gets set automatically during Piece#layout
+    public int getAbsY() { return this.absY; } // gets set automatically during Piece#layout
 
 }
