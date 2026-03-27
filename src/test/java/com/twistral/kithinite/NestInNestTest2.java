@@ -101,6 +101,7 @@ public class NestInNestTest2 extends ApplicationAdapter {
         if (wB.getAbsY()   != 180) throw new RuntimeException("Wrong wB.getAbsY() value");
         if (w3.getAbsX()   != 510) throw new RuntimeException("Wrong w3.getAbsX() value");
         if (w3.getAbsY()   != 520) throw new RuntimeException("Wrong w3.getAbsY() value");
+        System.out.println("Everything is correct!");
 
         layer.render();
     }

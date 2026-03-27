@@ -85,29 +85,8 @@ public class Layer {
     /*/////////////////////////////////////////////////////////////////*/
 
 
-    private void calculateAbsCoords(Nest n) {
-        n.absX = (n.nester != null ? n.nester.absX : 0) + n.x;
-        n.absY = (n.nester != null ? n.nester.absY : 0) + n.y;
-        for (Piece p : n.pieces) {
-            if (p.isNest()) {
-                Nest n2 = (Nest) p;
-                calculateAbsCoords(n2);
-            }
-            else {
-                Widget w = (Widget) p;
-                calculateAbsCoords(w);
-            }
-        }
-    }
-
-    private void calculateAbsCoords(Widget w) {
-        w.absX = (w.nester != null ? w.nester.absX : 0) + w.x;
-        w.absY = (w.nester != null ? w.nester.absY : 0) + w.y;
-    }
-
     public void update(float dt) {
         this.root.layout();
-        calculateAbsCoords(this.root);
     }
 
 

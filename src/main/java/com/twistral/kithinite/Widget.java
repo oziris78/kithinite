@@ -25,7 +25,9 @@ public abstract class Widget extends Piece {
 
     @Override
     public void layout() {
-        // Empty by default on purpose since widgets cant nest other pieces inside them
+        // Absolute coord calculation
+        this.absX = this.nester.absX + this.x;
+        this.absY = this.nester.absY + this.y;
     }
 
 }

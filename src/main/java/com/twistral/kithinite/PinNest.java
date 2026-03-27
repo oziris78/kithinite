@@ -44,6 +44,14 @@ public class PinNest extends Nest {
     public void layout() {
         if (!this.visible) return;
 
+        // Absolute (absX, absY) coord calculation for nests should happen immediately
+        // since pieces that are owned by this nest are going to use this nest's
+        // absolute coords to calculate their absolute coords.
+        boolean isRootNest = (this.nester == null);
+        this.absX = (isRootNest ? 0 : this.nester.absX) + this.x;
+        this.absY = (isRootNest ? 0 : this.nester.absY) + this.y;
+
+        // Relative (x,y) coord calculation for owned pieces
         for (Piece piece : this.pieces) {
             if (!piece.isVisible()) continue;
 
@@ -81,9 +89,7 @@ public class PinNest extends Nest {
                 }
             }
 
-            if (piece.isNest()) {
-                piece.layout();
-            }
+            piece.layout();
         }
     }
 
