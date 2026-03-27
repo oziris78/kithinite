@@ -24,7 +24,7 @@ public abstract class Widget extends Piece {
     }
 
     @Override
-    public void layout() {
+    protected void layout() {
         // Absolute coord calculation
         this.absX = this.nester.absX + this.x;
         this.absY = this.nester.absY + this.y;

@@ -32,8 +32,12 @@ public class SwitchLayerTest extends ApplicationAdapter {
     @Override
     public void create() {
         this.renderFirstLayer = true;
-        layerA = new Layer(Color.YELLOW);
-        layerB = new Layer(Color.RED);
+
+        layerA = new Layer();
+        layerA.setBgColor(Color.YELLOW);
+
+        layerB = new Layer();
+        layerB.setBgColor(Color.RED);
     }
 
     private void update(float dt) {

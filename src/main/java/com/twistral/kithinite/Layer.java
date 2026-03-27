@@ -28,8 +28,14 @@ import com.badlogic.gdx.utils.viewport.ScreenViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
 import space.earlygrey.shapedrawer.*;
 
+import java.util.Objects;
+import java.util.Optional;
+
 
 public class Layer {
+
+    // Static variables
+    public static final Color DEF_BG_COLOR = new Color(0x181818ff);
 
     // Rendering Toolkit (TODO: put these into a Window/Application class)
     private final Viewport viewport;
@@ -49,12 +55,13 @@ public class Layer {
 
 
     public Layer(Nest root, int width, int height, Color bgColor) {
-        this.bgColor = bgColor;
-        this.height = height;
-        this.width = width;
-
+        Objects.requireNonNull(root, "root");
         this.root = root;
         this.root.setSize(width, height);
+
+        this.width = width;
+        this.height = height;
+        this.bgColor = (bgColor != null) ? bgColor : DEF_BG_COLOR;
 
         this.batch = new SpriteBatch();
         this.viewport = new ScreenViewport();
@@ -70,13 +77,9 @@ public class Layer {
         this.resize(width, height);
     }
 
-    public Layer(Color bgColor) {
-        this(new PinNest(), Gdx.graphics.getWidth(), Gdx.graphics.getHeight(), bgColor);
-    }
 
     public Layer() {
-        this(new PinNest(), Gdx.graphics.getWidth(),
-                Gdx.graphics.getHeight(), new Color(0x181818ff));
+        this(new NullNest(), Gdx.graphics.getWidth(), Gdx.graphics.getHeight(), DEF_BG_COLOR);
     }
 
 

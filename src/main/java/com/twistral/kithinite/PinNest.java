@@ -41,7 +41,7 @@ public class PinNest extends Nest {
     }
 
     @Override
-    public void layout() {
+    protected void layout() {
         if (!this.visible) return;
 
         // Absolute (absX, absY) coord calculation for nests should happen immediately

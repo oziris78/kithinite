@@ -47,7 +47,7 @@ public abstract class Piece {
 
 
     // Responsible for setting x, y, absX, absY, width, height
-    public abstract void layout();
+    protected abstract void layout();
 
     protected abstract void render(ShapeDrawer drawer);
 
