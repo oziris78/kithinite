@@ -41,6 +41,9 @@ public class Rectangle extends Widget {
     @Override
     protected void render(ShapeDrawer drawer) {
         if (!this.visible) return;
+        if (this.width <= 0) return;
+        if (this.height <= 0) return;
+        if (this.color == null) return;
 
         if (filled) {
             drawer.filledRectangle(absX, absY, width, height, color);
