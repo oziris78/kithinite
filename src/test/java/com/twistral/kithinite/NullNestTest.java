@@ -19,13 +19,10 @@ package com.twistral.kithinite;
 
 import com.badlogic.gdx.ApplicationAdapter;
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.Input;
 import com.badlogic.gdx.graphics.Color;
 
-import java.util.Arrays;
 
-
-public class CurrentDev extends ApplicationAdapter {
+public class NullNestTest extends ApplicationAdapter {
 
     private Layer layer;
 
@@ -35,7 +32,7 @@ public class CurrentDev extends ApplicationAdapter {
         layer = new Layer();
         int scale = 4;
         int i = 10*scale, s = 30*scale, inc = 10*scale;
-
+            
         layer.getRoot().add(new Rectangle(new Color(0xff0000ff)).setSize(s,s).setXY(i,i)); i += inc;
         layer.getRoot().add(new Rectangle(new Color(0xff7f00ff)).setSize(s,s).setXY(i,i)); i += inc;
         layer.getRoot().add(new Rectangle(new Color(0xffff00ff)).setSize(s,s).setXY(i,i)); i += inc;
