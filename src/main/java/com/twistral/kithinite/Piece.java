@@ -27,20 +27,20 @@ public abstract class Piece {
 
     protected Nest nester;
 
-    protected int x, y;        // local coords
-    protected int absX, absY;  // absolute coords
+    protected float x, y;        // local coords
+    protected float absX, absY;  // absolute coords
+    protected float width, height;
 
-    protected int width, height;
     protected boolean visible;
 
     public Piece(boolean isWidget) {
         this.isWidget = isWidget;
-        this.x = 0;
-        this.y = 0;
-        this.absX = 0;
-        this.absY = 0;
-        this.width = 0;
-        this.height = 0;
+        this.x = 0f;
+        this.y = 0f;
+        this.absX = 0f;
+        this.absY = 0f;
+        this.width = 0f;
+        this.height = 0f;
         this.visible = true;
         this.nester = null;
     }
@@ -59,25 +59,25 @@ public abstract class Piece {
     public boolean isWidget() { return this.isWidget; }
     public boolean isNest() { return !this.isWidget; }
 
-    public Piece setX(int x) { this.x = x; return this; }
-    public Piece setY(int y) { this.y = y; return this; }
-    public Piece setXY(int x, int y) { return setX(x).setY(y); }
-    public Piece setXY(int xy) { return setXY(xy, xy); }
+    public Piece setX(float x) { this.x = x; return this; }
+    public Piece setY(float y) { this.y = y; return this; }
+    public Piece setXY(float x, float y) { return setX(x).setY(y); }
+    public Piece setXY(float xy) { return setXY(xy, xy); }
 
-    public Piece setWidth(int width) { this.width = width; return this; }
-    public Piece setHeight(int height) { this.height = height; return this; }
-    public Piece setSize(int width, int height) { return setWidth(width).setHeight(height); }
+    public Piece setWidth(float width) { this.width = width; return this; }
+    public Piece setHeight(float height) { this.height = height; return this; }
+    public Piece setSize(float width, float height) { return setWidth(width).setHeight(height); }
 
     public Piece setVisible(boolean visible) { this.visible = visible; return this; }
 
-    public int getX() { return this.x; }
-    public int getY() { return this.y; }
-    public int getWidth() { return this.width; }
-    public int getHeight() { return this.height; }
+    public float getX() { return this.x; }
+    public float getY() { return this.y; }
+    public float getWidth() { return this.width; }
+    public float getHeight() { return this.height; }
     public boolean isVisible() { return this.visible; }
 
     // Read-only variables:
-    public int getAbsX() { return this.absX; } // gets set automatically during Piece#layout
-    public int getAbsY() { return this.absY; } // gets set automatically during Piece#layout
+    public float getAbsX() { return this.absX; } // gets set automatically during Piece#layout
+    public float getAbsY() { return this.absY; } // gets set automatically during Piece#layout
 
 }

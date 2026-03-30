@@ -48,8 +48,8 @@ public class PinNest extends Nest {
         // since pieces that are owned by this nest are going to use this nest's
         // absolute coords to calculate their absolute coords.
         boolean isRootNest = (this.nester == null);
-        this.absX = (isRootNest ? 0 : this.nester.absX) + this.x;
-        this.absY = (isRootNest ? 0 : this.nester.absY) + this.y;
+        this.absX = (isRootNest ? 0f : this.nester.absX) + this.x;
+        this.absY = (isRootNest ? 0f : this.nester.absY) + this.y;
 
         // Relative (x,y) coord calculation for owned pieces
         for (Piece piece : this.pieces) {
@@ -62,7 +62,7 @@ public class PinNest extends Nest {
                 final boolean westPinned = (pin.west != null);
                 final boolean northPinned = (pin.north != null);
                 final boolean southPinned = (pin.south != null);
-                final int nestWidth = this.width, nestHeight = this.height;
+                final float nestWidth = this.width, nestHeight = this.height;
 
                 // Horizontal pinning
                 if (eastPinned && westPinned) {
@@ -110,21 +110,21 @@ public class PinNest extends Nest {
 
 
     public static class Pin {
-        private Integer north = null;
-        private Integer south = null;
-        private Integer east = null;
-        private Integer west = null;
+        private Float north = null;
+        private Float south = null;
+        private Float east = null;
+        private Float west = null;
 
         private Pin() {}
 
-        public Pin north(int north) { this.north = north; return this; }
-        public Pin south(int south) { this.south = south; return this; }
-        public Pin east(int east) { this.east = east; return this; }
-        public Pin west(int west) { this.west = west; return this; }
+        public Pin north(float north) { this.north = north; return this; }
+        public Pin south(float south) { this.south = south; return this; }
+        public Pin east(float east) { this.east = east; return this; }
+        public Pin west(float west) { this.west = west; return this; }
 
-        public Pin all(int x) { return this.north(x).south(x).east(x).west(x); }
-        public Pin horizontal(int x) { return this.east(x).west(x); }
-        public Pin vertical(int x) { return this.north(x).south(x); }
+        public Pin all(float x) { return this.north(x).south(x).east(x).west(x); }
+        public Pin horizontal(float x) { return this.east(x).west(x); }
+        public Pin vertical(float x) { return this.north(x).south(x); }
     }
 
 }

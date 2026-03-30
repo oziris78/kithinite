@@ -28,8 +28,8 @@ public class NullNest extends Nest {
 
         // Absolute (absX, absY) coord calculation for this nest
         boolean isRootNest = (this.nester == null);
-        this.absX = (isRootNest ? 0 : this.nester.absX) + this.x;
-        this.absY = (isRootNest ? 0 : this.nester.absY) + this.y;
+        this.absX = (isRootNest ? 0f : this.nester.absX) + this.x;
+        this.absY = (isRootNest ? 0f : this.nester.absY) + this.y;
 
         // Relative (x,y) coord calculation for owned pieces
         for (Piece piece : this.pieces) {

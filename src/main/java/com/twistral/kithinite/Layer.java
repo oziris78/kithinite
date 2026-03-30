@@ -44,7 +44,7 @@ public class Layer {
     private Texture pixmapTexture;
 
     // Layer Objects
-    private int width, height;
+    private float width, height;
     private Color bgColor;
     private Nest root;
 
@@ -54,7 +54,7 @@ public class Layer {
     /*//////////////////////////////////////////////////////////////////////*/
 
 
-    public Layer(Nest root, int width, int height, Color bgColor) {
+    public Layer(Nest root, float width, float height, Color bgColor) {
         Objects.requireNonNull(root, "root");
         this.root = root;
         this.root.setSize(width, height);
@@ -74,7 +74,7 @@ public class Layer {
         this.drawer = new ShapeDrawer(this.batch, textureRegion);
         pixmap.dispose();
 
-        this.resize(width, height);
+        this.resize((int) width, (int) height);
     }
 
 
@@ -97,7 +97,7 @@ public class Layer {
         batch.begin();
 
         if (this.bgColor != null) {
-            drawer.filledRectangle(0, 0, this.width, this.height, this.bgColor);
+            drawer.filledRectangle(0f, 0f, this.width, this.height, this.bgColor);
         }
 
         this.root.render(drawer);
@@ -111,7 +111,7 @@ public class Layer {
         this.height = height;
         this.root.setSize(width, height);
 
-        viewport.update(this.width, this.height, true);
+        viewport.update((int) this.width, (int) this.height, true);
         batch.setProjectionMatrix(viewport.getCamera().combined);
     }
 
@@ -133,13 +133,13 @@ public class Layer {
     /*///////////////////////////////////////////////////////////////////////////*/
 
     public Color getBgColor() { return bgColor; }
-    public int getHeight() { return height; }
-    public int getWidth() { return width; }
+    public float getHeight() { return height; }
+    public float getWidth() { return width; }
     public Nest getRoot() { return root; }
 
     public void setBgColor(Color bgColor) { this.bgColor = bgColor; }
-    public void setHeight(int height) { this.height = height; }
-    public void setWidth(int width) { this.width = width; }
+    public void setHeight(float height) { this.height = height; }
+    public void setWidth(float width) { this.width = width; }
     public void setRoot(Nest root) { this.root = root; }
 
 }
