@@ -109,9 +109,9 @@ public class Layer {
     public void resize(int width, int height) {
         this.width = width;
         this.height = height;
-        this.root.setSize(width, height);
+        this.root.setSize(this.width, this.height);
 
-        viewport.update((int) this.width, (int) this.height, true);
+        viewport.update(width, height, true);
         batch.setProjectionMatrix(viewport.getCamera().combined);
     }
 

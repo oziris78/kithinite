@@ -14,28 +14,18 @@
 // limitations under the License.
 
 
+
 package com.twistral.kithinite;
 
 
-public abstract class Widget extends Piece {
+public class KithiniteException extends RuntimeException {
 
-    public Widget() {
-        super(true);
+    KithiniteException(String format, Object... args) {
+        super(String.format(format, args));
     }
 
-    @Override
-    protected void layout() {
-        // All widgets are supposted to be inside a nest (this is Kithinite's assumption)
-        if (this.nester == null) {
-            throw new KithiniteException(
-                "%s must be added to a Nest before layout() is called.",
-                    this.getClass().getSimpleName()
-            );
-        }
-
-        // Absolute coord calculation
-        this.absX = this.nester.absX + this.x;
-        this.absY = this.nester.absY + this.y;
+    KithiniteException(String text) {
+        super(text);
     }
 
 }
