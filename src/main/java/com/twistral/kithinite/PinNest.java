@@ -19,10 +19,7 @@ package com.twistral.kithinite;
 
 import space.earlygrey.shapedrawer.ShapeDrawer;
 
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
-import java.util.Objects;
 
 public class PinNest extends Nest {
 
@@ -33,12 +30,14 @@ public class PinNest extends Nest {
         this.pins = new HashMap<>();
     }
 
+
     public Pin pin(Piece piece) {
         if (!this.pins.containsKey(piece)) {
             this.pins.put(piece, new Pin());
         }
         return this.pins.get(piece);
     }
+
 
     @Override
     protected void layout() {
@@ -58,10 +57,10 @@ public class PinNest extends Nest {
             final Pin pin = this.pins.get(piece);
 
             if (pin != null) {
-                final boolean eastPinned = (pin.east != null);
-                final boolean westPinned = (pin.west != null);
-                final boolean northPinned = (pin.north != null);
-                final boolean southPinned = (pin.south != null);
+                final boolean eastPinned = pin.isEastPinned();
+                final boolean westPinned = pin.isWestPinned();
+                final boolean northPinned = pin.isNorthPinned();
+                final boolean southPinned = pin.isSouthPinned();
                 final float nestWidth = this.width, nestHeight = this.height;
 
                 // Horizontal pinning
@@ -110,21 +109,50 @@ public class PinNest extends Nest {
 
 
     public static class Pin {
-        private Float north = null;
-        private Float south = null;
-        private Float east = null;
-        private Float west = null;
+        private float north, south, east, west;
+        private boolean northPinned, southPinned, eastPinned, westPinned;
 
-        private Pin() {}
+        private Pin() {
+            this.northPinned = false;
+            this.southPinned = false;
+            this.eastPinned = false;
+            this.westPinned = false;
+        }
 
-        public Pin north(float north) { this.north = north; return this; }
-        public Pin south(float south) { this.south = south; return this; }
-        public Pin east(float east) { this.east = east; return this; }
-        public Pin west(float west) { this.west = west; return this; }
+        /*////////////////////  PINNING  ////////////////////*/
 
-        public Pin all(float x) { return this.north(x).south(x).east(x).west(x); }
-        public Pin horizontal(float x) { return this.east(x).west(x); }
-        public Pin vertical(float x) { return this.north(x).south(x); }
+        public Pin north(float north) { this.north = north; northPinned = true; return this; }
+        public Pin south(float south) { this.south = south; southPinned = true; return this; }
+        public Pin east(float east) { this.east = east; eastPinned = true; return this; }
+        public Pin west(float west) { this.west = west; westPinned = true; return this; }
+
+        public Pin all(float x) { return horizontal(x).vertical(x); }
+        public Pin horizontal(float x) { return east(x).west(x); }
+        public Pin vertical(float x) { return north(x).south(x); }
+
+        /*////////////////////  UNPINNING  ////////////////////*/
+
+        public Pin unpinNorth() { this.northPinned = false; return this; }
+        public Pin unpinSouth() { this.southPinned = false; return this; }
+        public Pin unpinEast() { this.eastPinned = false; return this; }
+        public Pin unpinWest() { this.westPinned = false; return this; }
+
+        public Pin unpinAll() { return unpinHorizontal().unpinVertical(); }
+        public Pin unpinHorizontal() { return unpinEast().unpinWest(); }
+        public Pin unpinVertical() { return unpinNorth().unpinSouth(); }
+
+        /*////////////////////  GETTERS  ////////////////////*/
+
+        public boolean isNorthPinned() { return this.northPinned; }
+        public boolean isSouthPinned() { return this.southPinned; }
+        public boolean isEastPinned() { return this.eastPinned; }
+        public boolean isWestPinned() { return this.westPinned; }
+
+        public float getNorth() { return this.north; }
+        public float getSouth() { return this.south; }
+        public float getEast() { return this.east; }
+        public float getWest() { return this.west; }
+
     }
 
 }
