@@ -33,16 +33,7 @@ public class CurrentDev extends ApplicationAdapter {
     @Override
     public void create() {
         layer = new Layer();
-        int scale = 4;
-        int i = 10*scale, s = 30*scale, inc = 10*scale;
-
-        layer.getRoot().add(new Rectangle(new Color(0xff0000ff)).setSize(s,s).setXY(i,i)); i += inc;
-        layer.getRoot().add(new Rectangle(new Color(0xff7f00ff)).setSize(s,s).setXY(i,i)); i += inc;
-        layer.getRoot().add(new Rectangle(new Color(0xffff00ff)).setSize(s,s).setXY(i,i)); i += inc;
-        layer.getRoot().add(new Rectangle(new Color(0x00ff00ff)).setSize(s,s).setXY(i,i)); i += inc;
-        layer.getRoot().add(new Rectangle(new Color(0x0000ffff)).setSize(s,s).setXY(i,i)); i += inc;
-        layer.getRoot().add(new Rectangle(new Color(0x4b0082ff)).setSize(s,s).setXY(i,i)); i += inc;
-        layer.getRoot().add(new Rectangle(new Color(0x9400d3ff)).setSize(s,s).setXY(i,i));
+        layer.getRoot().add(new Rectangle(new Color(0xff0000ff)).setSize(120,120).setXY(20,20));
     }
 
     @Override

@@ -18,6 +18,8 @@ package com.twistral.kithinite;
 
 
 import com.badlogic.gdx.graphics.Color;
+import com.badlogic.gdx.math.MathUtils;
+import space.earlygrey.shapedrawer.JoinType;
 import space.earlygrey.shapedrawer.ShapeDrawer;
 
 import java.util.Objects;
@@ -25,31 +27,101 @@ import java.util.Objects;
 
 public class Rectangle extends Widget {
 
-    private Color color;
-    private boolean filled;
+    // Static variables
+    public static JoinType DEF_JOIN_TYPE = JoinType.POINTY;
+    public static float DEF_ROTATION_DEGREES = 0f;
+    public static Color DEF_COLOR = new Color(0x181818ff);
+    public static float DEF_LINE_WIDTH = 1f;
 
-    public Rectangle(Color color, boolean filled) {
-        this.color = color;
+    // Rect related variables
+    private boolean filled;
+    private float rotationDegrees;
+    private float lineWidth;
+    private JoinType joinType;
+
+    // Color variables
+    private Color color;
+    private Color topRightColor;
+    private Color topLeftColor;
+    private Color bottomLeftColor;
+    private Color bottomRightColor;
+
+
+    /*//////////////////////////////////////////////////////////////////////*/
+    /*///////////////////////////  CONSTRUCTORS  ///////////////////////////*/
+    /*//////////////////////////////////////////////////////////////////////*/
+
+
+    private Rectangle(boolean filled, float rotationDegrees, float lineWidth, JoinType joinType,
+                      Color color, Color topLeft, Color topRight, Color bottomRight, Color bottomLeft)
+    {
+        this.color = (!filled && color == null) ? DEF_COLOR : color;
+        this.rotationDegrees = rotationDegrees;
+        this.bottomRightColor = bottomRight;
+        this.bottomLeftColor = bottomLeft;
+        this.topRightColor = topRight;
+        this.topLeftColor = topLeft;
+        this.lineWidth = lineWidth;
+        this.joinType = joinType;
         this.filled = filled;
     }
 
-    public Rectangle(Color color) {
-        this(color, true);
+    // Main constructor for rectangles with GRADIENTs
+    public Rectangle(boolean filled, Color topLeft, Color topRight, Color bottomRight, Color bottomLeft,
+                     float rotationDegrees, float lineWidth, JoinType joinType)
+    {
+        this(filled, rotationDegrees, lineWidth, joinType,
+                null, topLeft, topRight, bottomRight, bottomLeft);
     }
+
+    // Main constructor for rectangles with COLORs
+    public Rectangle(boolean filled, Color color, float rotationDegrees, float lineWidth, JoinType joinType) {
+        this(filled, rotationDegrees, lineWidth, joinType, color, null, null, null, null);
+    }
+
+    // Secondary constructor for rectangles with GRADIENTs
+    public Rectangle(boolean filled, Color topLeft, Color topRight, Color bottomRight, Color bottomLeft) {
+        this(filled, topLeft, topRight, bottomRight, bottomLeft,
+                DEF_ROTATION_DEGREES, DEF_LINE_WIDTH, DEF_JOIN_TYPE);
+    }
+
+    // Secondary constructor for rectangles with COLORs
+    public Rectangle(boolean filled, Color color) {
+        this(filled, color, DEF_ROTATION_DEGREES, DEF_LINE_WIDTH, DEF_JOIN_TYPE);
+    }
+
+
+    /*/////////////////////////////////////////////////////////////////*/
+    /*///////////////////////////  METHODS  ///////////////////////////*/
+    /*/////////////////////////////////////////////////////////////////*/
 
 
     @Override
     protected void render(ShapeDrawer drawer) {
         if (!this.visible) return;
-        if (this.width <= 0) return;
-        if (this.height <= 0) return;
-        if (this.color == null) return;
+        if (this.width <= 0 || this.height <= 0) return;
+
+        // SANITY CHECK: Ensure we have SOMETHING to draw with
+        if (this.color == null && topLeftColor == null) {
+            this.setColor(DEF_COLOR);
+        }
+
+        final float rotationRadians = this.rotationDegrees * MathUtils.degreesToRadians;
 
         if (filled) {
-            drawer.filledRectangle(absX, absY, width, height, color);
+            final Color c1 = (color != null) ? color : topRightColor;
+            final Color c2 = (color != null) ? color : topLeftColor;
+            final Color c3 = (color != null) ? color : bottomLeftColor;
+            final Color c4 = (color != null) ? color : bottomRightColor;
+            drawer.filledRectangle(absX, absY, width, height, rotationRadians, c1, c2, c3, c4);
         }
         else {
-            drawer.rectangle(absX, absY, width, height, color);
+            // color CANT be null here since that means rect is outlined but the color is missing
+            final Color outlineColor = (this.color != null) ? this.color : DEF_COLOR;
+
+            final float oldColor = drawer.setColor(outlineColor);
+            drawer.rectangle(absX, absY, width, height, lineWidth, rotationRadians, joinType);
+            drawer.setColor(oldColor);
         }
     }
 
@@ -58,10 +130,53 @@ public class Rectangle extends Widget {
     /*///////////////////////////  GETTERS & SETTERS  ///////////////////////////*/
     /*///////////////////////////////////////////////////////////////////////////*/
 
-    public Rectangle setFilled(boolean filled) { this.filled = filled; return this; }
-    public Rectangle setColor(Color color) { this.color = color; return this; }
 
+    public Rectangle setRotationDegrees(float rotDeg) { this.rotationDegrees = rotDeg; return this; }
+    public Rectangle setJoinType(JoinType joinType) { this.joinType = joinType; return this; }
+    public Rectangle setLineWidth(float lineWidth) { this.lineWidth = lineWidth; return this; }
+    public Rectangle setFilled(boolean filled) { this.filled = filled; return this; }
+
+    public float getRotationDegrees() { return rotationDegrees; }
+    public JoinType getJoinType() { return joinType; }
+    public float getLineWidth() { return lineWidth; }
     public boolean isFilled() { return filled; }
+
+
+    /*////////////////////////////////////////////////////////////////////////*/
+    /*///////////////////////////  COLOR SETTINGS  ///////////////////////////*/
+    /*////////////////////////////////////////////////////////////////////////*/
+
+
+    public Rectangle setColor(Color color) {
+        this.color = color;
+        this.topRightColor = null;
+        this.topLeftColor = null;
+        this.bottomLeftColor = null;
+        this.bottomRightColor = null;
+        return this;
+    }
+
+    public Rectangle setGradient(Color topLeft, Color topRight, Color bottomRight, Color bottomLeft) {
+        this.color = null;
+        this.topLeftColor = Objects.requireNonNull(topLeft, "topLeftColor cannot be null");
+        this.topRightColor = Objects.requireNonNull(topRight, "topRightColor cannot be null");
+        this.bottomRightColor = Objects.requireNonNull(bottomRight, "bottomRightColor cannot be null");
+        this.bottomLeftColor = Objects.requireNonNull(bottomLeft, "bottomLeftColor cannot be null");
+        return this;
+    }
+
+    public Rectangle setVerticalGradient(Color top, Color bottom) {
+        return setGradient(top, top, bottom, bottom);
+    }
+
+    public Rectangle setHorizontalGradient(Color left, Color right) {
+        return setGradient(left, right, right, left);
+    }
+
     public Color getColor() { return color; }
+    public Color getTopLeftColor() { return this.topLeftColor; }
+    public Color getTopRightColor() { return this.topRightColor; }
+    public Color getBottomRightColor() { return this.bottomRightColor; }
+    public Color getBottomLeftColor() { return this.bottomLeftColor; }
 
 }
