@@ -129,8 +129,16 @@ public class Rectangle extends Widget {
             // color CANT be null here since that means rect is outlined but the color is missing
             final Color outlineColor = (this.color != null) ? this.color : DEF_COLOR;
 
+            // prevent spilling because of lineWidth variable
+            final float halfLine = lineWidth / 2f;
+            final float adjX = absX + halfLine;
+            final float adjY = absY + halfLine;
+            final float adjW = width - lineWidth;
+            final float adjH = height - lineWidth;
+
+            // Finally render the rectangle
             final float oldColor = drawer.setColor(outlineColor);
-            drawer.rectangle(absX, absY, width, height, lineWidth, rotationRadians, joinType);
+            drawer.rectangle(adjX, adjY, adjW, adjH, lineWidth, rotationRadians, joinType);
             drawer.setColor(oldColor);
         }
     }
