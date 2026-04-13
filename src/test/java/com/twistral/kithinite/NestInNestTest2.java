@@ -56,7 +56,7 @@ public class NestInNestTest2 extends ApplicationAdapter {
     }
 
     private static Piece rect(Color c, int x, int y) {
-        return new Rectangle(c).setXY(x, y).setSize(50, 50);
+        return new Rectangle(true, c).setXY(x, y).setSize(50, 50);
     }
 
     @Override

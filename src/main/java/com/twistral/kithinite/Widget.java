@@ -28,8 +28,7 @@ public abstract class Widget extends Piece {
         // All widgets are supposted to be inside a nest (this is Kithinite's assumption)
         if (this.nester == null) {
             throw new KithiniteException(
-                "%s must be added to a Nest before layout() is called.",
-                    this.getClass().getSimpleName()
+                "%s must be added to a Nest before layout() is called.", this.getClass().getSimpleName()
             );
         }
 

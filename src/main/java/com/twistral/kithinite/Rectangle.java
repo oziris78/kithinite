@@ -28,10 +28,10 @@ import java.util.Objects;
 public class Rectangle extends Widget {
 
     // Static variables
-    public static JoinType DEF_JOIN_TYPE = JoinType.POINTY;
-    public static float DEF_ROTATION_DEGREES = 0f;
-    public static Color DEF_COLOR = new Color(0x181818ff);
-    public static float DEF_LINE_WIDTH = 1f;
+    public static final JoinType DEF_JOIN_TYPE = JoinType.POINTY;
+    public static final float DEF_ROTATION_DEGREES = 0f;
+    public static final Color DEF_COLOR = Color.WHITE;
+    public static final float DEF_LINE_WIDTH = 1f;
 
     // Rect related variables
     private boolean filled;
@@ -70,24 +70,34 @@ public class Rectangle extends Widget {
     public Rectangle(boolean filled, Color topLeft, Color topRight, Color bottomRight, Color bottomLeft,
                      float rotationDegrees, float lineWidth, JoinType joinType)
     {
-        this(filled, rotationDegrees, lineWidth, joinType,
-                null, topLeft, topRight, bottomRight, bottomLeft);
+        this(
+            filled, rotationDegrees, lineWidth, joinType,
+            null, topLeft, topRight, bottomRight, bottomLeft
+        );
     }
 
     // Main constructor for rectangles with COLORs
     public Rectangle(boolean filled, Color color, float rotationDegrees, float lineWidth, JoinType joinType) {
-        this(filled, rotationDegrees, lineWidth, joinType, color, null, null, null, null);
+        this(
+            filled, rotationDegrees, lineWidth, joinType,
+            color, null, null, null, null
+        );
     }
 
     // Secondary constructor for rectangles with GRADIENTs
     public Rectangle(boolean filled, Color topLeft, Color topRight, Color bottomRight, Color bottomLeft) {
-        this(filled, topLeft, topRight, bottomRight, bottomLeft,
-                DEF_ROTATION_DEGREES, DEF_LINE_WIDTH, DEF_JOIN_TYPE);
+        this(
+            filled, topLeft, topRight, bottomRight, bottomLeft,
+            DEF_ROTATION_DEGREES, DEF_LINE_WIDTH, DEF_JOIN_TYPE
+        );
     }
 
     // Secondary constructor for rectangles with COLORs
     public Rectangle(boolean filled, Color color) {
-        this(filled, color, DEF_ROTATION_DEGREES, DEF_LINE_WIDTH, DEF_JOIN_TYPE);
+        this(
+            filled, color,
+            DEF_ROTATION_DEGREES, DEF_LINE_WIDTH, DEF_JOIN_TYPE
+        );
     }
 
 
@@ -126,22 +136,6 @@ public class Rectangle extends Widget {
     }
 
 
-    /*///////////////////////////////////////////////////////////////////////////*/
-    /*///////////////////////////  GETTERS & SETTERS  ///////////////////////////*/
-    /*///////////////////////////////////////////////////////////////////////////*/
-
-
-    public Rectangle setRotationDegrees(float rotDeg) { this.rotationDegrees = rotDeg; return this; }
-    public Rectangle setJoinType(JoinType joinType) { this.joinType = joinType; return this; }
-    public Rectangle setLineWidth(float lineWidth) { this.lineWidth = lineWidth; return this; }
-    public Rectangle setFilled(boolean filled) { this.filled = filled; return this; }
-
-    public float getRotationDegrees() { return rotationDegrees; }
-    public JoinType getJoinType() { return joinType; }
-    public float getLineWidth() { return lineWidth; }
-    public boolean isFilled() { return filled; }
-
-
     /*////////////////////////////////////////////////////////////////////////*/
     /*///////////////////////////  COLOR SETTINGS  ///////////////////////////*/
     /*////////////////////////////////////////////////////////////////////////*/
@@ -173,10 +167,46 @@ public class Rectangle extends Widget {
         return setGradient(left, right, right, left);
     }
 
+    /*////////////////  RGBA Overrides ////////////////*/
+
+    public Rectangle setColor(int rgba) {
+        return this.setColor(new Color(rgba));
+    }
+
+    public Rectangle setGradient(int topLeftRgba, int topRightRgba, int bottomRightRgba, int bottomLeftRgba) {
+        return this.setGradient(new Color(topLeftRgba), new Color(topRightRgba),
+                new Color(bottomRightRgba), new Color(bottomLeftRgba));
+    }
+
+    public Rectangle setVerticalGradient(int topRgba, int bottomRgba) {
+        return this.setVerticalGradient(new Color(topRgba), new Color(bottomRgba));
+    }
+
+    public Rectangle setHorizontalGradient(int leftRgba, int rightRgba) {
+        return this.setHorizontalGradient(new Color(leftRgba), new Color(rightRgba));
+    }
+
+
+    /*///////////////////////////////////////////////////////////////////////////*/
+    /*///////////////////////////  GETTERS & SETTERS  ///////////////////////////*/
+    /*///////////////////////////////////////////////////////////////////////////*/
+
+
+    public Rectangle setRotationDegrees(float rotDeg) { this.rotationDegrees = rotDeg; return this; }
+    public Rectangle setJoinType(JoinType joinType) { this.joinType = joinType; return this; }
+    public Rectangle setLineWidth(float lineWidth) { this.lineWidth = lineWidth; return this; }
+    public Rectangle setFilled(boolean filled) { this.filled = filled; return this; }
+
+    public float getRotationDegrees() { return rotationDegrees; }
+    public JoinType getJoinType() { return joinType; }
+    public float getLineWidth() { return lineWidth; }
+    public boolean isFilled() { return filled; }
+
     public Color getColor() { return color; }
     public Color getTopLeftColor() { return this.topLeftColor; }
     public Color getTopRightColor() { return this.topRightColor; }
     public Color getBottomRightColor() { return this.bottomRightColor; }
     public Color getBottomLeftColor() { return this.bottomLeftColor; }
+
 
 }

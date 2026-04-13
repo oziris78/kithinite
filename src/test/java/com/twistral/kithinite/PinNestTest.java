@@ -51,51 +51,51 @@ public class PinNestTest extends ApplicationAdapter {
         pinNest = new PinNest();
         layer.setRoot(pinNest);
 
-        rectNo = new Rectangle(Color.BLUE).setXY(200, 200).setSize(50, 50);
+        rectNo = new Rectangle(true, Color.BLUE).setXY(200, 200).setSize(50, 50);
 
-        rectE = new Rectangle(Color.RED).setXY(200, 200).setSize(50, 50);
+        rectE = new Rectangle(true, Color.RED).setXY(200, 200).setSize(50, 50);
         pinNest.pin(rectE).east(20);
 
-        rectW = new Rectangle(Color.GREEN).setXY(200, 200).setSize(50, 50);
+        rectW = new Rectangle(true, Color.GREEN).setXY(200, 200).setSize(50, 50);
         pinNest.pin(rectW).west(20);
 
-        rectN = new Rectangle(Color.YELLOW).setXY(200, 200).setSize(50, 50);
+        rectN = new Rectangle(true, Color.YELLOW).setXY(200, 200).setSize(50, 50);
         pinNest.pin(rectN).north(20);
 
-        rectS = new Rectangle(Color.BROWN).setXY(200, 200).setSize(50, 50);
+        rectS = new Rectangle(true, Color.BROWN).setXY(200, 200).setSize(50, 50);
         pinNest.pin(rectS).south(20);
 
-        rectNE = new Rectangle(Color.PINK).setXY(200, 200).setSize(50, 50);
+        rectNE = new Rectangle(true, Color.PINK).setXY(200, 200).setSize(50, 50);
         pinNest.pin(rectNE).north(20).east(20);
 
-        rectNW = new Rectangle(Color.PURPLE).setXY(200, 200).setSize(50, 50);
+        rectNW = new Rectangle(true, Color.PURPLE).setXY(200, 200).setSize(50, 50);
         pinNest.pin(rectNW).north(20).west(20);
 
-        rectSE = new Rectangle(Color.WHITE).setXY(200, 200).setSize(50, 50);
+        rectSE = new Rectangle(true, Color.WHITE).setXY(200, 200).setSize(50, 50);
         pinNest.pin(rectSE).south(20).east(20);
 
-        rectSW = new Rectangle(Color.ORANGE).setXY(200, 200).setSize(50, 50);
+        rectSW = new Rectangle(true, Color.ORANGE).setXY(200, 200).setSize(50, 50);
         pinNest.pin(rectSW).south(20).west(20);
 
-        rectNS = new Rectangle(Color.SKY).setXY(200, 200).setSize(50, 50);
+        rectNS = new Rectangle(true, Color.SKY).setXY(200, 200).setSize(50, 50);
         pinNest.pin(rectNS).vertical(20);
 
-        rectEW = new Rectangle(Color.LIME).setXY(200, 200).setSize(50, 50);
+        rectEW = new Rectangle(true, Color.LIME).setXY(200, 200).setSize(50, 50);
         pinNest.pin(rectEW).horizontal(20);
 
-        rectNSE = new Rectangle(Color.CORAL).setXY(200, 200).setSize(50, 50);
+        rectNSE = new Rectangle(true, Color.CORAL).setXY(200, 200).setSize(50, 50);
         pinNest.pin(rectNSE).north(20).south(20).east(20);
         
-        rectNSW = new Rectangle(Color.LIGHT_GRAY).setXY(200, 200).setSize(50, 50);
+        rectNSW = new Rectangle(true, Color.LIGHT_GRAY).setXY(200, 200).setSize(50, 50);
         pinNest.pin(rectNSW).north(20).south(20).west(20);
         
-        rectNEW = new Rectangle(Color.MAROON).setXY(200, 200).setSize(50, 50);
+        rectNEW = new Rectangle(true, Color.MAROON).setXY(200, 200).setSize(50, 50);
         pinNest.pin(rectNEW).north(20).east(20).west(20);
         
-        rectSEW = new Rectangle(Color.NAVY).setXY(200, 200).setSize(50, 50);
+        rectSEW = new Rectangle(true, Color.NAVY).setXY(200, 200).setSize(50, 50);
         pinNest.pin(rectSEW).south(20).east(20).west(20);
 
-        rectNSEW = new Rectangle(Color.CYAN).setXY(200, 200).setSize(50, 50);
+        rectNSEW = new Rectangle(true, Color.CYAN).setXY(200, 200).setSize(50, 50);
         pinNest.pin(rectNSEW).all(20);
 
         pinNest.add(rectNo, rectE, rectW, rectN, rectS, rectNE, rectNW, rectSE, rectSW,
