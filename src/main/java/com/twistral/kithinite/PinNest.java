@@ -65,26 +65,26 @@ public class PinNest extends Nest {
 
                 // Horizontal pinning
                 if (eastPinned && westPinned) {
-                    piece.x = pin.west;
-                    piece.width = nestWidth - pin.east - pin.west; // Perform strecthing
+                    piece.setX(pin.west);
+                    piece.setWidth(nestWidth - pin.east - pin.west); // Perform strecthing
                 }
                 else if (eastPinned && !westPinned) {
-                    piece.x = nestWidth - pin.east - piece.width;
+                    piece.setX(nestWidth - pin.east - piece.width);
                 }
                 else if (!eastPinned && westPinned) {
-                    piece.x = pin.west;
+                    piece.setX(pin.west);
                 }
 
                 // Vertical pinning
                 if (northPinned && southPinned) {
-                    piece.y = pin.south;
-                    piece.height = nestHeight - pin.north - pin.south; // Perform strecthing
+                    piece.setY(pin.south);
+                    piece.setHeight(nestHeight - pin.north - pin.south); // Perform strecthing
                 }
                 else if (northPinned && !southPinned) {
-                    piece.y = nestHeight - pin.north - piece.height;
+                    piece.setY(nestHeight - pin.north - piece.height);
                 }
                 else if (!northPinned && southPinned) {
-                    piece.y = pin.south;
+                    piece.setY(pin.south);
                 }
             }
 

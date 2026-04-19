@@ -53,24 +53,25 @@ public class Rectangle extends Widget {
 
 
     private Rectangle(boolean filled, float rotationDegrees, float lineWidth, JoinType joinType,
-                      Color color, Color topLeft, Color topRight, Color bottomRight, Color bottomLeft)
+                      Color color, Color topRightColor, Color topLeftColor,
+                      Color bottomLeftColor, Color bottomRightColor)
     {
         this.filled = filled;
         this.rotationDegrees = rotationDegrees;
         this.lineWidth = lineWidth;
         this.joinType = joinType;
         this.color = color;
-        this.topLeftColor = topLeft;
-        this.topRightColor = topRight;
-        this.bottomRightColor = bottomRight;
-        this.bottomLeftColor = bottomLeft;
+        this.topRightColor = topRightColor;
+        this.topLeftColor = topLeftColor;
+        this.bottomLeftColor = bottomLeftColor;
+        this.bottomRightColor = bottomRightColor;
     }
 
     // Main constructor for rectangles with GRADIENTs
     public Rectangle(boolean filled, Color topLeft, Color topRight, Color bottomRight, Color bottomLeft,
                      float rotationDegrees, float lineWidth, JoinType joinType)
     {
-        this(filled, rotationDegrees, lineWidth, joinType, null, topLeft, topRight, bottomRight, bottomLeft);
+        this(filled, rotationDegrees, lineWidth, joinType, null, topRight, topLeft, bottomLeft, bottomRight);
     }
 
     // Main constructor for rectangles with COLORs

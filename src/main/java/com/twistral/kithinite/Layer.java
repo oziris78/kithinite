@@ -132,14 +132,14 @@ public class Layer {
     /*///////////////////////////  GETTERS & SETTERS  ///////////////////////////*/
     /*///////////////////////////////////////////////////////////////////////////*/
 
+    public Layer setBgColor(Color bgColor) { this.bgColor = bgColor; return this; }
+    public Layer setHeight(float height) { this.height = height; return this; }
+    public Layer setWidth(float width) { this.width = width; return this; }
+    public Layer setRoot(Nest root) { this.root = root; return this; }
+
     public Color getBgColor() { return bgColor; }
     public float getHeight() { return height; }
     public float getWidth() { return width; }
     public Nest getRoot() { return root; }
-
-    public void setBgColor(Color bgColor) { this.bgColor = bgColor; }
-    public void setHeight(float height) { this.height = height; }
-    public void setWidth(float width) { this.width = width; }
-    public void setRoot(Nest root) { this.root = root; }
 
 }
