@@ -157,7 +157,7 @@ public class Ellipse extends Widget {
         return this;
     }
 
-    /*////////////////  Setters with NO SIDE EFFECTS  ////////////////*/
+    /*////////////////  SETTERS WITH NO SIDE EFFECTS  ////////////////*/
 
     public Ellipse setFilled(boolean filled) {
         this.filled = filled;

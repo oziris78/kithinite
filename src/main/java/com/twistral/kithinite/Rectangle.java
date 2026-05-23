@@ -33,7 +33,7 @@ public class Rectangle extends Widget {
     public static final Color DEF_COLOR = Color.WHITE;
     public static final float DEF_LINE_WIDTH = 1f;
 
-    // Rect related variables
+    // Rectangle related variables
     private boolean filled;
     private float rotationDegrees;
     private float lineWidth;
