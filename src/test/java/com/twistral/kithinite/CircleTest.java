@@ -22,7 +22,7 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
 
 
-public class CurrentDev extends ApplicationAdapter {
+public class CircleTest extends ApplicationAdapter {
 
     private static final float RAD = 50, PADDING = 20;
     private static final int MAX_PER_ROW = 4;

@@ -64,6 +64,11 @@ public abstract class Piece {
     public Piece setXY(float x, float y) { return setX(x).setY(y); }
     public Piece setXY(float xy) { return setXY(xy, xy); }
 
+    public Piece addX(float x) { return setX(getX() + x); }
+    public Piece addY(float y) { return setY(getY() + y); }
+    public Piece addXY(float x, float y) { return addX(x).addY(y); }
+    public Piece addXY(float xy) { return addX(xy).addY(xy); }
+
     public Piece setWidth(float width) { this.width = width; return this; }
     public Piece setHeight(float height) { this.height = height; return this; }
     public Piece setSize(float width, float height) { return setWidth(width).setHeight(height); }

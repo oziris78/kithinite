@@ -51,8 +51,8 @@ public class Ellipse extends Widget {
                     float lineWidth, Color color, Color innerColor, Color outerColor)
     {
         this.filled = filled;
-        this.radiusX = radiusX;
-        this.radiusY = radiusY;
+        setRadiusX(radiusX); // auto update width
+        setRadiusY(radiusY); // auto update height
         this.rotationDegrees = rotationDegrees;
         this.lineWidth = lineWidth;
         this.color = color;
@@ -115,11 +115,16 @@ public class Ellipse extends Widget {
             );
         }
         else {
+            // prevent spilling because of lineWidth variable
+            final float halfLine = lineWidth / 2f;
+            final float adjRadiusX = radiusX - halfLine;
+            final float adjRadiusY = radiusY - halfLine;
+
             Color outlineColor = this.color;
             if(outlineColor == null) outlineColor = DEF_COLOR;
 
             final float oldColor = drawer.setColor(outlineColor);
-            drawer.ellipse(absCentreX, absCentreY, radiusX, radiusY, rotationRadians, lineWidth);
+            drawer.ellipse(absCentreX, absCentreY, adjRadiusX, adjRadiusY, rotationRadians, lineWidth);
             drawer.setColor(oldColor);
         }
     }
@@ -177,6 +182,10 @@ public class Ellipse extends Widget {
     public Ellipse setColor(Color color) {
         this.color = color;
         return this;
+    }
+
+    public Ellipse setColor(Color innerColor, Color outerColor) {
+        return setInnerColor(innerColor).setOuterColor(outerColor);
     }
 
     public Ellipse setInnerColor(Color innerColor) {

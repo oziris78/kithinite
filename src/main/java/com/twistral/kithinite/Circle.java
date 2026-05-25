@@ -48,7 +48,7 @@ public class Circle extends Widget {
                    Color color, Color innerColor, Color outerColor)
     {
         this.filled = filled;
-        this.radius = radius;
+        setRadius(radius); // auto update width & height
         this.lineWidth = lineWidth;
         this.color = color;
         this.innerColor = innerColor;
@@ -102,11 +102,15 @@ public class Circle extends Widget {
             drawer.filledEllipse(absCentreX, absCentreY, radius, radius, 0f, inColor, outColor);
         }
         else {
+            // prevent spilling because of lineWidth variable
+            final float halfLine = lineWidth / 2f;
+            final float adjRadius = radius - halfLine;
+
             Color outlineColor = this.color;
             if(outlineColor == null) outlineColor = DEF_COLOR;
 
             final float oldColor = drawer.setColor(outlineColor);
-            drawer.ellipse(absCentreX, absCentreY, radius, radius, 0f, lineWidth);
+            drawer.ellipse(absCentreX, absCentreY, adjRadius, adjRadius, 0f, lineWidth);
             drawer.setColor(oldColor);
         }
     }
@@ -156,6 +160,11 @@ public class Circle extends Widget {
     public Circle setColor(Color color) {
         this.color = color;
         return this;
+    }
+
+
+    public Circle setColor(Color innerColor, Color outerColor) {
+        return setInnerColor(innerColor).setOuterColor(outerColor);
     }
 
     public Circle setInnerColor(Color innerColor) {
