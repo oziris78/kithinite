@@ -20,11 +20,12 @@ package com.twistral.kithinite;
 import com.badlogic.gdx.ApplicationAdapter;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
+import space.earlygrey.shapedrawer.JoinType;
 
 
 public class CurrentDev extends ApplicationAdapter {
 
-    private static final float RAD = 50, PADDING = 20;
+    private static final float PADDING = 20;
     private static final int MAX_PER_ROW = 4;
 
     private Layer layer;
@@ -32,58 +33,24 @@ public class CurrentDev extends ApplicationAdapter {
 
     @Override
     public void create() {
-        Gdx.graphics.setTitle("Circles");
-        Gdx.graphics.setWindowedMode(500, 500);
+        Gdx.graphics.setTitle("Triangles #1");
+        Gdx.graphics.setWindowedMode(800, 600);
 
         layer = new Layer();
 
-        final Color color1 = Color.GOLD;
-        final Color color2 = Color.ORANGE;
-        final Color color3 = Color.PURPLE;
+
+        Triangle tri1 = new Triangle(false, 10, 10, 20, 10, 15, 20, Color.RED);
+        tri1.setXY(50, 50);
+        tri1.setSize(200, 100);
+
+        Triangle tri2 = new Triangle(false, 10, 10, 20, 10, 15, 20, Color.RED, 16f);
+        tri2.setXY(400, 50);
+        tri2.setSize(200, 100);
 
         layer.getRoot().add(
-            // filled + color settings test
-            circle(true).setColor(color1),
-            circle(true).setColor(color2, color3),
-            circle(false).setColor(color1),
-            circle(false).setColor(color2, color3),
-
-            // lineWidth test with all the above
-            circle(true).setColor(color1).setLineWidth(4f),
-            circle(true).setColor(color2, color3).setLineWidth(4f),
-            circle(false).setColor(color1).setLineWidth(4f),
-            circle(false).setColor(color2, color3).setLineWidth(4f),
-
-            circle(true).setColor(color1).setLineWidth(8f),
-            circle(true).setColor(color2, color3).setLineWidth(8f),
-            circle(false).setColor(color1).setLineWidth(8f),
-            circle(false).setColor(color2, color3).setLineWidth(8f),
-
-            circle(true).setColor(color1).setLineWidth(20f),
-            circle(true).setColor(color2, color3).setLineWidth(20f),
-            circle(false).setColor(color1).setLineWidth(20f),
-            circle(false).setColor(color2, color3).setLineWidth(20f)
+                tri1,tri2
         );
     }
-
-    private static int row = 0, col = 0;
-
-    private Circle circle(boolean filled) {
-        Circle circle = new Circle(filled, RAD, null);
-
-        circle.setXY(
-            PADDING + (PADDING + 2*RAD) * row,
-            PADDING + (PADDING + 2*RAD) * col
-        );
-
-        if (++col >= MAX_PER_ROW) {
-            col = 0;
-            row++;
-        }
-
-        return circle;
-    }
-
 
     @Override
     public void render() {
