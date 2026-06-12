@@ -19,11 +19,11 @@ package com.twistral.kithinite;
 
 
 import com.badlogic.gdx.graphics.Color;
-import com.badlogic.gdx.math.MathUtils;
+import com.badlogic.gdx.math.Vector2;
 import com.twistral.tephrium.core.functions.TMath;
-import space.earlygrey.shapedrawer.JoinType;
 import space.earlygrey.shapedrawer.ShapeDrawer;
 
+import static com.twistral.kithinite.Kithinite.*;
 
 
 public class Triangle extends Widget {
@@ -40,6 +40,10 @@ public class Triangle extends Widget {
     // Color variables
     private Color color;
     private Color v1Color, v2Color, v3Color;
+
+    // Optimization & rendering related variables
+    private float rv1x, rv1y, rv2x, rv2y, rv3x, rv3y;
+    private float iv1x, iv1y, iv2x, iv2y, iv3x, iv3y;
 
 
     /*//////////////////////////////////////////////////////////////////////*/
@@ -97,40 +101,172 @@ public class Triangle extends Widget {
         if (!this.visible) return;
         if (this.width <= 0 || this.height <= 0) return;
 
-        // Absolute coord calculation for v1, v2, v3. absX and absY are automatically
-        // calculated but not needed here. Instead of x, y we have relative v1, v2, v3 vertices
-        final float x1 = this.nester.absX + v1x,
-                    x2 = this.nester.absX + v2x,
-                    x3 = this.nester.absX + v3x;
-
-        final float y1 = this.nester.absY + v1y,
-                    y2 = this.nester.absY + v2y,
-                    y3 = this.nester.absY + v3y;
+        // Calculate render/outer vertices in absolute coords using relative v1, v2, v3 values
+        this.rv1x = this.nester.absX + v1x;
+        this.rv1y = this.nester.absY + v1y;
+        this.rv2x = this.nester.absX + v2x;
+        this.rv2y = this.nester.absY + v2y;
+        this.rv3x = this.nester.absX + v3x;
+        this.rv3y = this.nester.absY + v3y;
 
         if (filled) {
-            Color c1 = this.v1Color;
-            if (c1 == null) c1 = this.color;
-            if (c1 == null) c1 = DEF_COLOR;
-
-            Color c2 = this.v2Color;
-            if (c2 == null) c2 = this.color;
-            if (c2 == null) c2 = DEF_COLOR;
-
-            Color c3 = this.v3Color;
-            if (c3 == null) c3 = this.color;
-            if (c3 == null) c3 = DEF_COLOR;
+            Color c1 = prioritySelect(this.v1Color, this.color, DEF_COLOR);
+            Color c2 = prioritySelect(this.v2Color, this.color, DEF_COLOR);
+            Color c3 = prioritySelect(this.v3Color, this.color, DEF_COLOR);
 
             drawer.filledTriangle(
-                x1, y1, x2, y2, x3, y3, c1.toFloatBits(), c2.toFloatBits(), c3.toFloatBits()
+                rv1x, rv1y, rv2x, rv2y, rv3x, rv3y,
+                c1.toFloatBits(), c2.toFloatBits(), c3.toFloatBits()
             );
         }
         else {
-            Color c = this.color;
-            if (c == null) c = DEF_COLOR;
+            final Color c = prioritySelect(this.color, DEF_COLOR);
+            final float cBits = c.toFloatBits();
 
-            drawer.triangle(x1, y1, x2, y2, x3, y3, lineWidth, c.toFloatBits());
+            if (this.lineWidth <= DEF_LINE_WIDTH) {
+                drawer.triangle(rv1x, rv1y, rv2x, rv2y, rv3x, rv3y, this.lineWidth, cBits);
+            }
+            else {
+                // Use MESH RENDERING to achieve thick lines without spilling
+                addPaddingToVertices(); // changes rv1, rv2, rv3
+                computeInnerVertices(); // computes iv1, iv2, iv3
+
+                // Edge 1 to 2
+                drawer.filledTriangle(rv1x, rv1y, rv2x, rv2y, iv2x, iv2y, cBits, cBits, cBits);
+                drawer.filledTriangle(rv1x, rv1y, iv2x, iv2y, iv1x, iv1y, cBits, cBits, cBits);
+
+                // Edge 2 to 3
+                drawer.filledTriangle(rv2x, rv2y, rv3x, rv3y, iv3x, iv3y, cBits, cBits, cBits);
+                drawer.filledTriangle(rv2x, rv2y, iv3x, iv3y, iv2x, iv2y, cBits, cBits, cBits);
+
+                // Edge 3 to 1
+                drawer.filledTriangle(rv3x, rv3y, rv1x, rv1y, iv1x, iv1y, cBits, cBits, cBits);
+                drawer.filledTriangle(rv3x, rv3y, iv1x, iv1y, iv3x, iv3y, cBits, cBits, cBits);
+            }
         }
     }
+
+
+
+    /**
+     * Pads certain vertices (outer edge vertices of the bounding box) by half a pixel
+     * to try to prevent rounding errors
+     */
+    private void addPaddingToVertices() {
+        final float padding = 0.5f;
+        final float minBoundX = this.nester.absX + min(v1x, v2x, v3x);
+        final float maxBoundX = this.nester.absX + max(v1x, v2x, v3x);
+        final float minBoundY = this.nester.absY + min(v1y, v2y, v3y);
+        final float maxBoundY = this.nester.absY + max(v1y, v2y, v3y);
+
+        if (rv1x == maxBoundX) rv1x += padding;
+        if (rv2x == maxBoundX) rv2x += padding;
+        if (rv3x == maxBoundX) rv3x += padding;
+
+        if (rv1y == maxBoundY) rv1y += padding;
+        if (rv2y == maxBoundY) rv2y += padding;
+        if (rv3y == maxBoundY) rv3y += padding;
+
+        if (rv1x == minBoundX) rv1x -= padding;
+        if (rv2x == minBoundX) rv2x -= padding;
+        if (rv3x == minBoundX) rv3x -= padding;
+
+        if (rv1y == minBoundY) rv1y -= padding;
+        if (rv2y == minBoundY) rv2y -= padding;
+        if (rv3y == minBoundY) rv3y -= padding;
+    }
+
+
+    private void computeInnerVertices() {
+        // Some triangles can have way too sharp edges etc. meaning they can be "collapsed" or
+        // "degenerate" without spilling so its better to just draw them raw. We can check this
+        // by looking at the edge vector's length (we use len^2 to check since sqrt isnt needed here)
+        float edge12x = rv2x - rv1x, edge12y = rv2y - rv1y;
+        float edge23x = rv3x - rv2x, edge23y = rv3y - rv2y;
+        float edge31x = rv1x - rv3x, edge31y = rv1y - rv3y;
+
+        final float lenSq12 = edge12x * edge12x + edge12y * edge12y;
+        final float lenSq23 = edge23x * edge23x + edge23y * edge23y;
+        final float lenSq31 = edge31x * edge31x + edge31y * edge31y;
+
+        if (lenSq12 <= 0 || lenSq23 <= 0 || lenSq31 <= 0) {
+            this.iv1x = rv1x; this.iv1y = rv1y;
+            this.iv2x = rv2x; this.iv2y = rv2y;
+            this.iv3x = rv3x; this.iv3y = rv3y;
+            return;
+        }
+
+        // Since the triangle isnt collapsed/degenerate we can normalize the edge vectors
+        final float len12 = (float) Math.sqrt(lenSq12);
+        final float len23 = (float) Math.sqrt(lenSq23);
+        final float len31 = (float) Math.sqrt(lenSq31);
+
+        edge12x = edge12x / len12;
+        edge12y = edge12y / len12;
+        edge23x = edge23x / len23;
+        edge23y = edge23y / len23;
+        edge31x = edge31x / len31;
+        edge31y = edge31y / len31;
+
+        // Now we determine our normal vectors which are pointing towards the inside of the triangle.
+        // To determine them we calculate the cross prod. and determine if the vertices are laid
+        // out clockwise or counter-clockwise.
+        final float crossProduct = edge12x * edge23y - edge12y * edge23x;
+        final float sign = (crossProduct > 0) ? 1f : -1f;
+
+        final float n12x = -edge12y * sign, n12y = edge12x * sign;
+        final float n23x = -edge23y * sign, n23y = edge23x * sign;
+        final float n31x = -edge31y * sign, n31y = edge31x * sign;
+
+        // Now we take a point on each outer edge and shift it inward along our normal vectors by
+        // lineWidth amount. This gives us an absolute tracking point on each shifted line segment
+        // defining the inner perimeter. We will intersect these inner walls to determine our
+        // inner vertices (iv1, iv2, iv3)
+        final float path12x = rv1x + n12x * this.lineWidth,
+                    path12y = rv1y + n12y * this.lineWidth,
+                    path23x = rv2x + n23x * this.lineWidth,
+                    path23y = rv2y + n23y * this.lineWidth,
+                    path31x = rv3x + n31x * this.lineWidth,
+                    path31y = rv3y + n31y * this.lineWidth;
+
+        // Intersect path31 and path12  =>  calculate iv1
+        // If the denominator is close to 0 then the lines are nearly/exactly parallel
+        final float denom1 = edge31x * edge12y - edge31y * edge12x;
+        if (Math.abs(denom1) > 0.001f) {
+            float t1 = ((path12x - path31x) * edge12y - (path12y - path31y) * edge12x) / denom1;
+            this.iv1x = path31x + edge31x * t1;
+            this.iv1y = path31y + edge31y * t1;
+        }
+        else {
+            this.iv1x = rv1x;
+            this.iv1y = rv1y;
+        }
+
+        // Intersect path23 and path12  =>  calculate iv2
+        final float denom2 = edge12x * edge23y - edge12y * edge23x;
+        if (Math.abs(denom2) > 0.001f) {
+            float t2 = ((path23x - path12x) * edge23y - (path23y - path12y) * edge23x) / denom2;
+            this.iv2x = path12x + edge12x * t2;
+            this.iv2y = path12y + edge12y * t2;
+        }
+        else {
+            this.iv2x = rv2x;
+            this.iv2y = rv2y;
+        }
+
+        // Intersect path31 and path23  =>  calculate iv3
+        final float denom3 = edge23x * edge31y - edge23y * edge31x;
+        if (Math.abs(denom3) > 0.001f) {
+            float t3 = ((path31x - path23x) * edge31y - (path31y - path23y) * edge31x) / denom3;
+            this.iv3x = path23x + edge23x * t3;
+            this.iv3y = path23y + edge23y * t3;
+        }
+        else {
+            this.iv3x = rv3x;
+            this.iv3y = rv3y;
+        }
+    }
+
 
 
     /*///////////////////////////////////////////////////////////////////////////*/
@@ -150,6 +286,7 @@ public class Triangle extends Widget {
         return this;
     }
 
+
     @Override
     public Piece setY(float y) {
         float oldY = this.y;
@@ -161,6 +298,7 @@ public class Triangle extends Widget {
         return this;
     }
 
+
     @Override
     public Piece setWidth(float newWidth) {
         final float oldWidth = this.width;
@@ -168,10 +306,8 @@ public class Triangle extends Widget {
 
         super.setWidth(newWidth);
 
-        // To scale the triangle correctly we need to have the coordinate system's origin to
-        // be equal to the triangle's (x,y) so that we can just multiply the vertices by the
-        // scale and get the correct values without moving the triangle. After scaling, we will
-        // add (x,y) change to go back to the original coordinate system.
+        // To scale the triangle correctly without changing x and y, we scale the vertices
+        // relative to the triangle's bounding box origin (x and y) acting as our origin
         if (!TMath.equalsf(oldWidth, 0f)) {
             final float scale = newWidth / oldWidth;
             final float dx = this.x;
@@ -184,6 +320,7 @@ public class Triangle extends Widget {
         return this;
     }
 
+
     @Override
     public Piece setHeight(float newHeight) {
         final float oldHeight = this.height;
@@ -191,10 +328,8 @@ public class Triangle extends Widget {
 
         super.setHeight(newHeight);
 
-        // To scale the triangle correctly we need to have the coordinate system's origin to
-        // be equal to the triangle's (x,y) so that we can just multiply the vertices by the
-        // scale and get the correct values without moving the triangle. After scaling, we will
-        // add (x,y) change to go back to the original coordinate system.
+        // To scale the triangle correctly without changing x and y, we scale the vertices
+        // relative to the triangle's bounding box origin (x and y) acting as our origin
         if (!TMath.equalsf(oldHeight, 0f)) {
             final float scale = newHeight / oldHeight;
             final float dy = this.y;
@@ -206,6 +341,7 @@ public class Triangle extends Widget {
 
         return this;
     }
+
 
     public Triangle setVertices(float v1x, float v1y, float v2x, float v2y, float v3x, float v3y) {
         this.v1x = v1x;
@@ -240,16 +376,17 @@ public class Triangle extends Widget {
     }
 
     private void syncBoundingBox() {
-        final float minX = Math.min(Math.min(v1x, v2x), v3x);
-        final float minY = Math.min(Math.min(v1y, v2y), v3y);
-        final float maxX = Math.max(Math.max(v1x, v2x), v3x);
-        final float maxY = Math.max(Math.max(v1y, v2y), v3y);
+        final float minX = min(v1x, v2x, v3x);
+        final float minY = min(v1y, v2y, v3y);
+        final float maxX = max(v1x, v2x, v3x);
+        final float maxY = max(v1y, v2y, v3y);
 
         this.x = minX;
         this.y = minY;
         this.width = maxX - minX;
         this.height = maxY - minY;
     }
+
 
     /*////////////////  SETTERS WITH NO SIDE EFFECTS  ////////////////*/
 
@@ -328,4 +465,3 @@ public class Triangle extends Widget {
 
 }
 
-    
