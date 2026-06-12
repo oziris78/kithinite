@@ -422,6 +422,10 @@ public class Triangle extends Widget {
 
     /*////////////////  UTILITY SETTERS  ////////////////*/
 
+    public Triangle setColor(Color v1Color, Color v2Color, Color v3Color) {
+        return this.setV1Color(v1Color).setV2Color(v2Color).setV3Color(v3Color);
+    }
+
     public Triangle setV1(float v1x, float v1y, Color v1Color) {
         this.setV1Color(v1Color);
         return this.setV1(v1x, v1y);

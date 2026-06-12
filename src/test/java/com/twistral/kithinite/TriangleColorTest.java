@@ -17,11 +17,12 @@
 
 package com.twistral.kithinite;
 
-import com.badlogic.gdx.*;
-import com.badlogic.gdx.graphics.*;
+import com.badlogic.gdx.ApplicationAdapter;
+import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.graphics.Color;
 
 
-public class CurrentDev extends ApplicationAdapter {
+public class TriangleColorTest extends ApplicationAdapter {
 
     private static final Color COLOR0 = Color.PURPLE;
     private static final Color COLOR1 = Color.RED;
