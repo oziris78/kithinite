@@ -24,6 +24,8 @@ import space.earlygrey.shapedrawer.ShapeDrawer;
 
 import java.util.Objects;
 
+import static com.twistral.kithinite.Kithinite.prioritySelect;
+
 
 public class Rectangle extends Widget {
 
@@ -104,22 +106,10 @@ public class Rectangle extends Widget {
         final float rotationRadians = this.rotationDegrees * MathUtils.degreesToRadians;
 
         if (filled) {
-            // Priority based handling of the colors
-            Color c1 = this.topRightColor;
-            if(c1 == null) c1 = this.color;
-            if(c1 == null) c1 = DEF_COLOR;
-
-            Color c2 = this.topLeftColor;
-            if(c2 == null) c2 = this.color;
-            if(c2 == null) c2 = DEF_COLOR;
-
-            Color c3 = this.bottomLeftColor;
-            if(c3 == null) c3 = this.color;
-            if(c3 == null) c3 = DEF_COLOR;
-
-            Color c4 = this.bottomRightColor;
-            if(c4 == null) c4 = this.color;
-            if(c4 == null) c4 = DEF_COLOR;
+            Color c1 = prioritySelect(this.topRightColor, this.color, DEF_COLOR);
+            Color c2 = prioritySelect(this.topLeftColor, this.color, DEF_COLOR);
+            Color c3 = prioritySelect(this.bottomLeftColor, this.color, DEF_COLOR);
+            Color c4 = prioritySelect(this.bottomRightColor, this.color, DEF_COLOR);
 
             drawer.filledRectangle(absX, absY, width, height, rotationRadians, c1, c2, c3, c4);
         }
@@ -132,8 +122,7 @@ public class Rectangle extends Widget {
             final float adjH = height - lineWidth;
 
             // Finally render the rectangle
-            Color outlineColor = this.color;
-            if(outlineColor == null) outlineColor = DEF_COLOR;
+            Color outlineColor = prioritySelect(this.color, DEF_COLOR);
 
             final float oldColor = drawer.setColor(outlineColor);
             drawer.rectangle(adjX, adjY, adjW, adjH, lineWidth, rotationRadians, joinType);

@@ -31,6 +31,8 @@ import space.earlygrey.shapedrawer.*;
 import java.util.Objects;
 import java.util.Optional;
 
+import static com.twistral.kithinite.Kithinite.prioritySelect;
+
 
 public class Layer {
 
@@ -61,7 +63,7 @@ public class Layer {
 
         this.width = width;
         this.height = height;
-        this.bgColor = (bgColor != null) ? bgColor : DEF_BG_COLOR;
+        this.bgColor = prioritySelect(bgColor, DEF_BG_COLOR);
 
         this.batch = new SpriteBatch();
         this.viewport = new ScreenViewport();

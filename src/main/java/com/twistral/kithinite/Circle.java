@@ -21,6 +21,8 @@ import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.math.MathUtils;
 import space.earlygrey.shapedrawer.ShapeDrawer;
 
+import static com.twistral.kithinite.Kithinite.prioritySelect;
+
 
 public class Circle extends Widget {
 
@@ -91,13 +93,8 @@ public class Circle extends Widget {
         final float absCentreY = absY + radius;
 
         if (filled) {
-            Color inColor = this.innerColor;
-            if(inColor == null) inColor = this.color;
-            if(inColor == null) inColor = DEF_COLOR;
-
-            Color outColor = this.outerColor;
-            if(outColor == null) outColor = this.color;
-            if(outColor == null) outColor = DEF_COLOR;
+            Color inColor = prioritySelect(this.innerColor, this.color, DEF_COLOR);
+            Color outColor = prioritySelect(this.outerColor, this.color, DEF_COLOR);
 
             drawer.filledEllipse(absCentreX, absCentreY, radius, radius, 0f, inColor, outColor);
         }
@@ -106,9 +103,7 @@ public class Circle extends Widget {
             final float halfLine = lineWidth / 2f;
             final float adjRadius = radius - halfLine;
 
-            Color outlineColor = this.color;
-            if(outlineColor == null) outlineColor = DEF_COLOR;
-
+            Color outlineColor = prioritySelect(this.color, DEF_COLOR);
             final float oldColor = drawer.setColor(outlineColor);
             drawer.ellipse(absCentreX, absCentreY, adjRadius, adjRadius, 0f, lineWidth);
             drawer.setColor(oldColor);

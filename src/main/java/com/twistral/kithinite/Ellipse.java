@@ -22,6 +22,8 @@ import com.badlogic.gdx.math.MathUtils;
 import space.earlygrey.shapedrawer.JoinType;
 import space.earlygrey.shapedrawer.ShapeDrawer;
 
+import static com.twistral.kithinite.Kithinite.prioritySelect;
+
 
 public class Ellipse extends Widget {
 
@@ -102,13 +104,8 @@ public class Ellipse extends Widget {
         final float rotationRadians = this.rotationDegrees * MathUtils.degreesToRadians;
 
         if (filled) {
-            Color inColor = this.innerColor;
-            if(inColor == null) inColor = this.color;
-            if(inColor == null) inColor = DEF_COLOR;
-
-            Color outColor = this.outerColor;
-            if(outColor == null) outColor = this.color;
-            if(outColor == null) outColor = DEF_COLOR;
+            Color inColor = prioritySelect(this.innerColor, this.color, DEF_COLOR);
+            Color outColor = prioritySelect(this.outerColor, this.color, DEF_COLOR);
 
             drawer.filledEllipse(
                 absCentreX, absCentreY, radiusX, radiusY, rotationRadians, inColor, outColor
@@ -120,9 +117,7 @@ public class Ellipse extends Widget {
             final float adjRadiusX = radiusX - halfLine;
             final float adjRadiusY = radiusY - halfLine;
 
-            Color outlineColor = this.color;
-            if(outlineColor == null) outlineColor = DEF_COLOR;
-
+            Color outlineColor = prioritySelect(this.color, DEF_COLOR);
             final float oldColor = drawer.setColor(outlineColor);
             drawer.ellipse(absCentreX, absCentreY, adjRadiusX, adjRadiusY, rotationRadians, lineWidth);
             drawer.setColor(oldColor);

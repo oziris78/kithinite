@@ -18,10 +18,11 @@
 package com.twistral.kithinite;
 
 
-import com.badlogic.gdx.graphics.Color;
-
 
 public final class Kithinite {
+
+    // No constructor
+    private Kithinite() {}
 
     public static <T> T prioritySelect(T t1, T t2) {
         if (t1 != null) return t1;
