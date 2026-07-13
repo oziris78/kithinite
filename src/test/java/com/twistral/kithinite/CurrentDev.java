@@ -17,85 +17,81 @@
 
 package com.twistral.kithinite;
 
-import com.badlogic.gdx.*;
-import com.badlogic.gdx.graphics.*;
+import com.badlogic.gdx.ApplicationAdapter;
+import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.graphics.Color;
 
 
 public class CurrentDev extends ApplicationAdapter {
 
-    private static final Color COLOR0 = Color.PURPLE;
-    private static final Color COLOR1 = Color.RED;
-    private static final Color COLOR2 = Color.CYAN;
-    private static final Color COLOR3 = Color.GOLD;
-    private static final int MAX_PER_ROW = 3;
+    private static final float RAD_A = 60, RAD_B = 40, PADDING = 25;
+    private static final int MAX_PER_ROW = 4;
 
     private Layer layer;
-
-    private int row = 0, col = 0;
 
 
     @Override
     public void create() {
-        Gdx.graphics.setTitle("Triangle Color Test");
-        Gdx.graphics.setWindowedMode(1250, 500);
+        Gdx.graphics.setTitle("Ellipses");
+        Gdx.graphics.setWindowedMode(900, 500);
 
         layer = new Layer();
 
+        final Color color1 = Color.GOLD;
+        final Color color2 = Color.ORANGE;
+        final Color color3 = Color.PURPLE;
+
         layer.getRoot().add(
-            // filled triangle #1 with 6 diff colors
-            tri(true, 50, 50, 150, 50, 100, 150),
-            tri(true, 1f, 1f, 2f, 1f, 1.5f, 2f),
-            tri(true, 0f, 0f, 1f, 0f, 0.5f, 1f),
-            tri(true, 0f, 0f, 1f, 0f, 0.5f, 1f),
-            tri(true, 0f, 0f, 1f, 0f, 0.5f, 1f),
-            tri(true, 0f, 0f, 1f, 0f, 0.5f, 1f),
+                // filled + color settings test
+                elpse(true).setColor(color1),
+                elpse(true).setColor(color2, color3),
+                elpse(false).setColor(color1),
+                elpse(false).setColor(color2, color3),
 
-            // outlined triangle #1 with 6 diff colors
-            tri(false, 0f, 0f, 1f, 0f, 0.5f, 1f),
-            tri(false, 0f, 0f, 1f, 0f, 0.5f, 1f),
-            tri(false, 0f, 0f, 1f, 0f, 0.5f, 1f),
-            tri(false, 0f, 0f, 1f, 0f, 0.5f, 1f),
-            tri(false, 0f, 0f, 1f, 0f, 0.5f, 1f),
-            tri(false, 0f, 0f, 1f, 0f, 0.5f, 1f),
+                // lineWidth test with all the above
+                elpse(true).setColor(color1).setLineWidth(4f),
+                elpse(true).setColor(color2, color3).setLineWidth(4f),
+                elpse(false).setColor(color1).setLineWidth(4f),
+                elpse(false).setColor(color2, color3).setLineWidth(4f),
 
-            // filled triangle #2 with 6 diff colors
-            tri(true, 0f, 0f, 6f, 20f, 20f, 12f),
-            tri(true, 0f, 0f, 6f, 20f, 20f, 12f),
-            tri(true, 0f, 0f, 6f, 20f, 20f, 12f),
-            tri(true, 0f, 0f, 6f, 20f, 20f, 12f),
-            tri(true, 0f, 0f, 6f, 20f, 20f, 12f),
-            tri(true, 0f, 0f, 6f, 20f, 20f, 12f),
+                elpse(true).setColor(color1).setLineWidth(8f),
+                elpse(true).setColor(color2, color3).setLineWidth(8f),
+                elpse(false).setColor(color1).setLineWidth(8f),
+                elpse(false).setColor(color2, color3).setLineWidth(8f),
 
-            // outlined triangle #2 with 6 diff colors
-            tri(false, 0f, 0f, 6f, 20f, 20f, 12f),
-            tri(false, 0f, 0f, 6f, 20f, 20f, 12f),
-            tri(false, 0f, 0f, 6f, 20f, 20f, 12f),
-            tri(false, 0f, 0f, 6f, 20f, 20f, 12f),
-            tri(false, 0f, 0f, 6f, 20f, 20f, 12f),
-            tri(false, 0f, 0f, 6f, 20f, 20f, 12f)
+                elpse(true).setColor(color1).setLineWidth(20f),
+                elpse(true).setColor(color2, color3).setLineWidth(20f),
+                elpse(false).setColor(color1).setLineWidth(20f),
+                elpse(false).setColor(color2, color3).setLineWidth(20f),
+
+                // rotation test (should spill)
+                elpse(true).setColor(color1).setRotationDegrees(30f),
+                elpse(true).setColor(color2, color3).setRotationDegrees(30f),
+                elpse(false).setColor(color1).setRotationDegrees(30f),
+                elpse(false).setColor(color2, color3).setRotationDegrees(30f),
+
+                // vertical ellipse test
+                elpse(true).setColor(color1).setRadiusX(RAD_B).setRadiusY(RAD_A).addY(PADDING),
+                elpse(false).setColor(color1).setRadiusX(RAD_B).setRadiusY(RAD_A).addY(5f*PADDING)
         );
     }
 
-    private Triangle tri(boolean filled, float v1x, float v1y, float v2x, float v2y, float v3x, float v3y) {
-        Triangle triangle = new Triangle(filled, v1x, v1y, v2x, v2y, v3x, v3y, null);
+    private static int row = 0, col = 0;
 
-        int colorIndex = (row * MAX_PER_ROW + col) % 6;
-        if (colorIndex == 0) triangle.setColor(COLOR0);
-        if (colorIndex == 1) triangle.setColor(COLOR1);
-        if (colorIndex == 2) triangle.setColor(COLOR2);
-        if (colorIndex == 3) triangle.setColor(COLOR0, COLOR2, COLOR3);
-        if (colorIndex == 4) triangle.setColor(COLOR1, COLOR3, COLOR0);
-        if (colorIndex == 5) triangle.setColor(COLOR2, COLOR0, COLOR1);
+    private Ellipse elpse(boolean filled) {
+        Ellipse ellipse = new Ellipse(filled, RAD_A, RAD_B, null);
 
-        triangle.setSize(100, 100);
-        triangle.setXY(50 + 150f * row, 50 + 150f * col);
+        ellipse.setXY(
+                PADDING + (PADDING + 2*RAD_A) * row,
+                PADDING + (PADDING + 2*RAD_B) * col
+        );
 
-        if (++col == MAX_PER_ROW) {
-            row++;
+        if (++col >= MAX_PER_ROW) {
             col = 0;
+            row++;
         }
 
-        return triangle;
+        return ellipse;
     }
 
 
