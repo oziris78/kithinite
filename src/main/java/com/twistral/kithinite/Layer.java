@@ -56,7 +56,7 @@ public class Layer {
     /*//////////////////////////////////////////////////////////////////////*/
 
 
-    public Layer(Nest root, float width, float height, Color bgColor) {
+    public Layer(Viewport viewport, Nest root, float width, float height, Color bgColor) {
         Objects.requireNonNull(root, "root");
         this.root = root;
         this.root.setSize(width, height);
@@ -66,7 +66,7 @@ public class Layer {
         this.bgColor = prioritySelect(bgColor, DEF_BG_COLOR);
 
         this.batch = new SpriteBatch();
-        this.viewport = new ScreenViewport();
+        this.viewport = viewport;
 
         Pixmap pixmap = new Pixmap(1, 1, Pixmap.Format.RGBA8888);
         pixmap.setColor(Color.WHITE);
@@ -79,9 +79,12 @@ public class Layer {
         this.resize((int) width, (int) height);
     }
 
+    public Layer(Viewport viewport) {
+        this(viewport, new NullNest(), Gdx.graphics.getWidth(), Gdx.graphics.getHeight(), null);
+    }
 
     public Layer() {
-        this(new NullNest(), Gdx.graphics.getWidth(), Gdx.graphics.getHeight(), DEF_BG_COLOR);
+        this(new ScreenViewport(), new NullNest(), Gdx.graphics.getWidth(), Gdx.graphics.getHeight(), null);
     }
 
 
