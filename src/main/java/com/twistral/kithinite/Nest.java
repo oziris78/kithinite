@@ -30,10 +30,18 @@ public abstract class Nest extends Piece {
         this.pieces = new ArrayList<>();
     }
 
+    /*///////////  ADD  ///////////*/
+
     public void add(Piece piece) {
         this.pieces.add(piece);
         piece.nester = this;
     }
+
+    public void add(Piece... pieces) {
+        for (Piece p : pieces) this.add(p);
+    }
+
+    /*///////////  REMOVE  ///////////*/
 
     public void remove(Piece piece) {
         if (piece.nester == this && this.pieces.contains(piece)) {
@@ -42,16 +50,14 @@ public abstract class Nest extends Piece {
         }
     }
 
-    public void add(Piece... pieces) {
-        for (Piece p : pieces) {
-            this.add(p);
-        }
+    public void remove(Piece... pieces) {
+        for (Piece p : pieces) this.remove(p);
     }
 
-    public void remove(Piece... pieces) {
-        for (Piece p : pieces) {
-            this.remove(p);
-        }
+    public void clear() {
+        Piece[] pieceArray = new Piece[this.pieces.size()];
+        this.pieces.toArray(pieceArray);
+        for (Piece p : pieceArray) this.remove(p);
     }
 
 }
