@@ -30,7 +30,7 @@ import com.twistral.tempest.TempestUtils;
 import com.twistral.tephrium.prng.SplitMix64Random;
 
 
-public class InteractiveTriangleTest extends ApplicationAdapter {
+public class InteractiveTriangles extends ApplicationAdapter {
 
     private static final int WIN_SIZE = 600, WIN_PAD = 20;
     private SplitMix64Random rng = new SplitMix64Random();
