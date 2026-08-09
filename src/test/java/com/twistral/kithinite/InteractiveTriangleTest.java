@@ -23,6 +23,9 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Pixmap;
+import com.twistral.kithinite.runtime.Layer;
+import com.twistral.kithinite.shapes.Rectangle;
+import com.twistral.kithinite.shapes.Triangle;
 import com.twistral.tempest.TempestUtils;
 import com.twistral.tephrium.prng.SplitMix64Random;
 

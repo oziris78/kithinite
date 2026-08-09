@@ -25,25 +25,14 @@ public final class Kithinite {
     private Kithinite() {}
 
     public static <T> T prioritySelect(T t1, T t2) {
-        if (t1 != null) return t1;
-        return t2;
+        return t1 != null ? t1 : t2;
     }
 
     public static <T> T prioritySelect(T t1, T t2, T t3) {
-        if (t1 != null) return t1;
-        if (t2 != null) return t2;
-        return t3;
+        return t1 != null ? t1 : (t2 != null ? t2 : t3);
     }
-
-
-    public static float min(float a, float b) { return Math.min(a, b); }
-    public static float max(float a, float b) { return Math.max(a, b); }
-    public static int min(int a, int b) { return Math.min(a, b); }
-    public static int max(int a, int b) { return Math.max(a, b); }
 
     public static float min(float a, float b, float c) { return Math.min(Math.min(a, b), c); }
     public static float max(float a, float b, float c) { return Math.max(Math.max(a, b), c); }
-    public static int min(int a, int b, int c) { return Math.min(Math.min(a, b), c); }
-    public static int max(int a, int b, int c) { return Math.max(Math.max(a, b), c); }
 
 }

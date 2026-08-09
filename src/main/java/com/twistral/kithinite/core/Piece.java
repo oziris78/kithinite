@@ -14,12 +14,11 @@
 // limitations under the License.
 
 
-package com.twistral.kithinite;
+package com.twistral.kithinite.core;
 
 
+import com.twistral.kithinite.nests.Nest;
 import space.earlygrey.shapedrawer.ShapeDrawer;
-
-import java.util.Objects;
 
 public abstract class Piece {
 

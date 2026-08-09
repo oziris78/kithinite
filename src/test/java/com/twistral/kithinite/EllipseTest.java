@@ -20,6 +20,8 @@ package com.twistral.kithinite;
 import com.badlogic.gdx.ApplicationAdapter;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
+import com.twistral.kithinite.runtime.Layer;
+import com.twistral.kithinite.shapes.Ellipse;
 
 
 public class EllipseTest extends ApplicationAdapter {

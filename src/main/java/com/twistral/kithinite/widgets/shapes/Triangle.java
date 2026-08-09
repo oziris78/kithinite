@@ -14,11 +14,13 @@
 // limitations under the License.
 
 
-package com.twistral.kithinite;
+package com.twistral.kithinite.widgets.shapes;
 
 
 
 import com.badlogic.gdx.graphics.Color;
+import com.twistral.kithinite.core.Piece;
+import com.twistral.kithinite.widgets.Widget;
 import com.twistral.tephrium.core.functions.TMath;
 import space.earlygrey.shapedrawer.ShapeDrawer;
 

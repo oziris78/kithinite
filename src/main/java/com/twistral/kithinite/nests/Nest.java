@@ -14,12 +14,13 @@
 // limitations under the License.
 
 
-package com.twistral.kithinite;
+package com.twistral.kithinite.nests;
 
+
+import com.twistral.kithinite.core.Piece;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.function.Consumer;
 
 public abstract class Nest extends Piece {
 

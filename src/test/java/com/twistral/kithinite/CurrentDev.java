@@ -20,7 +20,9 @@ package com.twistral.kithinite;
 
 import com.badlogic.gdx.*;
 import com.badlogic.gdx.graphics.*;
-import com.badlogic.gdx.math.MathUtils;
+import com.twistral.kithinite.runtime.Layer;
+import com.twistral.kithinite.shapes.Rectangle;
+import com.twistral.kithinite.shapes.Triangle;
 import com.twistral.tempest.*;
 import com.twistral.tephrium.prng.*;
 

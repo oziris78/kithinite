@@ -14,15 +14,14 @@
 // limitations under the License.
 
 
-package com.twistral.kithinite;
+package com.twistral.kithinite.widgets.shapes;
 
 
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.math.MathUtils;
+import com.twistral.kithinite.widgets.Widget;
 import space.earlygrey.shapedrawer.JoinType;
 import space.earlygrey.shapedrawer.ShapeDrawer;
-
-import java.util.Objects;
 
 import static com.twistral.kithinite.Kithinite.prioritySelect;
 
