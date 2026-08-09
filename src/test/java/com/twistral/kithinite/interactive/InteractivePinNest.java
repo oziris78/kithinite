@@ -15,7 +15,7 @@
 
 
 
-package com.twistral.kithinite.nests;
+package com.twistral.kithinite.interactive;
 
 import com.badlogic.gdx.ApplicationAdapter;
 import com.badlogic.gdx.Gdx;
@@ -30,7 +30,7 @@ import com.twistral.tempest.TempestUtils;
 import java.util.Arrays;
 
 
-public class PinNestTest extends ApplicationAdapter {
+public class InteractivePinNest extends ApplicationAdapter {
 
     private Layer layer;
     private PinNest pinNest;
