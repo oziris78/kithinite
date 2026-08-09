@@ -1,5 +1,5 @@
 
-// Copyright 2025-2026 Oğuzhan Topaloğlu
+// Copyright 2026 Oğuzhan Topaloğlu
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -14,20 +14,18 @@
 // limitations under the License.
 
 
+
 package com.twistral.kithinite;
 
 
-import com.badlogic.gdx.backends.lwjgl.LwjglApplication;
-import com.badlogic.gdx.backends.lwjgl.LwjglApplicationConfiguration;
-import com.twistral.kithinite.shapes.RectangleTest;
+public class KithiniteException extends RuntimeException {
 
+    KithiniteException(String format, Object... args) {
+        super(String.format(format, args));
+    }
 
-public class Main {
-
-    public static void main(String[] args) {
-        LwjglApplicationConfiguration config = new LwjglApplicationConfiguration();
-        config.title = "Kithinite Test";
-        new LwjglApplication(new RectangleTest(), config);
+    KithiniteException(String text) {
+        super(text);
     }
 
 }

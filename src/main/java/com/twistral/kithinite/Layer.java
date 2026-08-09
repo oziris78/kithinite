@@ -15,7 +15,7 @@
 
 
 
-package com.twistral.kithinite.runtime;
+package com.twistral.kithinite;
 
 
 import com.badlogic.gdx.Gdx;
@@ -26,8 +26,6 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
-import com.twistral.kithinite.nests.Nest;
-import com.twistral.kithinite.nests.NullNest;
 import space.earlygrey.shapedrawer.*;
 
 import java.util.Objects;

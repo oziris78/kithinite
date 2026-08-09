@@ -14,10 +14,8 @@
 // limitations under the License.
 
 
-package com.twistral.kithinite.nests;
+package com.twistral.kithinite;
 
-
-import com.twistral.kithinite.core.Piece;
 
 import java.util.ArrayList;
 import java.util.List;

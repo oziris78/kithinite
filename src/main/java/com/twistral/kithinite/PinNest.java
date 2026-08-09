@@ -14,10 +14,9 @@
 // limitations under the License.
 
 
-package com.twistral.kithinite.nests;
+package com.twistral.kithinite;
 
 
-import com.twistral.kithinite.core.Piece;
 import space.earlygrey.shapedrawer.ShapeDrawer;
 
 import java.util.HashMap;

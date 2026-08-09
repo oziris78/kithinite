@@ -15,7 +15,7 @@
 
 
 
-package com.twistral.kithinite;
+package com.twistral.kithinite.interactive;
 
 
 import com.badlogic.gdx.ApplicationAdapter;
@@ -23,9 +23,9 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Pixmap;
-import com.twistral.kithinite.runtime.Layer;
-import com.twistral.kithinite.shapes.Rectangle;
-import com.twistral.kithinite.shapes.Triangle;
+import com.twistral.kithinite.Layer;
+import com.twistral.kithinite.Rectangle;
+import com.twistral.kithinite.Triangle;
 import com.twistral.tempest.TempestUtils;
 import com.twistral.tephrium.prng.SplitMix64Random;
 
@@ -171,10 +171,10 @@ public class InteractiveTriangleTest extends ApplicationAdapter {
     private Color verifyRenderedPixels() {
         final int pad = 3;
 
-        final int px = (int) rectangle.x - pad;
-        final int py = (int) rectangle.y - pad;
-        final int pw = (int) rectangle.width + 2*pad;
-        final int ph = (int) rectangle.height + 2*pad;
+        final int px = (int) rectangle.getX() - pad;
+        final int py = (int) rectangle.getY() - pad;
+        final int pw = (int) rectangle.getWidth() + 2*pad;
+        final int ph = (int) rectangle.getHeight() + 2*pad;
 
         final Pixmap pixmap = Pixmap.createFromFrameBuffer(px, py, pw, ph);
 
@@ -185,8 +185,8 @@ public class InteractiveTriangleTest extends ApplicationAdapter {
         final int minY = pad;
 
         // Coords for the top right pixel of the rectangle
-        final int maxX = pad + (int) rectangle.width - 1;
-        final int maxY = pad + (int) rectangle.height - 1;
+        final int maxX = pad + (int) rectangle.getWidth() - 1;
+        final int maxY = pad + (int) rectangle.getHeight() - 1;
 
         for (int x = 0; x < pw; x++) {
             for (int y = 0; y < ph; y++) {

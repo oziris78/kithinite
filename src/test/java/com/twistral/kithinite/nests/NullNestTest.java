@@ -15,13 +15,13 @@
 
 
 
-package com.twistral.kithinite;
+package com.twistral.kithinite.nests;
 
 import com.badlogic.gdx.ApplicationAdapter;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
-import com.twistral.kithinite.runtime.Layer;
-import com.twistral.kithinite.shapes.Rectangle;
+import com.twistral.kithinite.Layer;
+import com.twistral.kithinite.Rectangle;
 
 
 public class NullNestTest extends ApplicationAdapter {

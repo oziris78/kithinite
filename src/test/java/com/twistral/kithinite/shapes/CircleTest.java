@@ -15,13 +15,13 @@
 
 
 
-package com.twistral.kithinite;
+package com.twistral.kithinite.shapes;
 
 import com.badlogic.gdx.ApplicationAdapter;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
-import com.twistral.kithinite.runtime.Layer;
-import com.twistral.kithinite.shapes.Circle;
+import com.twistral.kithinite.Circle;
+import com.twistral.kithinite.Layer;
 
 
 public class CircleTest extends ApplicationAdapter {
