@@ -129,6 +129,33 @@ public class InteractiveTriangles extends ApplicationAdapter {
 
         triangle.setVertices(0f, 0f, 1f, rng.nextFloat(), rng.nextFloat(), 1f);
         triangle.setXY(WIN_PAD, WIN_PAD).setSize(WIN_SIZE - 2*WIN_PAD, WIN_SIZE - 2*WIN_PAD);
+
+        // Randomly swap V1 and V2  -> v2 v1 v3
+        if (rng.nextBoolean()) {
+            triangle.setVertices(
+                triangle.getV2x(), triangle.getV2y(), triangle.getV2Color(),
+                triangle.getV1x(), triangle.getV1y(), triangle.getV1Color(),
+                triangle.getV3x(), triangle.getV3y(), triangle.getV3Color()
+            );
+        }
+
+        // Randomly swap V1 and V3  -> v3 v2 v1
+        if (rng.nextBoolean()) {
+            triangle.setVertices(
+                triangle.getV3x(), triangle.getV3y(), triangle.getV3Color(),
+                triangle.getV2x(), triangle.getV2y(), triangle.getV2Color(),
+                triangle.getV1x(), triangle.getV1y(), triangle.getV1Color()
+            );
+        }
+
+        // Randomly swap V3 and V2  -> v1 v3 v2
+        if (rng.nextBoolean()) {
+            triangle.setVertices(
+                triangle.getV1x(), triangle.getV1y(), triangle.getV1Color(),
+                triangle.getV3x(), triangle.getV3y(), triangle.getV3Color(),
+                triangle.getV2x(), triangle.getV2y(), triangle.getV2Color()
+            );
+        }
     }
 
     private void randomizeTriColors() {

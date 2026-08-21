@@ -19,7 +19,7 @@ package com.twistral.kithinite;
 
 import com.badlogic.gdx.backends.lwjgl.LwjglApplication;
 import com.badlogic.gdx.backends.lwjgl.LwjglApplicationConfiguration;
-import com.twistral.kithinite.shapes.RectangleTest;
+import com.twistral.kithinite.CurrentDev;
 
 
 public class Main {
