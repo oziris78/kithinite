@@ -24,6 +24,11 @@ import space.earlygrey.shapedrawer.*;
 import static com.twistral.kithinite.Kithinite.*;
 
 
+/**
+ * Represents a 2D triangle widget defined by three vertices relative to its bounding box. <br>
+ * Supports both filled and and outlined (not filled) rendering modes. <br>
+ * <b>NOTE: Custom lineWidth values are NOT supported due to pixel imperfections.</b>
+ */
 public class Triangle extends Widget {
 
     // Static variables
@@ -91,15 +96,15 @@ public class Triangle extends Widget {
             // Fill the core polygon
             drawer.filledTriangle(x1, y1, x2, y2, x3, y3, c1Bits, c2Bits, c3Bits);
 
-            // Redraw the edges to make sure "imperfect" rendered triangles are fixed
+            // Redraw the edges to get rid of pixel imperfections
             drawer.line(x1, y1, x2, y2, 1f, false, c1Bits, c2Bits);
             drawer.line(x2, y2, x3, y3, 1f, false, c2Bits, c3Bits);
             drawer.line(x3, y3, x1, y1, 1f, false, c3Bits, c1Bits);
         }
         else {
-            Color c = prioritySelect(this.color, DEF_COLOR);
+            final float cBits = prioritySelect(this.color, DEF_COLOR).toFloatBits();
 
-            drawer.triangle(x1, y1, x2, y2, x3, y3, 1f, c.toFloatBits());
+            drawer.triangle(x1, y1, x2, y2, x3, y3, 1f, cBits);
         }
     }
 
