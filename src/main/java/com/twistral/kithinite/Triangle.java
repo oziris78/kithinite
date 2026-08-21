@@ -18,10 +18,9 @@ package com.twistral.kithinite;
 
 
 
-import com.badlogic.gdx.graphics.Color;
-import com.twistral.tephrium.core.functions.TMath;
-import space.earlygrey.shapedrawer.ShapeDrawer;
-
+import com.badlogic.gdx.graphics.*;
+import com.twistral.tephrium.core.functions.*;
+import space.earlygrey.shapedrawer.*;
 import static com.twistral.kithinite.Kithinite.*;
 
 
@@ -85,13 +84,17 @@ public class Triangle extends Widget {
         final float y3 = this.nester.absY + v3y;
 
         if (filled) {
-            Color c1 = prioritySelect(this.v1Color, this.color, DEF_COLOR);
-            Color c2 = prioritySelect(this.v2Color, this.color, DEF_COLOR);
-            Color c3 = prioritySelect(this.v3Color, this.color, DEF_COLOR);
+            final float c1Bits = prioritySelect(this.v1Color, this.color, DEF_COLOR).toFloatBits();
+            final float c2Bits = prioritySelect(this.v2Color, this.color, DEF_COLOR).toFloatBits();
+            final float c3Bits = prioritySelect(this.v3Color, this.color, DEF_COLOR).toFloatBits();
 
-            drawer.filledTriangle(
-                x1, y1, x2, y2, x3, y3, c1.toFloatBits(), c2.toFloatBits(), c3.toFloatBits()
-            );
+            // Fill the core polygon
+            drawer.filledTriangle(x1, y1, x2, y2, x3, y3, c1Bits, c2Bits, c3Bits);
+
+            // Redraw the edges to make sure "imperfect" rendered triangles are fixed
+            drawer.line(x1, y1, x2, y2, 1f, false, c1Bits, c2Bits);
+            drawer.line(x2, y2, x3, y3, 1f, false, c2Bits, c3Bits);
+            drawer.line(x3, y3, x1, y1, 1f, false, c3Bits, c1Bits);
         }
         else {
             Color c = prioritySelect(this.color, DEF_COLOR);

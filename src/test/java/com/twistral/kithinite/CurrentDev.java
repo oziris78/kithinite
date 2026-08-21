@@ -43,6 +43,8 @@ public class CurrentDev extends ApplicationAdapter {
     private Rectangle rectangle;
     private Triangle triangle;
 
+    private static int logCount = 1;
+
 
     @Override
     public void create() {
@@ -65,31 +67,36 @@ public class CurrentDev extends ApplicationAdapter {
     }
 
 
+
     @Override
     public void render() {
         TempestUtils.clear();
 
-        if (Gdx.input.isKeyJustPressed(Input.Keys.NUM_1)) randomizeTriVertices();
-        if (Gdx.input.isKeyJustPressed(Input.Keys.NUM_2)) makeTriFilled1Color();
-        if (Gdx.input.isKeyJustPressed(Input.Keys.NUM_3)) makeTriFilled3Color();
-        if (Gdx.input.isKeyJustPressed(Input.Keys.NUM_4)) makeTriOutlined();
+        // Color modes
+        if (Gdx.input.isKeyJustPressed(Input.Keys.NUM_1)) makeTriFilled1Color();
+        if (Gdx.input.isKeyJustPressed(Input.Keys.NUM_2)) makeTriFilled3Color();
+        if (Gdx.input.isKeyJustPressed(Input.Keys.NUM_3)) makeTriOutlined();
 
-        if (Gdx.input.isKeyJustPressed(Input.Keys.R)) {
+        // Randomize only the vertices
+        if (Gdx.input.isKeyPressed(Input.Keys.Q)) randomizeTriVertices();
+
+        // Randomize EVERYTHING
+        if (Gdx.input.isKeyPressed(Input.Keys.R)) {
             randomizeTriVertices();
             randomizeTriColors();
         }
 
-        if (Gdx.input.isKeyJustPressed(Input.Keys.D)) {
-            logInfoToConsole();
-        }
+        if (Gdx.input.isKeyJustPressed(Input.Keys.D)) logInfoToConsole();
 
         layer.update(Gdx.graphics.getDeltaTime());
         layer.render();
 
-        if (Gdx.input.isKeyJustPressed(Input.Keys.V)) {
-            if (rectangle.getColor() == RECT_COLOR) {
-                rectangle.setColor(verifyRenderedPixels());
-            }
+        // Auto verify everything
+        if (rectangle.getColor() == RECT_COLOR) {
+            Color c = verifyRenderedPixels();
+            if (c == IMPERFECT_COLOR) System.out.println(logCount++ + "- IMPERFECT");
+            if (c == BLEED_COLOR) System.out.println(logCount++ + "- BLEED");
+            rectangle.setColor(c);
         }
     }
 
