@@ -35,7 +35,7 @@ public class RectangleTest extends ApplicationAdapter {
 
     @Override
     public void create() {
-        Gdx.graphics.setTitle("Rectangles!!!!");
+        Gdx.graphics.setTitle("Rectangles");
         Gdx.graphics.setWindowedMode(750, 450);
 
         layer = new Layer();

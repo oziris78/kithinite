@@ -127,8 +127,23 @@ public class InteractiveTriangles extends ApplicationAdapter {
     private void randomizeTriVertices() {
         rectangle.setColor(RECT_COLOR);
 
+        final float ORIG_TRI_W = WIN_SIZE - 2 * WIN_PAD;
+        final float ORIG_TRI_H = WIN_SIZE - 2 * WIN_PAD;
+
         triangle.setVertices(0f, 0f, 1f, rng.nextFloat(), rng.nextFloat(), 1f);
-        triangle.setXY(WIN_PAD, WIN_PAD).setSize(WIN_SIZE - 2*WIN_PAD, WIN_SIZE - 2*WIN_PAD);
+        triangle.setXY(WIN_PAD, WIN_PAD).setSize(ORIG_TRI_W, ORIG_TRI_H);
+
+        // Randomly setSize to 0,0 and unset it back
+        if (rng.nextBoolean()) {
+            triangle.setSize(0f, 0f);
+            triangle.setSize(ORIG_TRI_W, ORIG_TRI_H);
+        }
+
+        // Make sure resizing never fucks up the original size etc.
+        for (int unused = 0; unused < 15; unused++) {
+            triangle.setSize(rng.nextInt(0, 2000), rng.nextInt(0, 2000));
+            triangle.setSize(ORIG_TRI_W, ORIG_TRI_H);
+        }
 
         // Randomly swap V1 and V2  -> v2 v1 v3
         if (rng.nextBoolean()) {
@@ -172,9 +187,12 @@ public class InteractiveTriangles extends ApplicationAdapter {
 
         triangle.setFilled(true);
         triangle.setColor(
-            new Color(rng.nextFloat(0.7f, 1f), rng.nextFloat(0.7f, 1f), rng.nextFloat(0.7f, 1f), 1f),
-            new Color(rng.nextFloat(0f, 0.4f), rng.nextFloat(0f, 0.4f), rng.nextFloat(0f, 0.4f), 1f),
-            new Color(rng.nextFloat(0.4f, 0.7f), rng.nextFloat(0.4f, 0.7f), rng.nextFloat(0.4f, 0.7f), 1f)
+            new Color(rng.nextFloat(0.7f, 1f), rng.nextFloat(0.7f, 1f),
+                      rng.nextFloat(0.7f, 1f), rng.nextFloat(0.5f, 1f)),
+            new Color(rng.nextFloat(0f, 0.4f), rng.nextFloat(0f, 0.4f),
+                      rng.nextFloat(0f, 0.4f), rng.nextFloat(0.5f, 1f)),
+            new Color(rng.nextFloat(0.4f, 0.7f), rng.nextFloat(0.4f, 0.7f),
+                      rng.nextFloat(0.4f, 0.7f), rng.nextFloat(0.5f, 1f))
         );
     }
 
@@ -183,7 +201,8 @@ public class InteractiveTriangles extends ApplicationAdapter {
 
         triangle.setFilled(false);
         triangle.setColor(
-            new Color(rng.nextFloat(), rng.nextFloat(0.6f, 1f), rng.nextFloat(0.6f, 1f), 1f)
+            new Color(rng.nextFloat(), rng.nextFloat(0.6f, 1f),
+                      rng.nextFloat(0.6f, 1f), rng.nextFloat(0.5f, 1f))
         );
     }
 
@@ -192,7 +211,8 @@ public class InteractiveTriangles extends ApplicationAdapter {
 
         triangle.setFilled(true);
         triangle.setColor(
-            new Color(1f, rng.nextFloat(0.7f, 1f), rng.nextFloat(0.7f, 1f), 1f)
+            new Color(rng.nextFloat(), rng.nextFloat(0.7f, 1f),
+                      rng.nextFloat(0.7f, 1f), rng.nextFloat(0.5f, 1f))
         );
     }
 

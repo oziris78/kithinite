@@ -20,6 +20,7 @@ package com.twistral.kithinite;
 import com.badlogic.gdx.backends.lwjgl.LwjglApplication;
 import com.badlogic.gdx.backends.lwjgl.LwjglApplicationConfiguration;
 import com.twistral.kithinite.CurrentDev;
+import com.twistral.kithinite.interactive.InteractiveTriangles;
 
 
 public class Main {

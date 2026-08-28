@@ -15,13 +15,16 @@
 
 
 
-package com.twistral.kithinite;
+package com.twistral.kithinite.shapes;
 
-import com.badlogic.gdx.*;
-import com.badlogic.gdx.graphics.*;
+import com.badlogic.gdx.ApplicationAdapter;
+import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.graphics.Color;
+import com.twistral.kithinite.Layer;
+import com.twistral.kithinite.Triangle;
 
 
-public class CurrentDev extends ApplicationAdapter {
+public class TriangleTest extends ApplicationAdapter {
 
     private static final int SCALE = 12;
 

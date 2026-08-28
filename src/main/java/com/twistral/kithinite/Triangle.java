@@ -28,6 +28,8 @@ import static com.twistral.kithinite.Kithinite.*;
  * Represents a 2D triangle widget defined by three vertices relative to its bounding box. <br>
  * Supports both filled and and outlined (not filled) rendering modes. <br>
  * <b>NOTE: Custom lineWidth values are NOT supported due to pixel imperfections.</b>
+ * <b>NOTE: Custom opacity values (alpha < 1f) are NOT supported on filled triangles to prevent
+ * edge double blending leftovers. Alpha values are clamped to 1f during render for filled triangles.</b>
  */
 public class Triangle extends Widget {
 
@@ -41,6 +43,12 @@ public class Triangle extends Widget {
     // Color variables
     private Color color;
     private Color v1Color, v2Color, v3Color;
+
+    // Variables for correct triangle scaling (setWidth, setHeight, setSize)
+    private float v1xNorm, v1yNorm, v2xNorm, v2yNorm, v3xNorm, v3yNorm;
+
+    // For performance
+    private final Color tempColor = new Color();
 
 
     /*//////////////////////////////////////////////////////////////////////*/
@@ -88,24 +96,24 @@ public class Triangle extends Widget {
         final float x3 = this.nester.absX + v3x;
         final float y3 = this.nester.absY + v3y;
 
+        final Color c1 = prioritySelect(this.v1Color, this.color, DEF_COLOR);
+        final Color c2 = prioritySelect(this.v2Color, this.color, DEF_COLOR);
+        final Color c3 = prioritySelect(this.v3Color, this.color, DEF_COLOR);
+
+        final float c1Bits = tempColor.set(c1.r, c1.g, c1.b, 1f).toFloatBits();
+        final float c2Bits = tempColor.set(c2.r, c2.g, c2.b, 1f).toFloatBits();
+        final float c3Bits = tempColor.set(c3.r, c3.g, c3.b, 1f).toFloatBits();
+
+        // Render the edges of the triangle
+        drawer.line(x1, y1, x2, y2, 1f, false, c1Bits, c2Bits);
+        drawer.line(x2, y2, x3, y3, 1f, false, c2Bits, c3Bits);
+        drawer.line(x3, y3, x1, y1, 1f, false, c3Bits, c1Bits);
+
+        // Fill the core polygon
         if (filled) {
-            final float c1Bits = prioritySelect(this.v1Color, this.color, DEF_COLOR).toFloatBits();
-            final float c2Bits = prioritySelect(this.v2Color, this.color, DEF_COLOR).toFloatBits();
-            final float c3Bits = prioritySelect(this.v3Color, this.color, DEF_COLOR).toFloatBits();
-
-            // Fill the core polygon
             drawer.filledTriangle(x1, y1, x2, y2, x3, y3, c1Bits, c2Bits, c3Bits);
-
-            // Redraw the edges to get rid of pixel imperfections
-            drawer.line(x1, y1, x2, y2, 1f, false, c1Bits, c2Bits);
-            drawer.line(x2, y2, x3, y3, 1f, false, c2Bits, c3Bits);
-            drawer.line(x3, y3, x1, y1, 1f, false, c3Bits, c1Bits);
         }
-        else {
-            final float cBits = prioritySelect(this.color, DEF_COLOR).toFloatBits();
 
-            drawer.triangle(x1, y1, x2, y2, x3, y3, 1f, cBits);
-        }
     }
 
 
@@ -141,45 +149,27 @@ public class Triangle extends Widget {
 
     @Override
     public Piece setWidth(float newWidth) {
-        final float oldWidth = this.width;
-        if (TMath.equalsf(oldWidth, newWidth)) return this;
-
         super.setWidth(newWidth);
-
-        // To scale the triangle correctly without changing x and y, we scale the vertices
-        // relative to the triangle's bounding box origin (x and y) acting as our origin
-        if (!TMath.equalsf(oldWidth, 0f)) {
-            final float scale = newWidth / oldWidth;
-            final float dx = this.x;
-
-            this.v1x = (this.v1x - dx) * scale + dx;
-            this.v2x = (this.v2x - dx) * scale + dx;
-            this.v3x = (this.v3x - dx) * scale + dx;
-        }
-
+        recalculateVerticesFromNorm();
         return this;
     }
 
 
     @Override
     public Piece setHeight(float newHeight) {
-        final float oldHeight = this.height;
-        if (TMath.equalsf(oldHeight, newHeight)) return this;
-
         super.setHeight(newHeight);
-
-        // To scale the triangle correctly without changing x and y, we scale the vertices
-        // relative to the triangle's bounding box origin (x and y) acting as our origin
-        if (!TMath.equalsf(oldHeight, 0f)) {
-            final float scale = newHeight / oldHeight;
-            final float dy = this.y;
-
-            this.v1y = (this.v1y - dy) * scale + dy;
-            this.v2y = (this.v2y - dy) * scale + dy;
-            this.v3y = (this.v3y - dy) * scale + dy;
-        }
-
+        recalculateVerticesFromNorm();
         return this;
+    }
+
+
+    private void recalculateVerticesFromNorm() {
+        this.v1x = this.x + (this.v1xNorm * this.width);
+        this.v1y = this.y + (this.v1yNorm * this.height);
+        this.v2x = this.x + (this.v2xNorm * this.width);
+        this.v2y = this.y + (this.v2yNorm * this.height);
+        this.v3x = this.x + (this.v3xNorm * this.width);
+        this.v3y = this.y + (this.v3yNorm * this.height);
     }
 
 
@@ -219,14 +209,18 @@ public class Triangle extends Widget {
         this.y = minY;
         this.width = maxX - minX;
         this.height = maxY - minY;
-    }
 
+        if (this.width > 0f) {
+            this.v1xNorm = (v1x - minX) / this.width;
+            this.v2xNorm = (v2x - minX) / this.width;
+            this.v3xNorm = (v3x - minX) / this.width;
+        }
 
-    /*////////////////  SETTERS WITH NO SIDE EFFECTS  ////////////////*/
-
-    public Triangle setFilled(boolean filled) {
-        this.filled = filled;
-        return this;
+        if (this.height > 0f) {
+            this.v1yNorm = (v1y - minY) / this.height;
+            this.v2yNorm = (v2y - minY) / this.height;
+            this.v3yNorm = (v3y - minY) / this.height;
+        }
     }
 
     public Triangle setColor(Color color) {
@@ -234,6 +228,13 @@ public class Triangle extends Widget {
         this.v1Color = null;
         this.v2Color = null;
         this.v3Color = null;
+        return this;
+    }
+
+    /*////////////////  SETTERS WITH NO SIDE EFFECTS  ////////////////*/
+
+    public Triangle setFilled(boolean filled) {
+        this.filled = filled;
         return this;
     }
 
