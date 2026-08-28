@@ -141,7 +141,7 @@ public class InteractiveTriangles extends ApplicationAdapter {
 
         // Make sure resizing never fucks up the original size etc.
         for (int unused = 0; unused < 15; unused++) {
-            triangle.setSize(rng.nextInt(0, 2000), rng.nextInt(0, 2000));
+            triangle.setSize(rng.nextInt(-200, 2000), rng.nextInt(-200, 2000));
             triangle.setSize(ORIG_TRI_W, ORIG_TRI_H);
         }
 
