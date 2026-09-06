@@ -102,25 +102,32 @@ public class Ellipse extends Widget {
         final float absCentreY = absY + radiusY;
         final float rotationRadians = this.rotationDegrees * MathUtils.degreesToRadians;
 
+        final Color outColor = prioritySelect(this.outerColor, this.color, DEF_COLOR);
+
         if (filled) {
             Color inColor = prioritySelect(this.innerColor, this.color, DEF_COLOR);
-            Color outColor = prioritySelect(this.outerColor, this.color, DEF_COLOR);
 
             drawer.filledEllipse(
                 absCentreX, absCentreY, radiusX, radiusY, rotationRadians, inColor, outColor
             );
         }
-        else {
-            // prevent spilling because of lineWidth variable
+        else if (lineWidth > 1f) {
+            // Prevent spilling because of lineWidth variable
             final float halfLine = lineWidth / 2f;
-            final float adjRadiusX = radiusX - halfLine;
-            final float adjRadiusY = radiusY - halfLine;
+            final float adjRadX = radiusX - halfLine;
+            final float adjRadY = radiusY - halfLine;
 
-            Color outlineColor = prioritySelect(this.color, DEF_COLOR);
-            final float oldColor = drawer.setColor(outlineColor);
-            drawer.ellipse(absCentreX, absCentreY, adjRadiusX, adjRadiusY, rotationRadians, lineWidth);
-            drawer.setColor(oldColor);
+            if (adjRadX > 0 && adjRadY > 0) {
+                final float oldColor = drawer.setColor(outColor);
+                drawer.ellipse(absCentreX, absCentreY, adjRadX, adjRadY, rotationRadians, lineWidth);
+                drawer.setColor(oldColor);
+            }
         }
+
+        // Redraw the perimeter line eliminate pixel imperfections (using outer color)
+        final float oldColor = drawer.setColor(outColor);
+        drawer.ellipse(absCentreX, absCentreY, radiusX, radiusY, rotationRadians, 1f);
+        drawer.setColor(oldColor);
     }
 
 
@@ -156,6 +163,13 @@ public class Ellipse extends Widget {
         return this;
     }
 
+    public Ellipse setColor(Color color) {
+        this.color = color;
+        this.innerColor = null;
+        this.outerColor = null;
+        return this;
+    }
+
     /*////////////////  SETTERS WITH NO SIDE EFFECTS  ////////////////*/
 
     public Ellipse setFilled(boolean filled) {
@@ -173,15 +187,6 @@ public class Ellipse extends Widget {
         return this;
     }
 
-    public Ellipse setColor(Color color) {
-        this.color = color;
-        return this;
-    }
-
-    public Ellipse setColor(Color innerColor, Color outerColor) {
-        return setInnerColor(innerColor).setOuterColor(outerColor);
-    }
-
     public Ellipse setInnerColor(Color innerColor) {
         this.innerColor = innerColor;
         return this;
@@ -193,6 +198,10 @@ public class Ellipse extends Widget {
     }
 
     /*////////////////  UTILITY SETTERS  ////////////////*/
+
+    public Ellipse setColor(Color innerColor, Color outerColor) {
+        return setInnerColor(innerColor).setOuterColor(outerColor);
+    }
 
     public Ellipse setCentreX(float centreX) {
         this.x = centreX - this.radiusX;
