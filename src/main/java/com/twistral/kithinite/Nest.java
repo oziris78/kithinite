@@ -18,6 +18,7 @@ package com.twistral.kithinite;
 
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 
 public abstract class Nest extends Piece {
@@ -50,6 +51,10 @@ public abstract class Nest extends Piece {
     }
 
     public void remove(Piece... pieces) {
+        for (Piece p : pieces) this.remove(p);
+    }
+
+    public void remove(Collection<? extends Piece> pieces) {
         for (Piece p : pieces) this.remove(p);
     }
 

@@ -23,6 +23,7 @@ import com.twistral.kithinite.CurrentDev;
 import com.twistral.kithinite.interactive.InteractiveCircles;
 import com.twistral.kithinite.interactive.InteractiveEllipses;
 import com.twistral.kithinite.interactive.InteractiveTriangles;
+import com.twistral.kithinite.shapes.TrianglePyramidTest;
 
 
 public class Main {
@@ -30,7 +31,7 @@ public class Main {
     public static void main(String[] args) {
         LwjglApplicationConfiguration config = new LwjglApplicationConfiguration();
         config.title = "Kithinite Test";
-        new LwjglApplication(new InteractiveCircles(), config);
+        new LwjglApplication(new TrianglePyramidTest(), config);
     }
 
 }
