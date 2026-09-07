@@ -130,6 +130,9 @@ public class InteractiveEllipses extends ApplicationAdapter {
     private void randomizeEllipseSize() {
         rectangle.setColor(RECT_COLOR);
 
+        // Not casting down random width & height values will cause it to always BLEED
+        // this is completely expected since we are rounding down via "(int) rectangle.getWidth()"
+        // and "(int) rectangle.getHeight()" in verifyRenderedPixels function
         final float ORIG_WIDTH = (int) rng.nextFloat(50f, WIN_SIZE - 2 * WIN_PAD);
         final float ORIG_HEIGHT = (int) rng.nextFloat(50f, WIN_SIZE - 2 * WIN_PAD);
 

@@ -91,22 +91,31 @@ public class Circle extends Widget {
         final float absCentreX = absX + radius;
         final float absCentreY = absY + radius;
 
+        final Color outColor = prioritySelect(this.outerColor, this.color, DEF_COLOR);
+
         if (filled) {
             Color inColor = prioritySelect(this.innerColor, this.color, DEF_COLOR);
-            Color outColor = prioritySelect(this.outerColor, this.color, DEF_COLOR);
 
-            drawer.filledEllipse(absCentreX, absCentreY, radius, radius, 0f, inColor, outColor);
+            drawer.filledEllipse(
+                absCentreX, absCentreY, radius, radius, 0f, inColor, outColor
+            );
         }
-        else {
-            // prevent spilling because of lineWidth variable
+        else if (lineWidth > 1f) {
+            // Prevent spilling because of lineWidth variable
             final float halfLine = lineWidth / 2f;
-            final float adjRadius = radius - halfLine;
+            final float adjRad = radius - halfLine;
 
-            Color outlineColor = prioritySelect(this.color, DEF_COLOR);
-            final float oldColor = drawer.setColor(outlineColor);
-            drawer.ellipse(absCentreX, absCentreY, adjRadius, adjRadius, 0f, lineWidth);
-            drawer.setColor(oldColor);
+            if (adjRad > 0) {
+                final float oldColor = drawer.setColor(outColor);
+                drawer.ellipse(absCentreX, absCentreY, adjRad, adjRad, 0f, lineWidth);
+                drawer.setColor(oldColor);
+            }
         }
+
+        // Redraw the perimeter line eliminate pixel imperfections (using outer color)
+        final float oldColor = drawer.setColor(outColor);
+        drawer.ellipse(absCentreX, absCentreY, radius, radius, 0f, 1f);
+        drawer.setColor(oldColor);
     }
 
 
@@ -139,6 +148,20 @@ public class Circle extends Widget {
         return this;
     }
 
+    @Override
+    public Piece setSize(float width, float height) {
+        // Enforce equal width and height for circles
+        final float size = Math.min(width, height);
+        return super.setSize(size, size);
+    }
+
+    public Circle setColor(Color color) {
+        this.color = color;
+        this.innerColor = null;
+        this.outerColor = null;
+        return this;
+    }
+
     /*////////////////  Setters with NO SIDE EFFECTS  ////////////////*/
 
     public Circle setFilled(boolean filled) {
@@ -148,11 +171,6 @@ public class Circle extends Widget {
 
     public Circle setLineWidth(float lineWidth) {
         this.lineWidth = lineWidth;
-        return this;
-    }
-
-    public Circle setColor(Color color) {
-        this.color = color;
         return this;
     }
 

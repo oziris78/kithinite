@@ -23,14 +23,14 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Pixmap;
+import com.twistral.kithinite.Circle;
 import com.twistral.kithinite.Layer;
 import com.twistral.kithinite.Rectangle;
-import com.twistral.kithinite.Triangle;
 import com.twistral.tempest.TempestUtils;
 import com.twistral.tephrium.prng.SplitMix64Random;
 
 
-public class InteractiveTriangles extends ApplicationAdapter {
+public class InteractiveCircles extends ApplicationAdapter {
 
     private static final int WIN_SIZE = 600, WIN_PAD = 20;
     private SplitMix64Random rng = new SplitMix64Random();
@@ -47,14 +47,14 @@ public class InteractiveTriangles extends ApplicationAdapter {
 
     private Layer layer;
     private Rectangle rectangle;
-    private Triangle triangle;
+    private Circle circle;
 
     private static int logCount = 1;
 
 
     @Override
     public void create() {
-        Gdx.graphics.setTitle("Interactive Triangle Test");
+        Gdx.graphics.setTitle("Interactive Circle Test");
         Gdx.graphics.setWindowedMode(WIN_SIZE, WIN_SIZE);
 
         layer = new Layer();
@@ -63,13 +63,13 @@ public class InteractiveTriangles extends ApplicationAdapter {
         rectangle = new Rectangle(true, RECT_COLOR);
         rectangle.setXY(WIN_PAD, WIN_PAD).setSize(WIN_SIZE - 2*WIN_PAD, WIN_SIZE - 2*WIN_PAD);
 
-        triangle = new Triangle(
-            rng.nextBoolean(), 0f, 0f, 1f, rng.nextFloat(), rng.nextFloat(), 1f, null
-        );
-        triangle.setXY(WIN_PAD, WIN_PAD).setSize(WIN_SIZE - 2*WIN_PAD, WIN_SIZE - 2*WIN_PAD);
-        randomizeTriColors();
+        circle = new Circle(rng.nextBoolean(), 100f, null, null, 1f);
+        circle.setXY(WIN_PAD, WIN_PAD);
+        circle.setSize(WIN_SIZE - 2*WIN_PAD, WIN_SIZE - 2*WIN_PAD);
 
-        layer.getRoot().add(rectangle, triangle);
+        randomizeCircleColors();
+
+        layer.getRoot().add(rectangle, circle);
     }
 
 
@@ -79,17 +79,19 @@ public class InteractiveTriangles extends ApplicationAdapter {
         TempestUtils.clear();
 
         // Color modes
-        if (Gdx.input.isKeyJustPressed(Input.Keys.NUM_1)) makeTriFilled1Color();
-        if (Gdx.input.isKeyJustPressed(Input.Keys.NUM_2)) makeTriFilled3Color();
-        if (Gdx.input.isKeyJustPressed(Input.Keys.NUM_3)) makeTriOutlined();
+        if (Gdx.input.isKeyJustPressed(Input.Keys.NUM_1)) makeCircleFilled1Color();
+        if (Gdx.input.isKeyJustPressed(Input.Keys.NUM_2)) makeCircleFilled2Color();
+        if (Gdx.input.isKeyJustPressed(Input.Keys.NUM_3)) makeCircleOutlined();
 
-        // Randomize only the vertices
-        if (Gdx.input.isKeyPressed(Input.Keys.Q)) randomizeTriangleSize();
+        // Randomize shape properties
+        if (Gdx.input.isKeyPressed(Input.Keys.Q)) randomizeCircleSize();
+        if (Gdx.input.isKeyPressed(Input.Keys.W)) randomizeCircleLineWidth();
 
         // Randomize EVERYTHING
         if (Gdx.input.isKeyPressed(Input.Keys.R)) {
-            randomizeTriangleSize();
-            randomizeTriColors();
+            randomizeCircleSize();
+            randomizeCircleLineWidth();
+            randomizeCircleColors();
         }
 
         if (Gdx.input.isKeyJustPressed(Input.Keys.D)) logInfo();
@@ -105,6 +107,7 @@ public class InteractiveTriangles extends ApplicationAdapter {
             rectangle.setColor(c);
         }
     }
+
 
 
     @Override
@@ -124,93 +127,67 @@ public class InteractiveTriangles extends ApplicationAdapter {
     /*/////////////////////////////////////////////////////////////////////*/
 
 
-    private void randomizeTriangleSize() {
+    private void randomizeCircleSize() {
         rectangle.setColor(RECT_COLOR);
 
-        final float ORIG_TRI_W = WIN_SIZE - 2 * WIN_PAD;
-        final float ORIG_TRI_H = WIN_SIZE - 2 * WIN_PAD;
+        final float ORIG_SIZE = (int) rng.nextFloat(50f, WIN_SIZE - 2 * WIN_PAD);
 
-        triangle.setVertices(0f, 0f, 1f, rng.nextFloat(), rng.nextFloat(), 1f);
-        triangle.setXY(WIN_PAD, WIN_PAD).setSize(ORIG_TRI_W, ORIG_TRI_H);
+        rectangle.setSize(ORIG_SIZE, ORIG_SIZE);
+        circle.setXY(WIN_PAD, WIN_PAD).setSize(ORIG_SIZE, ORIG_SIZE);
 
         // Randomly setSize to 0,0 and unset it back
         if (rng.nextBoolean()) {
-            triangle.setSize(0f, 0f);
-            triangle.setSize(ORIG_TRI_W, ORIG_TRI_H);
+            circle.setSize(0f, 0f);
+            circle.setSize(ORIG_SIZE, ORIG_SIZE);
         }
 
         // Make sure resizing never fucks up the original size etc.
         for (int unused = 0; unused < 15; unused++) {
-            triangle.setSize(rng.nextInt(-200, 2000), rng.nextInt(-200, 2000));
-            triangle.setSize(ORIG_TRI_W, ORIG_TRI_H);
-        }
-
-        // Randomly swap V1 and V2  -> v2 v1 v3
-        if (rng.nextBoolean()) {
-            triangle.setVertices(
-                triangle.getV2x(), triangle.getV2y(), triangle.getV2Color(),
-                triangle.getV1x(), triangle.getV1y(), triangle.getV1Color(),
-                triangle.getV3x(), triangle.getV3y(), triangle.getV3Color()
-            );
-        }
-
-        // Randomly swap V1 and V3  -> v3 v2 v1
-        if (rng.nextBoolean()) {
-            triangle.setVertices(
-                triangle.getV3x(), triangle.getV3y(), triangle.getV3Color(),
-                triangle.getV2x(), triangle.getV2y(), triangle.getV2Color(),
-                triangle.getV1x(), triangle.getV1y(), triangle.getV1Color()
-            );
-        }
-
-        // Randomly swap V3 and V2  -> v1 v3 v2
-        if (rng.nextBoolean()) {
-            triangle.setVertices(
-                triangle.getV1x(), triangle.getV1y(), triangle.getV1Color(),
-                triangle.getV3x(), triangle.getV3y(), triangle.getV3Color(),
-                triangle.getV2x(), triangle.getV2y(), triangle.getV2Color()
-            );
+            circle.setSize(rng.nextInt(-200, 2000), rng.nextInt(-200, 2000));
+            circle.setSize(ORIG_SIZE, ORIG_SIZE);
         }
     }
 
-    private void randomizeTriColors() {
+    private void randomizeCircleLineWidth() {
+        circle.setLineWidth(rng.nextInt(1, 17));
+    }
+
+    private void randomizeCircleColors() {
         rectangle.setColor(RECT_COLOR);
 
         int rand = rng.nextInt(0, 3);
-        if (rand == 0) makeTriFilled3Color();
-        else if (rand == 1) makeTriFilled1Color();
-        else makeTriOutlined();
+        if (rand == 0) makeCircleFilled2Color();
+        else if (rand == 1) makeCircleFilled1Color();
+        else makeCircleOutlined();
     }
 
-    private void makeTriFilled3Color() {
+    private void makeCircleFilled2Color() {
         rectangle.setColor(RECT_COLOR);
 
-        triangle.setFilled(true);
-        triangle.setColor(
+        circle.setFilled(true);
+        circle.setColor(
             new Color(rng.nextFloat(0.7f, 1f), rng.nextFloat(0.7f, 1f),
                       rng.nextFloat(0.7f, 1f), rng.nextFloat(0.5f, 1f)),
             new Color(rng.nextFloat(0f, 0.4f), rng.nextFloat(0f, 0.4f),
-                      rng.nextFloat(0f, 0.4f), rng.nextFloat(0.5f, 1f)),
-            new Color(rng.nextFloat(0.4f, 0.7f), rng.nextFloat(0.4f, 0.7f),
-                      rng.nextFloat(0.4f, 0.7f), rng.nextFloat(0.5f, 1f))
+                      rng.nextFloat(0f, 0.4f), rng.nextFloat(0.5f, 1f))
         );
     }
 
-    private void makeTriOutlined() {
+    private void makeCircleOutlined() {
         rectangle.setColor(RECT_COLOR);
 
-        triangle.setFilled(false);
-        triangle.setColor(
+        circle.setFilled(false);
+        circle.setColor(
             new Color(rng.nextFloat(), rng.nextFloat(0.6f, 1f),
                       rng.nextFloat(0.6f, 1f), rng.nextFloat(0.5f, 1f))
         );
     }
 
-    private void makeTriFilled1Color() {
+    private void makeCircleFilled1Color() {
         rectangle.setColor(RECT_COLOR);
 
-        triangle.setFilled(true);
-        triangle.setColor(
+        circle.setFilled(true);
+        circle.setColor(
             new Color(rng.nextFloat(), rng.nextFloat(0.7f, 1f),
                       rng.nextFloat(0.7f, 1f), rng.nextFloat(0.5f, 1f))
         );
@@ -278,15 +255,12 @@ public class InteractiveTriangles extends ApplicationAdapter {
 
     private void logInfo() {
         System.out.println("--------------------------------");
-        System.out.printf(
-                "triangle.vertices = (%.2f, %.2f) (%.2f, %.2f) (%.2f, %.2f)\n",
-                triangle.getV1x(), triangle.getV1y(), triangle.getV2x(),
-                triangle.getV2y(), triangle.getV3x(), triangle.getV3y()
-        );
-        System.out.printf("triangle.x = %.2f\n", triangle.getX());
-        System.out.printf("triangle.y = %.2f\n", triangle.getY());
-        System.out.printf("triangle.width = %.2f\n", triangle.getWidth());
-        System.out.printf("triangle.height = %.2f\n", triangle.getHeight());
+        System.out.printf("circle.radius = %.2f\n", circle.getRadius());
+        System.out.printf("circle.lineWidth = %.2f\n", circle.getLineWidth());
+        System.out.printf("circle.x = %.2f\n", circle.getX());
+        System.out.printf("circle.y = %.2f\n", circle.getY());
+        System.out.printf("circle.width = %.2f\n", circle.getWidth());
+        System.out.printf("circle.height = %.2f\n", circle.getHeight());
         System.out.println("--------------------------------");
     }
 
