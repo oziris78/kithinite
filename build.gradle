@@ -35,16 +35,16 @@ dependencies {
     implementation "space.earlygrey:shapedrawer:$shapeDrawerVersion"  // MIT
     //implementation "com.badlogicgames.gdx:gdx-box2d:$gdxVersion"    // Apache-2.0
 
-    // Core libGDX libraries for desktop
+    // [TEST ONLY] Core libGDX libraries for desktop
     testImplementation "com.badlogicgames.gdx:gdx-platform:$gdxVersion:natives-desktop"            // Apache-2.0
     testImplementation "com.badlogicgames.gdx:gdx-backend-lwjgl:$gdxVersion"                       // Apache-2.0
     testImplementation "com.badlogicgames.gdx:gdx-box2d-platform:$gdxVersion:natives-desktop"      // Apache-2.0
     testImplementation "com.badlogicgames.gdx:gdx-freetype-platform:$gdxVersion:natives-desktop"   // Apache-2.0
     testImplementation "com.badlogicgames.gdx:gdx-freetype:$gdxVersion"                            // Apache-2.0
 
-    // Testing libraries
-    //testImplementation 'org.junit.jupiter:junit-jupiter-api:5.8.1'
-    //testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:5.8.1'
+    // [TEST ONLY] Testing libraries
+    testImplementation 'org.junit.jupiter:junit-jupiter-api:5.8.1'
+    testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:5.8.1'
 
     /*// Not added for now, maybe in the future?
     implementation 'com.google.code.gson:gson:2.10.1'  // Apache-2.0
