@@ -15,26 +15,29 @@
 
 
 
-package com.twistral.kithinite.shapes;
+package com.twistral.kithinite.demos;
 
 import com.badlogic.gdx.ApplicationAdapter;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
 import com.twistral.kithinite.Circle;
 import com.twistral.kithinite.Layer;
+import com.twistral.kithinite.TestUtils;
 
 
-public class CircleTest extends ApplicationAdapter {
+public class CircleDemo extends ApplicationAdapter {
 
     private static final float RAD = 50, PADDING = 20;
     private static final int MAX_PER_ROW = 4;
 
     private Layer layer;
 
+    private static int row = 0, col = 0;
+
 
     @Override
     public void create() {
-        Gdx.graphics.setTitle("Circles");
+        TestUtils.setTitleFromClass(this);
         Gdx.graphics.setWindowedMode(500, 500);
 
         layer = new Layer();
@@ -67,8 +70,6 @@ public class CircleTest extends ApplicationAdapter {
             circle(false).setColor(color2, color3).setLineWidth(20f)
         );
     }
-
-    private static int row = 0, col = 0;
 
     private Circle circle(boolean filled) {
         Circle circle = new Circle(filled, RAD, null);

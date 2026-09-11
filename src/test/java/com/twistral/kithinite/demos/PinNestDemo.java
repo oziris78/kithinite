@@ -15,7 +15,7 @@
 
 
 
-package com.twistral.kithinite.interactive;
+package com.twistral.kithinite.demos;
 
 import com.badlogic.gdx.ApplicationAdapter;
 import com.badlogic.gdx.Gdx;
@@ -30,7 +30,7 @@ import com.twistral.tempest.TempestUtils;
 import java.util.Arrays;
 
 
-public class InteractivePinNest extends ApplicationAdapter {
+public class PinNestDemo extends ApplicationAdapter {
 
     private Layer layer;
     private PinNest pinNest;
@@ -46,8 +46,11 @@ public class InteractivePinNest extends ApplicationAdapter {
 
     private Piece rectNo, rectE, rectW, rectN, rectS, rectNE, rectNW, rectSE, rectSW,
             rectNS, rectEW, rectNSE, rectNSW, rectNEW, rectSEW, rectNSEW;
+
     private Piece[] allRectangles;
-            
+
+    private int currentMode;
+
     @Override
     public void create() {
         layer = new Layer();
@@ -110,6 +113,7 @@ public class InteractivePinNest extends ApplicationAdapter {
                 rectNS, rectEW, rectNSE, rectNSW, rectNEW, rectSEW, rectNSEW
         };
 
+        currentMode = 0;
         selectRect(rectNo, "No pins (1/16)");
     }
 
@@ -122,53 +126,27 @@ public class InteractivePinNest extends ApplicationAdapter {
         // If you think this copy pasted code is "spagetti code" and
         // "shouldnt be in a serious library", then you can go f* yourself
 
-        if (Gdx.input.isKeyJustPressed(Input.Keys.NUM_1)) {
-            selectRect(rectNo, "No pins (1/16)"); return;
-        }
-        if (Gdx.input.isKeyJustPressed(Input.Keys.NUM_2)) {
-            selectRect(rectE, "Current pins: E (2/16)"); return;
-        }
-        if (Gdx.input.isKeyJustPressed(Input.Keys.NUM_3)) {
-            selectRect(rectW, "Current pins: W (3/16)"); return;
-        }
-        if (Gdx.input.isKeyJustPressed(Input.Keys.NUM_4)) {
-            selectRect(rectN, "Current pins: N (4/16)"); return;
-        }
-        if (Gdx.input.isKeyJustPressed(Input.Keys.NUM_5)) {
-            selectRect(rectS, "Current pins: S (5/16)"); return;
-        }
-        if (Gdx.input.isKeyJustPressed(Input.Keys.NUM_6)) {
-            selectRect(rectNE, "Current pins: NE (6/16)"); return;
-        }
-        if (Gdx.input.isKeyJustPressed(Input.Keys.NUM_7)) {
-            selectRect(rectNW, "Current pins: NW (7/16)"); return;
-        }
-        if (Gdx.input.isKeyJustPressed(Input.Keys.NUM_8)) {
-            selectRect(rectSE, "Current pins: SE (8/16)"); return;
-        }
-        if (Gdx.input.isKeyJustPressed(Input.Keys.Q)) {
-            selectRect(rectSW, "Current pins: SW (9/16)"); return;
-        }
-        if (Gdx.input.isKeyJustPressed(Input.Keys.W)) {
-            selectRect(rectNS, "Current pins: NS (10/16)"); return;
-        }
-        if (Gdx.input.isKeyJustPressed(Input.Keys.E)) {
-            selectRect(rectEW, "Current pins: EW (11/16)"); return;
-        }
         if (Gdx.input.isKeyJustPressed(Input.Keys.R)) {
-            selectRect(rectNSE, "Current pins: NSE (12/16)"); return;
-        }
-        if (Gdx.input.isKeyJustPressed(Input.Keys.T)) {
-            selectRect(rectNSW, "Current pins: NSW (13/16)"); return;
-        }
-        if (Gdx.input.isKeyJustPressed(Input.Keys.Y)) {
-            selectRect(rectNEW, "Current pins: NEW (14/16)"); return;
-        }
-        if (Gdx.input.isKeyJustPressed(Input.Keys.U)) {
-            selectRect(rectSEW, "Current pins: SEW (15/16)"); return;
-        }
-        if (Gdx.input.isKeyJustPressed(Input.Keys.I)) {
-            selectRect(rectNSEW, "Current pins: all (16/16)"); return;
+            currentMode = (currentMode + 1) % 16;
+
+            switch (currentMode) {
+                case 0:  { selectRect(rectNo  , "No pins (1/16)"           ); break; }
+                case 1:  { selectRect(rectE   , "Current pins: E (2/16)"   ); break; }
+                case 2:  { selectRect(rectW   , "Current pins: W (3/16)"   ); break; }
+                case 3:  { selectRect(rectN   , "Current pins: N (4/16)"   ); break; }
+                case 4:  { selectRect(rectS   , "Current pins: S (5/16)"   ); break; }
+                case 5:  { selectRect(rectNE  , "Current pins: NE (6/16)"  ); break; }
+                case 6:  { selectRect(rectNW  , "Current pins: NW (7/16)"  ); break; }
+                case 7:  { selectRect(rectSE  , "Current pins: SE (8/16)"  ); break; }
+                case 8:  { selectRect(rectSW  , "Current pins: SW (9/16)"  ); break; }
+                case 9:  { selectRect(rectNS  , "Current pins: NS (10/16)" ); break; }
+                case 10: { selectRect(rectEW  , "Current pins: EW (11/16)" ); break; }
+                case 11: { selectRect(rectNSE , "Current pins: NSE (12/16)"); break; }
+                case 12: { selectRect(rectNSW , "Current pins: NSW (13/16)"); break; }
+                case 13: { selectRect(rectNEW , "Current pins: NEW (14/16)"); break; }
+                case 14: { selectRect(rectSEW , "Current pins: SEW (15/16)"); break; }
+                case 15: { selectRect(rectNSEW, "Current pins: all (16/16)"); break; }
+            }
         }
     }
 

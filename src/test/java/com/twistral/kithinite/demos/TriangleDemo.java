@@ -15,16 +15,17 @@
 
 
 
-package com.twistral.kithinite.shapes;
+package com.twistral.kithinite.demos;
 
 import com.badlogic.gdx.ApplicationAdapter;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
 import com.twistral.kithinite.Layer;
+import com.twistral.kithinite.TestUtils;
 import com.twistral.kithinite.Triangle;
 
 
-public class TriangleTest extends ApplicationAdapter {
+public class TriangleDemo extends ApplicationAdapter {
 
     private static final int SCALE = 12;
 
@@ -43,8 +44,8 @@ public class TriangleTest extends ApplicationAdapter {
 
     @Override
     public void create() {
-        Gdx.graphics.setTitle("Triangles");
-        Gdx.graphics.setWindowedMode(800, 600);
+        TestUtils.setTitleFromClass(this);
+        Gdx.graphics.setWindowedMode(600, 600);
 
         layer = new Layer();
 

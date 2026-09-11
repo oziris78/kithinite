@@ -17,13 +17,9 @@
 package com.twistral.kithinite;
 
 
-import com.badlogic.gdx.backends.lwjgl.LwjglApplication;
-import com.badlogic.gdx.backends.lwjgl.LwjglApplicationConfiguration;
-import com.twistral.kithinite.CurrentDev;
-import com.twistral.kithinite.interactive.InteractiveCircles;
-import com.twistral.kithinite.interactive.InteractiveEllipses;
-import com.twistral.kithinite.interactive.InteractiveTriangles;
-import com.twistral.kithinite.shapes.TrianglePyramidTest;
+import com.badlogic.gdx.backends.lwjgl.*;
+import com.twistral.kithinite.manual.*;
+import com.twistral.kithinite.demos.*;
 
 
 public class Main {
@@ -31,7 +27,7 @@ public class Main {
     public static void main(String[] args) {
         LwjglApplicationConfiguration config = new LwjglApplicationConfiguration();
         config.title = "Kithinite Test";
-        new LwjglApplication(new TrianglePyramidTest(), config);
+        new LwjglApplication(new TriangleVerifier(), config);
     }
 
 }

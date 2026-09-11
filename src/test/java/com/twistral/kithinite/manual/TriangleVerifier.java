@@ -15,7 +15,7 @@
 
 
 
-package com.twistral.kithinite.interactive;
+package com.twistral.kithinite.manual;
 
 
 import com.badlogic.gdx.ApplicationAdapter;
@@ -25,12 +25,13 @@ import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Pixmap;
 import com.twistral.kithinite.Layer;
 import com.twistral.kithinite.Rectangle;
+import com.twistral.kithinite.TestUtils;
 import com.twistral.kithinite.Triangle;
 import com.twistral.tempest.TempestUtils;
 import com.twistral.tephrium.prng.SplitMix64Random;
 
 
-public class InteractiveTriangles extends ApplicationAdapter {
+public class TriangleVerifier extends ApplicationAdapter {
 
     private static final int WIN_SIZE = 600, WIN_PAD = 20;
     private SplitMix64Random rng = new SplitMix64Random();
@@ -54,7 +55,7 @@ public class InteractiveTriangles extends ApplicationAdapter {
 
     @Override
     public void create() {
-        Gdx.graphics.setTitle("Interactive Triangle Test");
+        TestUtils.setTitleFromClass(this);
         Gdx.graphics.setWindowedMode(WIN_SIZE, WIN_SIZE);
 
         layer = new Layer();

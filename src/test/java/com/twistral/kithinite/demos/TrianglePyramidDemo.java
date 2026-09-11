@@ -15,18 +15,20 @@
 
 
 
-package com.twistral.kithinite.shapes;
+package com.twistral.kithinite.demos;
 
 
 import com.badlogic.gdx.*;
 import com.badlogic.gdx.graphics.*;
-import com.twistral.kithinite.*;
+import com.twistral.kithinite.Layer;
+import com.twistral.kithinite.TestUtils;
+import com.twistral.kithinite.Triangle;
 import com.twistral.tempest.*;
 import com.twistral.tephrium.prng.*;
 import java.util.*;
 
 
-public class TrianglePyramidTest extends ApplicationAdapter {
+public class TrianglePyramidDemo extends ApplicationAdapter {
 
     private static final int WIN_SIZE = 600, WIN_PAD = 40;
 
@@ -38,7 +40,7 @@ public class TrianglePyramidTest extends ApplicationAdapter {
 
     @Override
     public void create() {
-        Gdx.graphics.setTitle("Triangle Pyramid Test");
+        TestUtils.setTitleFromClass(this);
         Gdx.graphics.setWindowedMode(WIN_SIZE, WIN_SIZE);
 
         layer = new Layer();

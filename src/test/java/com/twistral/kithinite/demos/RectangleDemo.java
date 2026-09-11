@@ -15,17 +15,18 @@
 
 
 
-package com.twistral.kithinite.shapes;
+package com.twistral.kithinite.demos;
 
 import com.badlogic.gdx.ApplicationAdapter;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
 import com.twistral.kithinite.Layer;
 import com.twistral.kithinite.Rectangle;
+import com.twistral.kithinite.TestUtils;
 import space.earlygrey.shapedrawer.JoinType;
 
 
-public class RectangleTest extends ApplicationAdapter {
+public class RectangleDemo extends ApplicationAdapter {
 
     private static final float RECT_WIDTH = 150, RECT_HEIGHT = 75, PADDING = 25;
     private static final int MAX_PER_ROW = 4;
@@ -35,7 +36,7 @@ public class RectangleTest extends ApplicationAdapter {
 
     @Override
     public void create() {
-        Gdx.graphics.setTitle("Rectangles");
+        TestUtils.setTitleFromClass(this);
         Gdx.graphics.setWindowedMode(750, 450);
 
         layer = new Layer();

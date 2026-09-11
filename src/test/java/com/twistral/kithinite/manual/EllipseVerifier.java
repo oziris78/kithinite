@@ -15,7 +15,7 @@
 
 
 
-package com.twistral.kithinite.interactive;
+package com.twistral.kithinite.manual;
 
 
 import com.badlogic.gdx.ApplicationAdapter;
@@ -23,14 +23,15 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Pixmap;
-import com.twistral.kithinite.Circle;
+import com.twistral.kithinite.Ellipse;
 import com.twistral.kithinite.Layer;
 import com.twistral.kithinite.Rectangle;
+import com.twistral.kithinite.TestUtils;
 import com.twistral.tempest.TempestUtils;
 import com.twistral.tephrium.prng.SplitMix64Random;
 
 
-public class InteractiveCircles extends ApplicationAdapter {
+public class EllipseVerifier extends ApplicationAdapter {
 
     private static final int WIN_SIZE = 600, WIN_PAD = 20;
     private SplitMix64Random rng = new SplitMix64Random();
@@ -47,14 +48,14 @@ public class InteractiveCircles extends ApplicationAdapter {
 
     private Layer layer;
     private Rectangle rectangle;
-    private Circle circle;
+    private Ellipse ellipse;
 
     private static int logCount = 1;
 
 
     @Override
     public void create() {
-        Gdx.graphics.setTitle("Interactive Circle Test");
+        TestUtils.setTitleFromClass(this);
         Gdx.graphics.setWindowedMode(WIN_SIZE, WIN_SIZE);
 
         layer = new Layer();
@@ -63,13 +64,13 @@ public class InteractiveCircles extends ApplicationAdapter {
         rectangle = new Rectangle(true, RECT_COLOR);
         rectangle.setXY(WIN_PAD, WIN_PAD).setSize(WIN_SIZE - 2*WIN_PAD, WIN_SIZE - 2*WIN_PAD);
 
-        circle = new Circle(rng.nextBoolean(), 100f, null, null, 1f);
-        circle.setXY(WIN_PAD, WIN_PAD);
-        circle.setSize(WIN_SIZE - 2*WIN_PAD, WIN_SIZE - 2*WIN_PAD);
+        ellipse = new Ellipse(rng.nextBoolean(), 100f, 100f, null, null, 0f, 1f);
+        ellipse.setXY(WIN_PAD, WIN_PAD);
+        ellipse.setSize(WIN_SIZE - 2*WIN_PAD, WIN_SIZE - 2*WIN_PAD);
 
-        randomizeCircleColors();
+        randomizeEllipseColors();
 
-        layer.getRoot().add(rectangle, circle);
+        layer.getRoot().add(rectangle, ellipse);
     }
 
 
@@ -79,19 +80,19 @@ public class InteractiveCircles extends ApplicationAdapter {
         TempestUtils.clear();
 
         // Color modes
-        if (Gdx.input.isKeyJustPressed(Input.Keys.NUM_1)) makeCircleFilled1Color();
-        if (Gdx.input.isKeyJustPressed(Input.Keys.NUM_2)) makeCircleFilled2Color();
-        if (Gdx.input.isKeyJustPressed(Input.Keys.NUM_3)) makeCircleOutlined();
+        if (Gdx.input.isKeyJustPressed(Input.Keys.NUM_1)) makeEllipseFilled1Color();
+        if (Gdx.input.isKeyJustPressed(Input.Keys.NUM_2)) makeEllipseFilled2Color();
+        if (Gdx.input.isKeyJustPressed(Input.Keys.NUM_3)) makeEllipseOutlined();
 
         // Randomize shape properties
-        if (Gdx.input.isKeyPressed(Input.Keys.Q)) randomizeCircleSize();
-        if (Gdx.input.isKeyPressed(Input.Keys.W)) randomizeCircleLineWidth();
+        if (Gdx.input.isKeyPressed(Input.Keys.Q)) randomizeEllipseSize();
+        if (Gdx.input.isKeyPressed(Input.Keys.W)) randomizeEllipseLineWidth();
 
         // Randomize EVERYTHING
         if (Gdx.input.isKeyPressed(Input.Keys.R)) {
-            randomizeCircleSize();
-            randomizeCircleLineWidth();
-            randomizeCircleColors();
+            randomizeEllipseSize();
+            randomizeEllipseLineWidth();
+            randomizeEllipseColors();
         }
 
         if (Gdx.input.isKeyJustPressed(Input.Keys.D)) logInfo();
@@ -127,45 +128,49 @@ public class InteractiveCircles extends ApplicationAdapter {
     /*/////////////////////////////////////////////////////////////////////*/
 
 
-    private void randomizeCircleSize() {
+    private void randomizeEllipseSize() {
         rectangle.setColor(RECT_COLOR);
 
-        final float ORIG_SIZE = (int) rng.nextFloat(50f, WIN_SIZE - 2 * WIN_PAD);
+        // Not casting down random width & height values will cause it to always BLEED
+        // this is completely expected since we are rounding down via "(int) rectangle.getWidth()"
+        // and "(int) rectangle.getHeight()" in verifyRenderedPixels function
+        final float ORIG_WIDTH = (int) rng.nextFloat(50f, WIN_SIZE - 2 * WIN_PAD);
+        final float ORIG_HEIGHT = (int) rng.nextFloat(50f, WIN_SIZE - 2 * WIN_PAD);
 
-        rectangle.setSize(ORIG_SIZE, ORIG_SIZE);
-        circle.setXY(WIN_PAD, WIN_PAD).setSize(ORIG_SIZE, ORIG_SIZE);
+        rectangle.setSize(ORIG_WIDTH, ORIG_HEIGHT);
+        ellipse.setXY(WIN_PAD, WIN_PAD).setSize(ORIG_WIDTH, ORIG_HEIGHT);
 
         // Randomly setSize to 0,0 and unset it back
         if (rng.nextBoolean()) {
-            circle.setSize(0f, 0f);
-            circle.setSize(ORIG_SIZE, ORIG_SIZE);
+            ellipse.setSize(0f, 0f);
+            ellipse.setSize(ORIG_WIDTH, ORIG_HEIGHT);
         }
 
         // Make sure resizing never fucks up the original size etc.
         for (int unused = 0; unused < 15; unused++) {
-            circle.setSize(rng.nextInt(-200, 2000), rng.nextInt(-200, 2000));
-            circle.setSize(ORIG_SIZE, ORIG_SIZE);
+            ellipse.setSize(rng.nextInt(-200, 2000), rng.nextInt(-200, 2000));
+            ellipse.setSize(ORIG_WIDTH, ORIG_HEIGHT);
         }
     }
 
-    private void randomizeCircleLineWidth() {
-        circle.setLineWidth(rng.nextInt(1, 17));
+    private void randomizeEllipseLineWidth() {
+        ellipse.setLineWidth(rng.nextInt(1, 17));
     }
 
-    private void randomizeCircleColors() {
+    private void randomizeEllipseColors() {
         rectangle.setColor(RECT_COLOR);
 
         int rand = rng.nextInt(0, 3);
-        if (rand == 0) makeCircleFilled2Color();
-        else if (rand == 1) makeCircleFilled1Color();
-        else makeCircleOutlined();
+        if (rand == 0) makeEllipseFilled2Color();
+        else if (rand == 1) makeEllipseFilled1Color();
+        else makeEllipseOutlined();
     }
 
-    private void makeCircleFilled2Color() {
+    private void makeEllipseFilled2Color() {
         rectangle.setColor(RECT_COLOR);
 
-        circle.setFilled(true);
-        circle.setColor(
+        ellipse.setFilled(true);
+        ellipse.setColor(
             new Color(rng.nextFloat(0.7f, 1f), rng.nextFloat(0.7f, 1f),
                       rng.nextFloat(0.7f, 1f), rng.nextFloat(0.5f, 1f)),
             new Color(rng.nextFloat(0f, 0.4f), rng.nextFloat(0f, 0.4f),
@@ -173,21 +178,21 @@ public class InteractiveCircles extends ApplicationAdapter {
         );
     }
 
-    private void makeCircleOutlined() {
+    private void makeEllipseOutlined() {
         rectangle.setColor(RECT_COLOR);
 
-        circle.setFilled(false);
-        circle.setColor(
+        ellipse.setFilled(false);
+        ellipse.setColor(
             new Color(rng.nextFloat(), rng.nextFloat(0.6f, 1f),
                       rng.nextFloat(0.6f, 1f), rng.nextFloat(0.5f, 1f))
         );
     }
 
-    private void makeCircleFilled1Color() {
+    private void makeEllipseFilled1Color() {
         rectangle.setColor(RECT_COLOR);
 
-        circle.setFilled(true);
-        circle.setColor(
+        ellipse.setFilled(true);
+        ellipse.setColor(
             new Color(rng.nextFloat(), rng.nextFloat(0.7f, 1f),
                       rng.nextFloat(0.7f, 1f), rng.nextFloat(0.5f, 1f))
         );
@@ -255,12 +260,14 @@ public class InteractiveCircles extends ApplicationAdapter {
 
     private void logInfo() {
         System.out.println("--------------------------------");
-        System.out.printf("circle.radius = %.2f\n", circle.getRadius());
-        System.out.printf("circle.lineWidth = %.2f\n", circle.getLineWidth());
-        System.out.printf("circle.x = %.2f\n", circle.getX());
-        System.out.printf("circle.y = %.2f\n", circle.getY());
-        System.out.printf("circle.width = %.2f\n", circle.getWidth());
-        System.out.printf("circle.height = %.2f\n", circle.getHeight());
+        System.out.printf("ellipse.radiusX = %.2f\n", ellipse.getRadiusX());
+        System.out.printf("ellipse.radiusY = %.2f\n", ellipse.getRadiusY());
+        System.out.printf("ellipse.lineWidth = %.2f\n", ellipse.getLineWidth());
+        System.out.printf("ellipse.rotationDegrees = %.2f\n", ellipse.getRotationDegrees());
+        System.out.printf("ellipse.x = %.2f\n", ellipse.getX());
+        System.out.printf("ellipse.y = %.2f\n", ellipse.getY());
+        System.out.printf("ellipse.width = %.2f\n", ellipse.getWidth());
+        System.out.printf("ellipse.height = %.2f\n", ellipse.getHeight());
         System.out.println("--------------------------------");
     }
 

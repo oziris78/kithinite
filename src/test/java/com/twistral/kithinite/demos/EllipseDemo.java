@@ -15,16 +15,17 @@
 
 
 
-package com.twistral.kithinite.shapes;
+package com.twistral.kithinite.demos;
 
 import com.badlogic.gdx.ApplicationAdapter;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
 import com.twistral.kithinite.Ellipse;
 import com.twistral.kithinite.Layer;
+import com.twistral.kithinite.TestUtils;
 
 
-public class EllipseTest extends ApplicationAdapter {
+public class EllipseDemo extends ApplicationAdapter {
 
     private static final float RAD_A = 60, RAD_B = 40, PADDING = 25;
     private static final int MAX_PER_ROW = 4;
@@ -34,8 +35,8 @@ public class EllipseTest extends ApplicationAdapter {
 
     @Override
     public void create() {
-        Gdx.graphics.setTitle("Ellipses");
-        Gdx.graphics.setWindowedMode(900, 500);
+        TestUtils.setTitleFromClass(this);
+        Gdx.graphics.setWindowedMode(900, 450);
 
         layer = new Layer();
 
@@ -45,42 +46,42 @@ public class EllipseTest extends ApplicationAdapter {
 
         layer.getRoot().add(
             // filled + color settings test
-            elpse(true).setColor(color1),
-            elpse(true).setColor(color2, color3),
-            elpse(false).setColor(color1),
-            elpse(false).setColor(color2, color3),
+            ellipse(true).setColor(color1),
+            ellipse(true).setColor(color2, color3),
+            ellipse(false).setColor(color1),
+            ellipse(false).setColor(color2, color3),
 
             // lineWidth test with all the above
-            elpse(true).setColor(color1).setLineWidth(4f),
-            elpse(true).setColor(color2, color3).setLineWidth(4f),
-            elpse(false).setColor(color1).setLineWidth(4f),
-            elpse(false).setColor(color2, color3).setLineWidth(4f),
+            ellipse(true).setColor(color1).setLineWidth(4f),
+            ellipse(true).setColor(color2, color3).setLineWidth(4f),
+            ellipse(false).setColor(color1).setLineWidth(4f),
+            ellipse(false).setColor(color2, color3).setLineWidth(4f),
 
-            elpse(true).setColor(color1).setLineWidth(8f),
-            elpse(true).setColor(color2, color3).setLineWidth(8f),
-            elpse(false).setColor(color1).setLineWidth(8f),
-            elpse(false).setColor(color2, color3).setLineWidth(8f),
+            ellipse(true).setColor(color1).setLineWidth(8f),
+            ellipse(true).setColor(color2, color3).setLineWidth(8f),
+            ellipse(false).setColor(color1).setLineWidth(8f),
+            ellipse(false).setColor(color2, color3).setLineWidth(8f),
 
-            elpse(true).setColor(color1).setLineWidth(20f),
-            elpse(true).setColor(color2, color3).setLineWidth(20f),
-            elpse(false).setColor(color1).setLineWidth(20f),
-            elpse(false).setColor(color2, color3).setLineWidth(20f),
+            ellipse(true).setColor(color1).setLineWidth(20f),
+            ellipse(true).setColor(color2, color3).setLineWidth(20f),
+            ellipse(false).setColor(color1).setLineWidth(20f),
+            ellipse(false).setColor(color2, color3).setLineWidth(20f),
 
             // rotation test (should spill)
-            elpse(true).setColor(color1).setRotationDegrees(30f),
-            elpse(true).setColor(color2, color3).setRotationDegrees(30f),
-            elpse(false).setColor(color1).setRotationDegrees(30f),
-            elpse(false).setColor(color2, color3).setRotationDegrees(30f),
+            ellipse(true).setColor(color1).setRotationDegrees(30f),
+            ellipse(true).setColor(color2, color3).setRotationDegrees(30f),
+            ellipse(false).setColor(color1).setRotationDegrees(30f),
+            ellipse(false).setColor(color2, color3).setRotationDegrees(30f),
 
             // vertical ellipse test
-            elpse(true).setColor(color1).setRadiusX(RAD_B).setRadiusY(RAD_A).addY(PADDING),
-            elpse(false).setColor(color1).setRadiusX(RAD_B).setRadiusY(RAD_A).addY(5f*PADDING)
+            ellipse(true).setColor(color1).setRadiusX(RAD_B).setRadiusY(RAD_A).addY(PADDING),
+            ellipse(false).setColor(color1).setRadiusX(RAD_B).setRadiusY(RAD_A).addY(5f*PADDING)
         );
     }
 
     private static int row = 0, col = 0;
 
-    private Ellipse elpse(boolean filled) {
+    private Ellipse ellipse(boolean filled) {
         Ellipse ellipse = new Ellipse(filled, RAD_A, RAD_B, null);
 
         ellipse.setXY(
