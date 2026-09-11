@@ -18,12 +18,20 @@ package com.twistral.kithinite;
 
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.graphics.Color;
+import com.twistral.tephrium.prng.SplitMix64Random;
 
 import java.lang.reflect.Method;
 import java.util.Objects;
 
 
 public final class TestUtils {
+
+    private static SplitMix64Random rng = new SplitMix64Random();
+
+    public static Color randColor() {
+        return new Color(rng.nextFloat(), rng.nextFloat(), rng.nextFloat(), rng.nextFloat());
+    }
 
     public static void setTitleFromClass(Object obj) {
         String title = obj.getClass().getSimpleName().replaceAll("(?<!^)(?=[A-Z])", " ");
