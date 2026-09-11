@@ -64,4 +64,14 @@ public abstract class Nest extends Piece {
         for (Piece p : pieceArray) this.remove(p);
     }
 
+    /*///////////  UTILITY  ///////////*/
+
+    public List<Piece> getPieces() {
+        return pieces;
+    }
+
+    public int getPieceCount() {
+        return this.pieces.size();
+    }
+
 }
