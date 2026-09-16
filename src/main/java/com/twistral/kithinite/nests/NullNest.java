@@ -14,25 +14,27 @@
 // limitations under the License.
 
 
-package com.twistral.kithinite;
+package com.twistral.kithinite.nests;
 
 
+import com.twistral.kithinite.core.Nest;
+import com.twistral.kithinite.core.Piece;
 import space.earlygrey.shapedrawer.ShapeDrawer;
 
 
-public class NullNest extends Nest {
+public class NullNest extends Nest<NullNest> {
 
     @Override
-    protected void layout() {
+    public void layout() {
         if (!this.visible) return;
 
         // Absolute (absX, absY) coord calculation for this nest
         boolean isRootNest = (this.nester == null);
-        this.absX = (isRootNest ? 0f : this.nester.absX) + this.x;
-        this.absY = (isRootNest ? 0f : this.nester.absY) + this.y;
+        this.absX = (isRootNest ? 0f : this.nester.getAbsX()) + this.x;
+        this.absY = (isRootNest ? 0f : this.nester.getAbsY()) + this.y;
 
         // Relative (x,y) coord calculation for owned pieces
-        for (Piece piece : this.pieces) {
+        for (Piece<?> piece : this.pieces) {
             if (!piece.isVisible()) continue;
 
             piece.layout();
@@ -40,10 +42,10 @@ public class NullNest extends Nest {
     }
 
     @Override
-    protected void render(ShapeDrawer drawer) {
+    public void render(ShapeDrawer drawer) {
         if (!this.visible) return;
 
-        for (Piece p : this.pieces) {
+        for (Piece<?> p : this.pieces) {
             p.render(drawer);
         }
     }

@@ -14,16 +14,18 @@
 // limitations under the License.
 
 
-package com.twistral.kithinite;
+package com.twistral.kithinite.nests;
 
 
+import com.twistral.kithinite.core.Nest;
+import com.twistral.kithinite.core.Piece;
 import space.earlygrey.shapedrawer.ShapeDrawer;
 
 import java.util.HashMap;
 
-public class PinNest extends Nest {
+public class PinNest extends Nest<PinNest> {
 
-    private final HashMap<Piece, Pin> pins;
+    private final HashMap<Piece<?>, Pin> pins;
 
     public PinNest() {
         super();
@@ -31,7 +33,7 @@ public class PinNest extends Nest {
     }
 
 
-    public Pin pin(Piece piece) {
+    public Pin pin(Piece<?> piece) {
         if (!this.pins.containsKey(piece)) {
             this.pins.put(piece, new Pin());
         }
@@ -40,18 +42,18 @@ public class PinNest extends Nest {
 
 
     @Override
-    protected void layout() {
+    public void layout() {
         if (!this.visible) return;
 
         // Absolute (absX, absY) coord calculation for nests should happen immediately
         // since pieces that are owned by this nest are going to use this nest's
         // absolute coords to calculate their absolute coords.
         boolean isRootNest = (this.nester == null);
-        this.absX = (isRootNest ? 0f : this.nester.absX) + this.x;
-        this.absY = (isRootNest ? 0f : this.nester.absY) + this.y;
+        this.absX = (isRootNest ? 0f : this.nester.getAbsX()) + this.x;
+        this.absY = (isRootNest ? 0f : this.nester.getAbsY()) + this.y;
 
         // Relative (x,y) coord calculation for owned pieces
-        for (Piece piece : this.pieces) {
+        for (Piece<?> piece : this.pieces) {
             if (!piece.isVisible()) continue;
 
             final Pin pin = this.pins.get(piece);
@@ -61,6 +63,7 @@ public class PinNest extends Nest {
                 final boolean westPinned = pin.isWestPinned();
                 final boolean northPinned = pin.isNorthPinned();
                 final boolean southPinned = pin.isSouthPinned();
+                final float pieceWidth = piece.getWidth(), pieceHeight = piece.getHeight();
                 final float nestWidth = this.width, nestHeight = this.height;
 
                 // Horizontal pinning
@@ -69,7 +72,7 @@ public class PinNest extends Nest {
                     piece.setWidth(nestWidth - pin.east - pin.west); // Perform strecthing
                 }
                 else if (eastPinned && !westPinned) {
-                    piece.setX(nestWidth - pin.east - piece.width);
+                    piece.setX(nestWidth - pin.east - pieceWidth);
                 }
                 else if (!eastPinned && westPinned) {
                     piece.setX(pin.west);
@@ -81,7 +84,7 @@ public class PinNest extends Nest {
                     piece.setHeight(nestHeight - pin.north - pin.south); // Perform strecthing
                 }
                 else if (northPinned && !southPinned) {
-                    piece.setY(nestHeight - pin.north - piece.height);
+                    piece.setY(nestHeight - pin.north - pieceHeight);
                 }
                 else if (!northPinned && southPinned) {
                     piece.setY(pin.south);
@@ -94,10 +97,10 @@ public class PinNest extends Nest {
 
 
     @Override
-    protected void render(ShapeDrawer drawer) {
+    public void render(ShapeDrawer drawer) {
         if (!this.visible) return;
 
-        for (Piece p : this.pieces) {
+        for (Piece<?> p : this.pieces) {
             p.render(drawer);
         }
     }

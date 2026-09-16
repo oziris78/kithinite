@@ -14,18 +14,19 @@
 // limitations under the License.
 
 
-package com.twistral.kithinite;
+package com.twistral.kithinite.shapes;
 
 
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.math.MathUtils;
+import com.twistral.kithinite.core.Widget;
 import space.earlygrey.shapedrawer.JoinType;
 import space.earlygrey.shapedrawer.ShapeDrawer;
 
-import static com.twistral.kithinite.Kithinite.prioritySelect;
+import static com.twistral.kithinite.KithiniteUtils.*;
 
 
-public class Rectangle extends Widget {
+public class Rectangle extends Widget<Rectangle> {
 
     // Static variables
     public static final JoinType DEF_JOIN_TYPE = JoinType.POINTY;
@@ -97,7 +98,7 @@ public class Rectangle extends Widget {
 
 
     @Override
-    protected void render(ShapeDrawer drawer) {
+    public void render(ShapeDrawer drawer) {
         if (!this.visible) return;
         if (this.width <= 0 || this.height <= 0) return;
 

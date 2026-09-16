@@ -20,11 +20,11 @@ package com.twistral.kithinite;
 
 public class KithiniteException extends RuntimeException {
 
-    KithiniteException(String format, Object... args) {
+    public KithiniteException(String format, Object... args) {
         super(String.format(format, args));
     }
 
-    KithiniteException(String text) {
+    public KithiniteException(String text) {
         super(text);
     }
 

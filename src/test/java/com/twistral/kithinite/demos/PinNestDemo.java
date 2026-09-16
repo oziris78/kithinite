@@ -21,10 +21,10 @@ import com.badlogic.gdx.ApplicationAdapter;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.graphics.Color;
-import com.twistral.kithinite.Layer;
-import com.twistral.kithinite.Piece;
-import com.twistral.kithinite.PinNest;
-import com.twistral.kithinite.Rectangle;
+import com.twistral.kithinite.core.Layer;
+import com.twistral.kithinite.core.Piece;
+import com.twistral.kithinite.nests.PinNest;
+import com.twistral.kithinite.shapes.Rectangle;
 import com.twistral.tempest.TempestUtils;
 
 import java.util.Arrays;
@@ -44,10 +44,10 @@ public class PinNestDemo extends ApplicationAdapter {
         all combinations: no_pins, E, W, N, S, NE, NW, SE, SW, NS, EW, NSE, NSW, NEW, SEW, NSEW
      */
 
-    private Piece rectNo, rectE, rectW, rectN, rectS, rectNE, rectNW, rectSE, rectSW,
+    private Piece<?> rectNo, rectE, rectW, rectN, rectS, rectNE, rectNW, rectSE, rectSW,
             rectNS, rectEW, rectNSE, rectNSW, rectNEW, rectSEW, rectNSEW;
 
-    private Piece[] allRectangles;
+    private Piece<?>[] allRectangles;
 
     private int currentMode;
 

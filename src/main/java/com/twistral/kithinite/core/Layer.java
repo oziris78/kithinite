@@ -15,7 +15,7 @@
 
 
 
-package com.twistral.kithinite;
+package com.twistral.kithinite.core;
 
 
 import com.badlogic.gdx.Gdx;
@@ -26,11 +26,12 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
+import com.twistral.kithinite.nests.NullNest;
 import space.earlygrey.shapedrawer.*;
 
 import java.util.Objects;
 
-import static com.twistral.kithinite.Kithinite.prioritySelect;
+import static com.twistral.kithinite.KithiniteUtils.*;
 
 
 public class Layer {
@@ -47,7 +48,7 @@ public class Layer {
     // Layer Objects
     private float width, height;
     private Color bgColor;
-    private Nest root;
+    private Nest<?> root;
 
 
     /*//////////////////////////////////////////////////////////////////////*/
@@ -55,7 +56,7 @@ public class Layer {
     /*//////////////////////////////////////////////////////////////////////*/
 
 
-    public Layer(Viewport viewport, Nest root, float width, float height, Color bgColor) {
+    public Layer(Viewport viewport, Nest<?> root, float width, float height, Color bgColor) {
         Objects.requireNonNull(root, "root");
         this.root = root;
         this.root.setSize(width, height);
@@ -139,11 +140,11 @@ public class Layer {
     public Layer setBgColor(Color bgColor) { this.bgColor = bgColor; return this; }
     public Layer setHeight(float height) { this.height = height; return this; }
     public Layer setWidth(float width) { this.width = width; return this; }
-    public Layer setRoot(Nest root) { this.root = root; return this; }
+    public Layer setRoot(Nest<?> root) { this.root = root; return this; }
 
     public Color getBgColor() { return bgColor; }
     public float getHeight() { return height; }
     public float getWidth() { return width; }
-    public Nest getRoot() { return root; }
+    public Nest<?> getRoot() { return root; }
 
 }

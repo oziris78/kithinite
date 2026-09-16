@@ -14,17 +14,19 @@
 // limitations under the License.
 
 
-package com.twistral.kithinite;
+package com.twistral.kithinite.shapes;
 
 
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.math.MathUtils;
+import com.twistral.kithinite.core.Piece;
+import com.twistral.kithinite.core.Widget;
 import space.earlygrey.shapedrawer.ShapeDrawer;
 
-import static com.twistral.kithinite.Kithinite.prioritySelect;
+import static com.twistral.kithinite.KithiniteUtils.*;
 
 
-public class Ellipse extends Widget {
+public class Ellipse extends Widget<Ellipse> {
 
     // Static variables
     public static final float DEF_ROTATION_DEGREES = 0f;
@@ -93,7 +95,7 @@ public class Ellipse extends Widget {
 
 
     @Override
-    protected void render(ShapeDrawer drawer) {
+    public void render(ShapeDrawer drawer) {
         if (!this.visible) return;
         if (this.width <= 0 || this.height <= 0) return;
         if (this.radiusX <= 0 || this.radiusY <= 0) return;
@@ -150,14 +152,14 @@ public class Ellipse extends Widget {
     }
 
     @Override
-    public Piece setWidth(float width) {
+    public Ellipse setWidth(float width) {
         this.width = width;
         this.radiusX = width / 2f;
         return this;
     }
 
     @Override
-    public Piece setHeight(float height) {
+    public Ellipse setHeight(float height) {
         this.height = height;
         this.radiusY = height / 2f;
         return this;

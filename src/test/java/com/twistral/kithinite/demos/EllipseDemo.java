@@ -20,8 +20,8 @@ package com.twistral.kithinite.demos;
 import com.badlogic.gdx.ApplicationAdapter;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
-import com.twistral.kithinite.Ellipse;
-import com.twistral.kithinite.Layer;
+import com.twistral.kithinite.shapes.Ellipse;
+import com.twistral.kithinite.core.Layer;
 import com.twistral.kithinite.TestUtils;
 
 

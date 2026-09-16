@@ -14,16 +14,18 @@
 // limitations under the License.
 
 
-package com.twistral.kithinite;
+package com.twistral.kithinite.shapes;
 
 
 import com.badlogic.gdx.graphics.Color;
+import com.twistral.kithinite.core.Piece;
+import com.twistral.kithinite.core.Widget;
 import space.earlygrey.shapedrawer.ShapeDrawer;
 
-import static com.twistral.kithinite.Kithinite.prioritySelect;
+import static com.twistral.kithinite.KithiniteUtils.*;
 
 
-public class Circle extends Widget {
+public class Circle extends Widget<Circle> {
 
     // Static variables
     public static final Color DEF_COLOR = Color.WHITE;
@@ -83,7 +85,7 @@ public class Circle extends Widget {
 
 
     @Override
-    protected void render(ShapeDrawer drawer) {
+    public void render(ShapeDrawer drawer) {
         if (!this.visible) return;
         if (this.width <= 0 || this.height <= 0) return;
         if (this.radius <= 0) return;
@@ -133,7 +135,7 @@ public class Circle extends Widget {
     }
 
     @Override
-    public Piece setWidth(float width) {
+    public Circle setWidth(float width) {
         this.width = width;
         this.height = width;
         this.radius = width / 2f;
@@ -141,7 +143,7 @@ public class Circle extends Widget {
     }
 
     @Override
-    public Piece setHeight(float height) {
+    public Circle setHeight(float height) {
         this.height = height;
         this.width = height;
         this.radius = height / 2f;
@@ -149,7 +151,7 @@ public class Circle extends Widget {
     }
 
     @Override
-    public Piece setSize(float width, float height) {
+    public Circle setSize(float width, float height) {
         // Enforce equal width and height for circles
         final float size = Math.min(width, height);
         return super.setSize(size, size);

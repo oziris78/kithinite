@@ -14,14 +14,15 @@
 // limitations under the License.
 
 
-package com.twistral.kithinite;
+package com.twistral.kithinite.shapes;
 
 
 
 import com.badlogic.gdx.graphics.*;
-import com.twistral.tephrium.core.functions.*;
+import com.twistral.kithinite.core.Piece;
+import com.twistral.kithinite.core.Widget;
 import space.earlygrey.shapedrawer.*;
-import static com.twistral.kithinite.Kithinite.*;
+import static com.twistral.kithinite.KithiniteUtils.*;
 
 
 /**
@@ -31,7 +32,7 @@ import static com.twistral.kithinite.Kithinite.*;
  * <b>NOTE: Custom opacity values (alpha < 1f) are NOT supported on filled triangles to prevent
  * edge double blending leftovers. Alpha values are clamped to 1f during render for filled triangles.</b>
  */
-public class Triangle extends Widget {
+public class Triangle extends Widget<Triangle> {
 
     // Static variables
     public static final Color DEF_COLOR = Color.WHITE;
@@ -85,16 +86,9 @@ public class Triangle extends Widget {
 
 
     @Override
-    protected void render(ShapeDrawer drawer) {
+    public void render(ShapeDrawer drawer) {
         if (!this.visible) return;
         if (this.width <= 0 || this.height <= 0) return;
-
-        final float x1 = this.nester.absX + v1x;
-        final float y1 = this.nester.absY + v1y;
-        final float x2 = this.nester.absX + v2x;
-        final float y2 = this.nester.absY + v2y;
-        final float x3 = this.nester.absX + v3x;
-        final float y3 = this.nester.absY + v3y;
 
         final Color c1 = prioritySelect(this.v1Color, this.color, DEF_COLOR);
         final Color c2 = prioritySelect(this.v2Color, this.color, DEF_COLOR);
@@ -104,7 +98,18 @@ public class Triangle extends Widget {
         final float c2Bits = tempColor.set(c2.r, c2.g, c2.b, 1f).toFloatBits();
         final float c3Bits = tempColor.set(c3.r, c3.g, c3.b, 1f).toFloatBits();
 
-        // Render the edges of the triangle
+        final float nesterAbsX = this.nester.getAbsX(),
+                    nesterAbsY = this.nester.getAbsY();
+
+        final float x1 = nesterAbsX + this.v1x,
+                    y1 = nesterAbsY + this.v1y;
+        final float x2 = nesterAbsX + this.v2x,
+                    y2 = nesterAbsY + this.v2y;
+        final float x3 = nesterAbsX + this.v3x,
+                    y3 = nesterAbsY + this.v3y;
+
+        // Render the edges of the triangle to avoid pixel imperfections
+        // at the cost of 3 additional line render calls each frame
         drawer.line(x1, y1, x2, y2, 1f, false, c1Bits, c2Bits);
         drawer.line(x2, y2, x3, y3, 1f, false, c2Bits, c3Bits);
         drawer.line(x3, y3, x1, y1, 1f, false, c3Bits, c1Bits);
@@ -124,7 +129,7 @@ public class Triangle extends Widget {
     /*////////////////  SETTERS WITH SIDE EFFECTS  ////////////////*/
 
     @Override
-    public Piece setX(float x) {
+    public Triangle setX(float x) {
         float oldX = this.x;
         super.setX(x);
         float dx = this.x - oldX;
@@ -136,7 +141,7 @@ public class Triangle extends Widget {
 
 
     @Override
-    public Piece setY(float y) {
+    public Triangle setY(float y) {
         float oldY = this.y;
         super.setY(y);
         float dy = this.y - oldY;
@@ -148,7 +153,7 @@ public class Triangle extends Widget {
 
 
     @Override
-    public Piece setWidth(float newWidth) {
+    public Triangle setWidth(float newWidth) {
         super.setWidth(newWidth);
         recalculateVerticesFromNorm();
         return this;
@@ -156,7 +161,7 @@ public class Triangle extends Widget {
 
 
     @Override
-    public Piece setHeight(float newHeight) {
+    public Triangle setHeight(float newHeight) {
         super.setHeight(newHeight);
         recalculateVerticesFromNorm();
         return this;

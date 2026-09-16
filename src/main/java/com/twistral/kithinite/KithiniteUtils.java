@@ -14,27 +14,25 @@
 // limitations under the License.
 
 
+
 package com.twistral.kithinite;
 
 
-public abstract class Widget extends Piece {
 
-    public Widget() {
-        super(true);
+public final class KithiniteUtils {
+
+    // No constructor
+    private KithiniteUtils() {}
+
+    public static <T> T prioritySelect(T t1, T t2) {
+        return t1 != null ? t1 : t2;
     }
 
-    @Override
-    protected void layout() {
-        // All widgets are supposted to be inside a nest (this is Kithinite's assumption)
-        if (this.nester == null) {
-            throw new KithiniteException(
-                "%s must be added to a Nest before layout() is called.", this.getClass().getSimpleName()
-            );
-        }
-
-        // Absolute coord calculation
-        this.absX = this.nester.absX + this.x;
-        this.absY = this.nester.absY + this.y;
+    public static <T> T prioritySelect(T t1, T t2, T t3) {
+        return t1 != null ? t1 : (t2 != null ? t2 : t3);
     }
+
+    public static float min(float a, float b, float c) { return Math.min(Math.min(a, b), c); }
+    public static float max(float a, float b, float c) { return Math.max(Math.max(a, b), c); }
 
 }

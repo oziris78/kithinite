@@ -14,16 +14,16 @@
 // limitations under the License.
 
 
-package com.twistral.kithinite;
+package com.twistral.kithinite.core;
 
 
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
-public abstract class Nest extends Piece {
+public abstract class Nest<T extends Nest<T>> extends Piece<T> {
 
-    protected List<Piece> pieces;
+    protected List<Piece<?>> pieces;
 
     public Nest() {
         super(false);
@@ -32,41 +32,55 @@ public abstract class Nest extends Piece {
 
     /*///////////  ADD  ///////////*/
 
-    public void add(Piece piece) {
+    public T add(Piece<?> piece) {
         this.pieces.add(piece);
         piece.nester = this;
+        return self();
     }
 
-    public void add(Piece... pieces) {
-        for (Piece p : pieces) this.add(p);
+    public T add(Piece<?>... pieces) {
+        for (Piece<?> p : pieces) {
+            this.add(p);
+        }
+        return self();
     }
 
     /*///////////  REMOVE  ///////////*/
 
-    public void remove(Piece piece) {
+    public T remove(Piece<?> piece) {
         if (piece.nester == this && this.pieces.contains(piece)) {
             this.pieces.remove(piece);
             piece.nester = null;
         }
+        return self();
     }
 
-    public void remove(Piece... pieces) {
-        for (Piece p : pieces) this.remove(p);
+    public T remove(Piece<?>... pieces) {
+        for (Piece<?> p : pieces) {
+            this.remove(p);
+        }
+        return self();
     }
 
-    public void remove(Collection<? extends Piece> pieces) {
-        for (Piece p : pieces) this.remove(p);
+    public T remove(Collection<? extends Piece<?>> pieces) {
+        for (Piece<?> p : pieces) {
+            this.remove(p);
+        }
+        return self();
     }
 
-    public void clear() {
-        Piece[] pieceArray = new Piece[this.pieces.size()];
-        this.pieces.toArray(pieceArray);
-        for (Piece p : pieceArray) this.remove(p);
+    public T clear() {
+        List<Piece<?>> toRemove = new ArrayList<>(this.pieces);
+        for (Piece<?> p : toRemove) {
+            this.remove(p);
+        }
+        return self();
     }
+
 
     /*///////////  UTILITY  ///////////*/
 
-    public List<Piece> getPieces() {
+    public List<Piece<?>> getPieces() {
         return pieces;
     }
 

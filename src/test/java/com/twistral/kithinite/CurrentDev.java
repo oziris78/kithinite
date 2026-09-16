@@ -19,6 +19,8 @@ package com.twistral.kithinite;
 
 import com.badlogic.gdx.*;
 import com.badlogic.gdx.graphics.*;
+import com.twistral.kithinite.core.Layer;
+import com.twistral.kithinite.shapes.Triangle;
 
 
 public class CurrentDev extends ApplicationAdapter {

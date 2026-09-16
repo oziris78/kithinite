@@ -19,10 +19,10 @@ package com.twistral.kithinite;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
+import com.twistral.kithinite.core.Piece;
 import com.twistral.tephrium.prng.SplitMix64Random;
 
 import java.lang.reflect.Method;
-import java.util.Objects;
 
 
 public final class TestUtils {
@@ -36,18 +36,6 @@ public final class TestUtils {
     public static void setTitleFromClass(Object obj) {
         String title = obj.getClass().getSimpleName().replaceAll("(?<!^)(?=[A-Z])", " ");
         Gdx.graphics.setTitle(title);
-    }
-
-    /** To bypass the "protected" access modifier of Piece#layout inside tests */
-    public static void invokeLayout(Piece piece) {
-        try {
-            Method method = Piece.class.getDeclaredMethod("layout");
-            method.setAccessible(true);
-            method.invoke(piece);
-        }
-        catch (Exception e) {
-            throw new RuntimeException("Failed to invoke layout in invokeLayout", e);
-        }
     }
 
 }

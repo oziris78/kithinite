@@ -17,8 +17,10 @@
 package com.twistral.kithinite.automated;
 
 
-import com.badlogic.gdx.graphics.*;
 import com.twistral.kithinite.*;
+import com.twistral.kithinite.core.Piece;
+import com.twistral.kithinite.nests.PinNest;
+import com.twistral.kithinite.shapes.Rectangle;
 import org.junit.jupiter.api.*;
 import static com.twistral.kithinite.TestUtils.*;
 import static org.junit.jupiter.api.Assertions.*;
@@ -47,7 +49,7 @@ public class PinNestTest {
         nest1.setY(200);
         root.setX(100);
 
-        TestUtils.invokeLayout(root);
+        root.layout();
 
         // R1 150 250
         assertEquals(r1.getAbsX(), 150f);
@@ -94,7 +96,7 @@ public class PinNestTest {
         n1.add(wA, n2, wB);
         n2.add(wK, wL);
 
-        TestUtils.invokeLayout(root);
+        root.layout();
 
         // "root" x=10, y=20                       => absX=10 , absY=20
         //    |- "w1" x=20, y=20                   => absX=30 , absY=40
@@ -153,7 +155,7 @@ public class PinNestTest {
 
         pinNest.pin(child).east(10f).north(20f);
 
-        invokeLayout(pinNest);
+        pinNest.layout();
 
         assertEquals(child.getAbsX(), 340f);
         assertEquals(child.getAbsY(), 230f);
@@ -171,7 +173,7 @@ public class PinNestTest {
 
         pinNest.pin(child).west(20f).east(30f).south(10f).north(15f);
 
-        invokeLayout(pinNest);
+        pinNest.layout();
 
         assertEquals(child.getX(), 20f);
         assertEquals(child.getWidth(), 350f);
@@ -191,19 +193,19 @@ public class PinNestTest {
         child.setXY(100f, 100f).setSize(50f, 50f);
         pinNest.add(child);
 
-        invokeLayout(pinNest);
+        pinNest.layout();
         assertEquals(child.getAbsX(), 100f);
         assertEquals(child.getAbsY(), 100f);
 
         pinNest.pin(child).west(20f);
         child.setXY(100f, 100f);
-        invokeLayout(pinNest);
+        pinNest.layout();
         assertEquals(child.getAbsX(), 20f);
         assertEquals(child.getAbsY(), 100f);
 
         pinNest.pin(child).unpinWest();
         child.setXY(100f, 100f);
-        invokeLayout(pinNest);
+        pinNest.layout();
         assertEquals(child.getAbsX(), 100f);
         assertEquals(child.getAbsY(), 100f);
     }

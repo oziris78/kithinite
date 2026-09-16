@@ -23,10 +23,10 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Pixmap;
-import com.twistral.kithinite.Layer;
-import com.twistral.kithinite.Rectangle;
+import com.twistral.kithinite.core.Layer;
+import com.twistral.kithinite.shapes.Rectangle;
 import com.twistral.kithinite.TestUtils;
-import com.twistral.kithinite.Triangle;
+import com.twistral.kithinite.shapes.Triangle;
 import com.twistral.tempest.TempestUtils;
 import com.twistral.tephrium.prng.SplitMix64Random;
 

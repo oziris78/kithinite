@@ -20,9 +20,9 @@ package com.twistral.kithinite.demos;
 
 import com.badlogic.gdx.*;
 import com.badlogic.gdx.graphics.*;
-import com.twistral.kithinite.Layer;
+import com.twistral.kithinite.core.Layer;
 import com.twistral.kithinite.TestUtils;
-import com.twistral.kithinite.Triangle;
+import com.twistral.kithinite.shapes.Triangle;
 import com.twistral.tempest.*;
 import com.twistral.tephrium.prng.*;
 import java.util.*;

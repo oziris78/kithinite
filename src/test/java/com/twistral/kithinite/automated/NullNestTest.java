@@ -18,10 +18,12 @@ package com.twistral.kithinite.automated;
 
 
 import com.twistral.kithinite.*;
+import com.twistral.kithinite.core.Piece;
+import com.twistral.kithinite.nests.NullNest;
+import com.twistral.kithinite.shapes.Rectangle;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
-import static com.twistral.kithinite.TestUtils.invokeLayout;
 import static com.twistral.kithinite.TestUtils.randColor;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
@@ -41,7 +43,7 @@ public class NullNestTest {
             root.add(new Rectangle(true, randColor()).setSize(s, s).setXY(i, i));
         }
 
-        TestUtils.invokeLayout(root);
+        root.layout();
 
         int i = inc;
         for (Piece p : root.getPieces()) {
@@ -69,7 +71,7 @@ public class NullNestTest {
         root.add(n1);
         n1.add(widget);
 
-        invokeLayout(root);
+        root.layout();
 
         assertEquals(root.getAbsX(), 10f);
         assertEquals(root.getAbsY(), 20f);
