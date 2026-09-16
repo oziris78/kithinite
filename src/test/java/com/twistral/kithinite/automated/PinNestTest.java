@@ -33,7 +33,7 @@ public class PinNestTest {
     void testNestedPinNestPositions() {
         final int s = 100;
 
-        Piece r1 = new Rectangle(true, randColor()).setXY(50, 50).setSize(s, s),  // 150 250
+        Piece<?> r1 = new Rectangle(true, randColor()).setXY(50, 50).setSize(s, s),  // 150 250
               r2 = new Rectangle(true, randColor()).setXY(60, 60).setSize(s, s),  // 160 260
               r3 = new Rectangle(true, randColor()).setXY(20, 20).setSize(s, s),  // 120 20
               r4 = new Rectangle(true, randColor()).setXY(30, 30).setSize(s, s),  // 130 30
@@ -79,18 +79,18 @@ public class PinNestTest {
         PinNest root = new PinNest();
         root.setXY(10, 20);
 
-        Piece w1 = new Rectangle(true, randColor()).setXY(20, 20).setSize(50, 50);
-        Piece w2 = new Rectangle(true, randColor()).setXY(80, 80).setSize(50, 50);
-        Piece w3 = new Rectangle(true, randColor()).setXY(500, 500).setSize(50, 50);
+        Piece<?> w1 = new Rectangle(true, randColor()).setXY(20, 20).setSize(50, 50);
+        Piece<?> w2 = new Rectangle(true, randColor()).setXY(80, 80).setSize(50, 50);
+        Piece<?> w3 = new Rectangle(true, randColor()).setXY(500, 500).setSize(50, 50);
 
         PinNest n1 = new PinNest();
         n1.setXY(20, 100);
-        Piece wA = new Rectangle(true, randColor()).setXY(10, 10).setSize(50, 50);
-        Piece wB = new Rectangle(true, randColor()).setXY(60, 60).setSize(50, 50);
+        Piece<?> wA = new Rectangle(true, randColor()).setXY(10, 10).setSize(50, 50);
+        Piece<?> wB = new Rectangle(true, randColor()).setXY(60, 60).setSize(50, 50);
 
         PinNest n2 = new PinNest();
-        Piece wK = new Rectangle(true, randColor()).setXY(20, 20).setSize(50, 50);
-        Piece wL = new Rectangle(true, randColor()).setXY(200, 200).setSize(50, 50);
+        Piece<?> wK = new Rectangle(true, randColor()).setXY(20, 20).setSize(50, 50);
+        Piece<?> wL = new Rectangle(true, randColor()).setXY(200, 200).setSize(50, 50);
 
         root.add(w1, w2, n1, w3);
         n1.add(wA, n2, wB);

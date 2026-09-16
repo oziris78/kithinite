@@ -46,7 +46,7 @@ public class NullNestTest {
         root.layout();
 
         int i = inc;
-        for (Piece p : root.getPieces()) {
+        for (Piece<?> p : root.getPieces()) {
             assertEquals(p.getWidth(), s);
             assertEquals(p.getHeight(), s);
             assertEquals(p.getAbsX(), i);

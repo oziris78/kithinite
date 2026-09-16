@@ -159,7 +159,7 @@ public class PinNestDemo extends ApplicationAdapter {
         layer.render();
     }
 
-    private void selectRect(Piece rectangle, String newTitle) {
+    private void selectRect(Piece<?> rectangle, String newTitle) {
         Arrays.stream(allRectangles).forEach(p -> p.setVisible(false)); // make them all invisible
         rectangle.setVisible(true); // make the selected one visible
         Gdx.graphics.setTitle(newTitle); // refresh the title
