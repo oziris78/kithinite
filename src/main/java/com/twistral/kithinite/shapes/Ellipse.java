@@ -26,15 +26,9 @@ import space.earlygrey.shapedrawer.ShapeDrawer;
 import static com.twistral.kithinite.KithiniteUtils.*;
 
 
-public class Ellipse extends Widget<Ellipse> {
-
-    // Static variables
-    public static final float DEF_ROTATION_DEGREES = 0f;
-    public static final Color DEF_COLOR = Color.WHITE;
-    public static final float DEF_LINE_WIDTH = 1f;
+public class Ellipse extends Shape<Ellipse> {
 
     // Ellipse related variables
-    private boolean filled;
     private float radiusX, radiusY;
     private float rotationDegrees;
     private float lineWidth;
@@ -53,7 +47,7 @@ public class Ellipse extends Widget<Ellipse> {
     private Ellipse(boolean filled, float radiusX, float radiusY, float rotationDegrees,
                     float lineWidth, Color color, Color innerColor, Color outerColor)
     {
-        this.filled = filled;
+        super(filled);
         setRadiusX(radiusX); // auto update width
         setRadiusY(radiusY); // auto update height
         this.rotationDegrees = rotationDegrees;
@@ -174,11 +168,6 @@ public class Ellipse extends Widget<Ellipse> {
 
     /*////////////////  SETTERS WITH NO SIDE EFFECTS  ////////////////*/
 
-    public Ellipse setFilled(boolean filled) {
-        this.filled = filled;
-        return this;
-    }
-
     public Ellipse setLineWidth(float lineWidth) {
         this.lineWidth = lineWidth;
         return this;
@@ -221,7 +210,6 @@ public class Ellipse extends Widget<Ellipse> {
 
     /*////////////////  ALL GETTERS  ////////////////*/
 
-    public boolean isFilled() { return this.filled; }
     public float getRadiusX() { return this.radiusX; }
     public float getRadiusY() { return this.radiusY; }
     public float getRotationDegrees() { return this.rotationDegrees; }

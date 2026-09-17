@@ -31,13 +31,9 @@ import static com.twistral.kithinite.KithiniteUtils.*;
  * <b>NOTE: Custom opacity values (alpha < 1f) are NOT supported on filled triangles to prevent
  * edge double blending leftovers. Alpha values are clamped to 1f during render for filled triangles.</b>
  */
-public class Triangle extends Widget<Triangle> {
-
-    // Static variables
-    public static final Color DEF_COLOR = Color.WHITE;
+public class Triangle extends Shape<Triangle> {
 
     // Triangle related variables
-    private boolean filled;
     private float v1x, v1y, v2x, v2y, v3x, v3y;
 
     // Color variables
@@ -56,7 +52,7 @@ public class Triangle extends Widget<Triangle> {
     private Triangle(boolean filled, float v1x, float v1y, float v2x, float v2y,
                      float v3x, float v3y, Color color, Color v1Color, Color v2Color, Color v3Color)
     {
-        this.filled = filled;
+        super(filled);
         this.color = color;
         this.setVertices(v1x, v1y, v1Color, v2x, v2y, v2Color, v3x, v3y, v3Color);
     }
@@ -234,11 +230,6 @@ public class Triangle extends Widget<Triangle> {
 
     /*////////////////  SETTERS WITH NO SIDE EFFECTS  ////////////////*/
 
-    public Triangle setFilled(boolean filled) {
-        this.filled = filled;
-        return this;
-    }
-
     public Triangle setV1Color(Color v1Color) {
         this.v1Color = v1Color;
         return this;
@@ -287,7 +278,6 @@ public class Triangle extends Widget<Triangle> {
 
     /*////////////////  ALL GETTERS  ////////////////*/
 
-    public boolean isFilled() { return this.filled; }
     public float getV1x() { return this.v1x; }
     public float getV1y() { return this.v1y; }
     public float getV2x() { return this.v2x; }

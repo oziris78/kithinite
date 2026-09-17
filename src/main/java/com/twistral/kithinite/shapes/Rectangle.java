@@ -26,16 +26,12 @@ import space.earlygrey.shapedrawer.ShapeDrawer;
 import static com.twistral.kithinite.KithiniteUtils.*;
 
 
-public class Rectangle extends Widget<Rectangle> {
+public class Rectangle extends Shape<Rectangle> {
 
     // Static variables
     public static final JoinType DEF_JOIN_TYPE = JoinType.POINTY;
-    public static final float DEF_ROTATION_DEGREES = 0f;
-    public static final Color DEF_COLOR = Color.WHITE;
-    public static final float DEF_LINE_WIDTH = 1f;
 
     // Rectangle related variables
-    private boolean filled;
     private float rotationDegrees;
     private float lineWidth;
     private JoinType joinType;
@@ -57,7 +53,7 @@ public class Rectangle extends Widget<Rectangle> {
                       Color color, Color topRightColor, Color topLeftColor,
                       Color bottomLeftColor, Color bottomRightColor)
     {
-        this.filled = filled;
+        super(filled);
         this.rotationDegrees = rotationDegrees;
         this.lineWidth = lineWidth;
         this.joinType = joinType;
@@ -150,11 +146,6 @@ public class Rectangle extends Widget<Rectangle> {
         return this;
     }
 
-    public Rectangle setFilled(boolean filled) {
-        this.filled = filled;
-        return this;
-    }
-
     public Rectangle setColor(Color color) {
         this.color = color;
         return this;
@@ -203,7 +194,6 @@ public class Rectangle extends Widget<Rectangle> {
         return setGradient(leftRgba, rightRgba, rightRgba, leftRgba);
     }
 
-    public boolean isFilled() { return filled; }
     public float getRotationDegrees() { return rotationDegrees; }
     public float getLineWidth() { return lineWidth; }
     public JoinType getJoinType() { return joinType; }

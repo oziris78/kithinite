@@ -25,14 +25,9 @@ import space.earlygrey.shapedrawer.ShapeDrawer;
 import static com.twistral.kithinite.KithiniteUtils.*;
 
 
-public class Circle extends Widget<Circle> {
-
-    // Static variables
-    public static final Color DEF_COLOR = Color.WHITE;
-    public static final float DEF_LINE_WIDTH = 1f;
+public class Circle extends Shape<Circle> {
 
     // Circle related variables
-    private boolean filled;
     private float radius;
     private float lineWidth;
 
@@ -50,7 +45,7 @@ public class Circle extends Widget<Circle> {
     private Circle(boolean filled, float radius, float lineWidth,
                    Color color, Color innerColor, Color outerColor)
     {
-        this.filled = filled;
+        super(filled);
         setRadius(radius); // auto update width & height
         this.lineWidth = lineWidth;
         this.color = color;
@@ -166,11 +161,6 @@ public class Circle extends Widget<Circle> {
 
     /*////////////////  Setters with NO SIDE EFFECTS  ////////////////*/
 
-    public Circle setFilled(boolean filled) {
-        this.filled = filled;
-        return this;
-    }
-
     public Circle setLineWidth(float lineWidth) {
         this.lineWidth = lineWidth;
         return this;
@@ -209,7 +199,6 @@ public class Circle extends Widget<Circle> {
 
     /*////////////////  ALL GETTERS  ////////////////*/
 
-    public boolean isFilled() { return this.filled; }
     public float getRadius() { return this.radius; }
     public float getLineWidth() { return this.lineWidth; }
     public Color getColor() { return this.color; }
