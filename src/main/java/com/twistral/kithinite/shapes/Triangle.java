@@ -19,7 +19,6 @@ package com.twistral.kithinite.shapes;
 
 
 import com.badlogic.gdx.graphics.*;
-import com.twistral.kithinite.core.Piece;
 import com.twistral.kithinite.core.Widget;
 import space.earlygrey.shapedrawer.*;
 import static com.twistral.kithinite.KithiniteUtils.*;
@@ -45,11 +44,8 @@ public class Triangle extends Widget<Triangle> {
     private Color color;
     private Color v1Color, v2Color, v3Color;
 
-    // Variables for correct triangle scaling (setWidth, setHeight, setSize)
-    private float v1xNorm, v1yNorm, v2xNorm, v2yNorm, v3xNorm, v3yNorm;
-
-    // For performance
-    private final Color tempColor = new Color();
+    // normalized vertices for proper width/height scaling
+    private float nv1x, nv1y, nv2x, nv2y, nv3x, nv3y;
 
 
     /*//////////////////////////////////////////////////////////////////////*/
@@ -94,9 +90,9 @@ public class Triangle extends Widget<Triangle> {
         final Color c2 = prioritySelect(this.v2Color, this.color, DEF_COLOR);
         final Color c3 = prioritySelect(this.v3Color, this.color, DEF_COLOR);
 
-        final float c1Bits = tempColor.set(c1.r, c1.g, c1.b, 1f).toFloatBits();
-        final float c2Bits = tempColor.set(c2.r, c2.g, c2.b, 1f).toFloatBits();
-        final float c3Bits = tempColor.set(c3.r, c3.g, c3.b, 1f).toFloatBits();
+        final float c1Bits = getFloatBits(c1.r, c1.g, c1.b, 1f);
+        final float c2Bits = getFloatBits(c2.r, c2.g, c2.b, 1f);
+        final float c3Bits = getFloatBits(c3.r, c3.g, c3.b, 1f);
 
         final float nesterAbsX = this.nester.getAbsX(),
                     nesterAbsY = this.nester.getAbsY();
@@ -169,12 +165,12 @@ public class Triangle extends Widget<Triangle> {
 
 
     private void recalculateVerticesFromNorm() {
-        this.v1x = this.x + (this.v1xNorm * this.width);
-        this.v1y = this.y + (this.v1yNorm * this.height);
-        this.v2x = this.x + (this.v2xNorm * this.width);
-        this.v2y = this.y + (this.v2yNorm * this.height);
-        this.v3x = this.x + (this.v3xNorm * this.width);
-        this.v3y = this.y + (this.v3yNorm * this.height);
+        this.v1x = this.x + (this.nv1x * this.width);
+        this.v1y = this.y + (this.nv1y * this.height);
+        this.v2x = this.x + (this.nv2x * this.width);
+        this.v2y = this.y + (this.nv2y * this.height);
+        this.v3x = this.x + (this.nv3x * this.width);
+        this.v3y = this.y + (this.nv3y * this.height);
     }
 
 
@@ -216,15 +212,15 @@ public class Triangle extends Widget<Triangle> {
         this.height = maxY - minY;
 
         if (this.width > 0f) {
-            this.v1xNorm = (v1x - minX) / this.width;
-            this.v2xNorm = (v2x - minX) / this.width;
-            this.v3xNorm = (v3x - minX) / this.width;
+            this.nv1x = (v1x - minX) / this.width;
+            this.nv2x = (v2x - minX) / this.width;
+            this.nv3x = (v3x - minX) / this.width;
         }
 
         if (this.height > 0f) {
-            this.v1yNorm = (v1y - minY) / this.height;
-            this.v2yNorm = (v2y - minY) / this.height;
-            this.v3yNorm = (v3y - minY) / this.height;
+            this.nv1y = (v1y - minY) / this.height;
+            this.nv2y = (v2y - minY) / this.height;
+            this.nv3y = (v3y - minY) / this.height;
         }
     }
 

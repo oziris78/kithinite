@@ -18,8 +18,11 @@
 package com.twistral.kithinite;
 
 
+import com.badlogic.gdx.graphics.Color;
 
 public final class KithiniteUtils {
+
+    private static  final Color tempColor = new Color();
 
     // No constructor
     private KithiniteUtils() {}
@@ -34,5 +37,9 @@ public final class KithiniteUtils {
 
     public static float min(float a, float b, float c) { return Math.min(Math.min(a, b), c); }
     public static float max(float a, float b, float c) { return Math.max(Math.max(a, b), c); }
+
+    public static float getFloatBits(float r, float g, float b, float a) {
+        return tempColor.set(r, g, b, a).toFloatBits();
+    }
 
 }
