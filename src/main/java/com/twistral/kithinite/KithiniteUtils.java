@@ -28,11 +28,29 @@ public final class KithiniteUtils {
     private KithiniteUtils() {}
 
     public static <T> T prioritySelect(T t1, T t2) {
-        return t1 != null ? t1 : t2;
+        if (t1 != null) return t1;
+        return t2;
     }
 
     public static <T> T prioritySelect(T t1, T t2, T t3) {
-        return t1 != null ? t1 : (t2 != null ? t2 : t3);
+        if (t1 != null) return t1;
+        if (t2 != null) return t2;
+        return t3;
+    }
+
+    public static <T> T prioritySelect(T t1, T t2, T t3, T t4) {
+        if (t1 != null) return t1;
+        if (t2 != null) return t2;
+        if (t3 != null) return t3;
+        return t4;
+    }
+
+    public static <T> T prioritySelect(T t1, T t2, T t3, T t4, T t5) {
+        if (t1 != null) return t1;
+        if (t2 != null) return t2;
+        if (t3 != null) return t3;
+        if (t4 != null) return t4;
+        return t5;
     }
 
     public static float min(float a, float b, float c) { return Math.min(Math.min(a, b), c); }

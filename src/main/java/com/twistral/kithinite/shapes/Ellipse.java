@@ -17,69 +17,44 @@
 package com.twistral.kithinite.shapes;
 
 
-import com.badlogic.gdx.graphics.Color;
-import com.badlogic.gdx.math.MathUtils;
-import com.twistral.kithinite.core.Piece;
-import com.twistral.kithinite.core.Widget;
-import space.earlygrey.shapedrawer.ShapeDrawer;
-
+import com.badlogic.gdx.graphics.*;
+import com.badlogic.gdx.math.*;
+import com.twistral.kithinite.core.*;
+import space.earlygrey.shapedrawer.*;
 import static com.twistral.kithinite.KithiniteUtils.*;
 
 
 public class Ellipse extends Shape<Ellipse> {
 
-    // Ellipse related variables
     private float radiusX, radiusY;
     private float rotationDegrees;
     private float lineWidth;
-
-    // Color variables
-    private Color color;
-    private Color innerColor;
-    private Color outerColor;
+    private Color innerColor, outerColor;
 
 
-    /*//////////////////////////////////////////////////////////////////////*/
-    /*///////////////////////////  CONSTRUCTORS  ///////////////////////////*/
-    /*//////////////////////////////////////////////////////////////////////*/
-
-
-    private Ellipse(boolean filled, float radiusX, float radiusY, float rotationDegrees,
-                    float lineWidth, Color color, Color innerColor, Color outerColor)
+    public Ellipse(boolean filled, float radiusX, float radiusY, Color innerColor, Color outerColor,
+                   float rotationDegrees, float lineWidth)
     {
         super(filled);
         setRadiusX(radiusX); // auto update width
         setRadiusY(radiusY); // auto update height
+        setColor(innerColor, outerColor);
         this.rotationDegrees = rotationDegrees;
         this.lineWidth = lineWidth;
-        this.color = color;
-        this.innerColor = innerColor;
-        this.outerColor = outerColor;
     }
 
-    // Main constructor for ellipses with a SINGLE COLOR
     public Ellipse(boolean filled, float radiusX, float radiusY, Color color,
                    float rotationDegrees, float lineWidth)
     {
-        this(filled, radiusX, radiusY, rotationDegrees, lineWidth, color, null, null);
+        this(filled, radiusX, radiusY, color, color, rotationDegrees, lineWidth);
     }
 
-    // Main constructor for ellipses with TWO COLORS
-    public Ellipse(boolean filled, float radiusX, float radiusY, Color innerColor, Color outerColor,
-                   float rotationDegrees, float lineWidth)
-    {
-        this(filled, radiusX, radiusY, rotationDegrees, lineWidth, null, innerColor, outerColor);
-    }
-
-
-    // Secondary constructor for ellipses with a SINGLE COLOR
-    public Ellipse(boolean filled, float radiusX, float radiusY, Color color) {
-        this(filled, radiusX, radiusY, color, DEF_ROTATION_DEGREES, DEF_LINE_WIDTH);
-    }
-
-    // Secondary constructor for ellipses with TWO COLORS
     public Ellipse(boolean filled, float radiusX, float radiusY, Color innerColor, Color outerColor) {
         this(filled, radiusX, radiusY, innerColor, outerColor, DEF_ROTATION_DEGREES, DEF_LINE_WIDTH);
+    }
+
+    public Ellipse(boolean filled, float radiusX, float radiusY, Color color) {
+        this(filled, radiusX, radiusY, color, color, DEF_ROTATION_DEGREES, DEF_LINE_WIDTH);
     }
 
 
@@ -98,10 +73,10 @@ public class Ellipse extends Shape<Ellipse> {
         final float absCentreY = absY + radiusY;
         final float rotationRadians = this.rotationDegrees * MathUtils.degreesToRadians;
 
-        final Color outColor = prioritySelect(this.outerColor, this.color, DEF_COLOR);
+        final Color outColor = prioritySelect(this.outerColor, DEF_COLOR);
 
         if (filled) {
-            Color inColor = prioritySelect(this.innerColor, this.color, DEF_COLOR);
+            Color inColor = prioritySelect(this.innerColor, DEF_COLOR);
 
             drawer.filledEllipse(
                 absCentreX, absCentreY, radiusX, radiusY, rotationRadians, inColor, outColor
@@ -159,22 +134,15 @@ public class Ellipse extends Shape<Ellipse> {
         return this;
     }
 
-    public Ellipse setColor(Color color) {
-        this.color = color;
-        this.innerColor = null;
-        this.outerColor = null;
-        return this;
-    }
-
     /*////////////////  SETTERS WITH NO SIDE EFFECTS  ////////////////*/
-
-    public Ellipse setLineWidth(float lineWidth) {
-        this.lineWidth = lineWidth;
-        return this;
-    }
 
     public Ellipse setRotationDegrees(float rotationDegrees) {
         this.rotationDegrees = rotationDegrees;
+        return this;
+    }
+
+    public Ellipse setLineWidth(float lineWidth) {
+        this.lineWidth = lineWidth;
         return this;
     }
 
@@ -190,8 +158,17 @@ public class Ellipse extends Shape<Ellipse> {
 
     /*////////////////  UTILITY SETTERS  ////////////////*/
 
+    @Override
+    public Ellipse setColor(Color color) {
+        this.innerColor = color;
+        this.outerColor = color;
+        return this;
+    }
+
     public Ellipse setColor(Color innerColor, Color outerColor) {
-        return setInnerColor(innerColor).setOuterColor(outerColor);
+        this.innerColor = innerColor;
+        this.outerColor = outerColor;
+        return this;
     }
 
     public Ellipse setCentreX(float centreX) {
@@ -210,11 +187,15 @@ public class Ellipse extends Shape<Ellipse> {
 
     /*////////////////  ALL GETTERS  ////////////////*/
 
+    @Override
+    public Color getColor() {
+        return prioritySelect(this.innerColor, this.outerColor, null);
+    }
+
     public float getRadiusX() { return this.radiusX; }
     public float getRadiusY() { return this.radiusY; }
     public float getRotationDegrees() { return this.rotationDegrees; }
     public float getLineWidth() { return this.lineWidth; }
-    public Color getColor() { return this.color; }
     public Color getInnerColor() { return this.innerColor; }
     public Color getOuterColor() { return this.outerColor; }
 

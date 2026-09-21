@@ -19,7 +19,7 @@ package com.twistral.kithinite.shapes;
 
 
 import com.badlogic.gdx.graphics.*;
-import com.twistral.kithinite.core.Widget;
+import com.twistral.kithinite.core.*;
 import space.earlygrey.shapedrawer.*;
 import static com.twistral.kithinite.KithiniteUtils.*;
 
@@ -35,40 +35,25 @@ public class Triangle extends Shape<Triangle> {
 
     // Triangle related variables
     private float v1x, v1y, v2x, v2y, v3x, v3y;
-
-    // Color variables
-    private Color color;
     private Color v1Color, v2Color, v3Color;
 
-    // normalized vertices for proper width/height scaling
+    // [INTERNAL] normalized vertices for proper width/height scaling
     private float nv1x, nv1y, nv2x, nv2y, nv3x, nv3y;
 
 
-    /*//////////////////////////////////////////////////////////////////////*/
-    /*///////////////////////////  CONSTRUCTORS  ///////////////////////////*/
-    /*//////////////////////////////////////////////////////////////////////*/
-
-
-    private Triangle(boolean filled, float v1x, float v1y, float v2x, float v2y,
-                     float v3x, float v3y, Color color, Color v1Color, Color v2Color, Color v3Color)
-    {
-        super(filled);
-        this.color = color;
-        this.setVertices(v1x, v1y, v1Color, v2x, v2y, v2Color, v3x, v3y, v3Color);
-    }
-
-    // Main constructor for triangles with a single color
-    public Triangle(boolean filled, float v1x, float v1y, float v2x, float v2y,
-                    float v3x, float v3y, Color color)
-    {
-        this(filled, v1x, v1y, v2x, v2y, v3x, v3y, color, null, null, null);
-    }
-
-    // Main constructor for triangles with a gradient
     public Triangle(boolean filled, float v1x, float v1y, float v2x, float v2y,
                     float v3x, float v3y, Color v1Color, Color v2Color, Color v3Color)
     {
-        this(filled, v1x, v1y, v2x, v2y, v3x, v3y, null, v1Color, v2Color, v3Color);
+        super(filled);
+        setVertices(v1x, v1y, v2x, v2y, v3x, v3y);
+        setColor(v1Color, v2Color, v3Color);
+    }
+
+
+    public Triangle(boolean filled, float v1x, float v1y, float v2x, float v2y,
+                    float v3x, float v3y, Color color)
+    {
+        this(filled, v1x, v1y, v2x, v2y, v3x, v3y, color, color, color);
     }
 
 
@@ -82,9 +67,9 @@ public class Triangle extends Shape<Triangle> {
         if (!this.visible) return;
         if (this.width <= 0 || this.height <= 0) return;
 
-        final Color c1 = prioritySelect(this.v1Color, this.color, DEF_COLOR);
-        final Color c2 = prioritySelect(this.v2Color, this.color, DEF_COLOR);
-        final Color c3 = prioritySelect(this.v3Color, this.color, DEF_COLOR);
+        final Color c1 = prioritySelect(this.v1Color, DEF_COLOR);
+        final Color c2 = prioritySelect(this.v2Color, DEF_COLOR);
+        final Color c3 = prioritySelect(this.v3Color, DEF_COLOR);
 
         final float c1Bits = getFloatBits(c1.r, c1.g, c1.b, 1f);
         final float c2Bits = getFloatBits(c2.r, c2.g, c2.b, 1f);
@@ -100,17 +85,16 @@ public class Triangle extends Shape<Triangle> {
         final float x3 = nesterAbsX + this.v3x,
                     y3 = nesterAbsY + this.v3y;
 
-        // Render the edges of the triangle to avoid pixel imperfections
-        // at the cost of 3 additional line render calls each frame
-        drawer.line(x1, y1, x2, y2, 1f, false, c1Bits, c2Bits);
-        drawer.line(x2, y2, x3, y3, 1f, false, c2Bits, c3Bits);
-        drawer.line(x3, y3, x1, y1, 1f, false, c3Bits, c1Bits);
-
         // Fill the core polygon
         if (filled) {
             drawer.filledTriangle(x1, y1, x2, y2, x3, y3, c1Bits, c2Bits, c3Bits);
         }
 
+        // Render the edges of the triangle to avoid pixel imperfections
+        // at the cost of 3 additional line render calls each frame
+        drawer.line(x1, y1, x2, y2, 1f, false, c1Bits, c2Bits);
+        drawer.line(x2, y2, x3, y3, 1f, false, c2Bits, c3Bits);
+        drawer.line(x3, y3, x1, y1, 1f, false, c3Bits, c1Bits);
     }
 
 
@@ -178,11 +162,13 @@ public class Triangle extends Shape<Triangle> {
         return this;
     }
 
+
     public Triangle setV1(float v1x, float v1y) {
         this.v1x = v1x; this.v1y = v1y;
         syncBoundingBox();
         return this;
     }
+
 
     public Triangle setV2(float v2x, float v2y) {
         this.v2x = v2x; this.v2y = v2y;
@@ -190,11 +176,13 @@ public class Triangle extends Shape<Triangle> {
         return this;
     }
 
+
     public Triangle setV3(float v3x, float v3y) {
         this.v3x = v3x; this.v3y = v3y;
         syncBoundingBox();
         return this;
     }
+
 
     private void syncBoundingBox() {
         final float minX = min(v1x, v2x, v3x);
@@ -220,13 +208,6 @@ public class Triangle extends Shape<Triangle> {
         }
     }
 
-    public Triangle setColor(Color color) {
-        this.color = color;
-        this.v1Color = null;
-        this.v2Color = null;
-        this.v3Color = null;
-        return this;
-    }
 
     /*////////////////  SETTERS WITH NO SIDE EFFECTS  ////////////////*/
 
@@ -247,36 +228,47 @@ public class Triangle extends Shape<Triangle> {
 
     /*////////////////  UTILITY SETTERS  ////////////////*/
 
+    @Override
+    public Triangle setColor(Color color) {
+        this.v1Color = color;
+        this.v2Color = color;
+        this.v3Color = color;
+        return this;
+    }
+
     public Triangle setColor(Color v1Color, Color v2Color, Color v3Color) {
-        return this.setV1Color(v1Color).setV2Color(v2Color).setV3Color(v3Color);
+        this.v1Color = v1Color;
+        this.v2Color = v2Color;
+        this.v3Color = v3Color;
+        return this;
     }
 
     public Triangle setV1(float v1x, float v1y, Color v1Color) {
-        this.setV1Color(v1Color);
-        return this.setV1(v1x, v1y);
+        return this.setV1Color(v1Color).setV1(v1x, v1y);
     }
 
     public Triangle setV2(float v2x, float v2y, Color v2Color) {
-        this.setV2Color(v2Color);
-        return this.setV2(v2x, v2y);
+        return this.setV2Color(v2Color).setV2(v2x, v2y);
     }
 
     public Triangle setV3(float v3x, float v3y, Color v3Color) {
-        this.setV3Color(v3Color);
-        return this.setV3(v3x, v3y);
+        return this.setV3Color(v3Color).setV3(v3x, v3y);
     }
 
     public Triangle setVertices(float v1x, float v1y, Color v1Color,
                                 float v2x, float v2y, Color v2Color,
                                 float v3x, float v3y, Color v3Color)
     {
-        this.setV1Color(v1Color);
-        this.setV2Color(v2Color);
-        this.setV3Color(v3Color);
-        return this.setVertices(v1x, v1y, v2x, v2y, v3x, v3y);
+        return this.setColor(v1Color, v2Color, v3Color)
+                .setVertices(v1x, v1y, v2x, v2y, v3x, v3y);
     }
 
     /*////////////////  ALL GETTERS  ////////////////*/
+
+    @Override
+    public Color getColor() {
+        return prioritySelect(this.v1Color, this.v2Color, this.v3Color, null);
+    }
 
     public float getV1x() { return this.v1x; }
     public float getV1y() { return this.v1y; }
@@ -284,12 +276,10 @@ public class Triangle extends Shape<Triangle> {
     public float getV2y() { return this.v2y; }
     public float getV3x() { return this.v3x; }
     public float getV3y() { return this.v3y; }
-    public Color getColor() { return this.color; }
     public Color getV1Color() { return this.v1Color; }
     public Color getV2Color() { return this.v2Color; }
     public Color getV3Color() { return this.v3Color; }
 
 
 }
-
 

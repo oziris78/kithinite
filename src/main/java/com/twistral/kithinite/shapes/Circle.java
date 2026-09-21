@@ -17,60 +17,36 @@
 package com.twistral.kithinite.shapes;
 
 
-import com.badlogic.gdx.graphics.Color;
-import com.twistral.kithinite.core.Piece;
-import com.twistral.kithinite.core.Widget;
-import space.earlygrey.shapedrawer.ShapeDrawer;
-
+import com.badlogic.gdx.graphics.*;
+import com.twistral.kithinite.core.*;
+import space.earlygrey.shapedrawer.*;
 import static com.twistral.kithinite.KithiniteUtils.*;
 
 
 public class Circle extends Shape<Circle> {
 
-    // Circle related variables
     private float radius;
     private float lineWidth;
-
-    // Color variables
-    private Color color;
-    private Color innerColor;
-    private Color outerColor;
+    private Color innerColor, outerColor;
 
 
-    /*//////////////////////////////////////////////////////////////////////*/
-    /*///////////////////////////  CONSTRUCTORS  ///////////////////////////*/
-    /*//////////////////////////////////////////////////////////////////////*/
-
-
-    private Circle(boolean filled, float radius, float lineWidth,
-                   Color color, Color innerColor, Color outerColor)
-    {
+    public Circle(boolean filled, float radius, Color innerColor, Color outerColor, float lineWidth) {
         super(filled);
         setRadius(radius); // auto update width & height
+        setColor(innerColor, outerColor);
         this.lineWidth = lineWidth;
-        this.color = color;
-        this.innerColor = innerColor;
-        this.outerColor = outerColor;
     }
 
-    // Main constructor for circles with a SINGLE COLOR
     public Circle(boolean filled, float radius, Color color, float lineWidth) {
-        this(filled, radius, lineWidth, color, null, null);
+        this(filled, radius, color, color, lineWidth);
     }
 
-    // Main constructor for circles with TWO COLORS
-    public Circle(boolean filled, float radius, Color innerColor, Color outerColor, float lineWidth) {
-        this(filled, radius, lineWidth, null, innerColor, outerColor);
-    }
-
-    // Secondary constructor for circles with a SINGLE COLOR
-    public Circle(boolean filled, float radius, Color color) {
-        this(filled, radius, color, DEF_LINE_WIDTH);
-    }
-
-    // Secondary constructor for circles with TWO COLORS
     public Circle(boolean filled, float radius, Color innerColor, Color outerColor) {
         this(filled, radius, innerColor, outerColor, DEF_LINE_WIDTH);
+    }
+
+    public Circle(boolean filled, float radius, Color color) {
+        this(filled, radius, color, color, DEF_LINE_WIDTH);
     }
 
 
@@ -88,10 +64,10 @@ public class Circle extends Shape<Circle> {
         final float absCentreX = absX + radius;
         final float absCentreY = absY + radius;
 
-        final Color outColor = prioritySelect(this.outerColor, this.color, DEF_COLOR);
+        final Color outColor = prioritySelect(this.outerColor, DEF_COLOR);
 
         if (filled) {
-            Color inColor = prioritySelect(this.innerColor, this.color, DEF_COLOR);
+            Color inColor = prioritySelect(this.innerColor, DEF_COLOR);
 
             drawer.filledEllipse(
                 absCentreX, absCentreY, radius, radius, 0f, inColor, outColor
@@ -149,26 +125,17 @@ public class Circle extends Shape<Circle> {
     public Circle setSize(float width, float height) {
         // Enforce equal width and height for circles
         final float size = Math.min(width, height);
-        return super.setSize(size, size);
-    }
-
-    public Circle setColor(Color color) {
-        this.color = color;
-        this.innerColor = null;
-        this.outerColor = null;
+        super.setSize(size, size);
+        this.radius = size / 2f;
         return this;
     }
+
 
     /*////////////////  Setters with NO SIDE EFFECTS  ////////////////*/
 
     public Circle setLineWidth(float lineWidth) {
         this.lineWidth = lineWidth;
         return this;
-    }
-
-
-    public Circle setColor(Color innerColor, Color outerColor) {
-        return setInnerColor(innerColor).setOuterColor(outerColor);
     }
 
     public Circle setInnerColor(Color innerColor) {
@@ -182,6 +149,19 @@ public class Circle extends Shape<Circle> {
     }
 
     /*////////////////  UTILITY SETTERS  ////////////////*/
+
+    @Override
+    public Circle setColor(Color color) {
+        this.innerColor = color;
+        this.outerColor = color;
+        return this;
+    }
+
+    public Circle setColor(Color innerColor, Color outerColor) {
+        this.innerColor = innerColor;
+        this.outerColor = outerColor;
+        return this;
+    }
 
     public Circle setCentreX(float centreX) {
         this.x = centreX - this.radius;
@@ -199,9 +179,13 @@ public class Circle extends Shape<Circle> {
 
     /*////////////////  ALL GETTERS  ////////////////*/
 
+    @Override
+    public Color getColor() {
+        return prioritySelect(this.innerColor, this.outerColor, null);
+    }
+
     public float getRadius() { return this.radius; }
     public float getLineWidth() { return this.lineWidth; }
-    public Color getColor() { return this.color; }
     public Color getInnerColor() { return this.innerColor; }
     public Color getOuterColor() { return this.outerColor; }
 

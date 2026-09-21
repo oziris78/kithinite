@@ -17,12 +17,11 @@
 package com.twistral.kithinite.shapes;
 
 
-import com.badlogic.gdx.graphics.Color;
-import com.badlogic.gdx.math.MathUtils;
-import com.twistral.kithinite.core.Widget;
-import space.earlygrey.shapedrawer.JoinType;
-import space.earlygrey.shapedrawer.ShapeDrawer;
-
+import com.badlogic.gdx.graphics.*;
+import com.badlogic.gdx.math.*;
+import com.twistral.kithinite.core.*;
+import com.twistral.tephrium.core.functions.TMath;
+import space.earlygrey.shapedrawer.*;
 import static com.twistral.kithinite.KithiniteUtils.*;
 
 
@@ -35,56 +34,35 @@ public class Rectangle extends Shape<Rectangle> {
     private float rotationDegrees;
     private float lineWidth;
     private JoinType joinType;
-
-    // Color variables
-    private Color color;
-    private Color topRightColor;
-    private Color topLeftColor;
-    private Color bottomLeftColor;
-    private Color bottomRightColor;
+    private Color topLeftColor, topRightColor, bottomRightColor, bottomLeftColor;
 
 
-    /*//////////////////////////////////////////////////////////////////////*/
-    /*///////////////////////////  CONSTRUCTORS  ///////////////////////////*/
-    /*//////////////////////////////////////////////////////////////////////*/
-
-
-    private Rectangle(boolean filled, float rotationDegrees, float lineWidth, JoinType joinType,
-                      Color color, Color topRightColor, Color topLeftColor,
-                      Color bottomLeftColor, Color bottomRightColor)
+    public Rectangle(boolean filled, Color topLeftColor, Color topRightColor,
+                     Color bottomRightColor, Color bottomLeftColor,
+                     float rotationDegrees, float lineWidth, JoinType joinType)
     {
         super(filled);
+        setColor(topLeftColor, topRightColor, bottomRightColor, bottomLeftColor);
         this.rotationDegrees = rotationDegrees;
         this.lineWidth = lineWidth;
         this.joinType = joinType;
-        this.color = color;
-        this.topRightColor = topRightColor;
-        this.topLeftColor = topLeftColor;
-        this.bottomLeftColor = bottomLeftColor;
-        this.bottomRightColor = bottomRightColor;
     }
 
-    // Main constructor for rectangles with GRADIENTs
-    public Rectangle(boolean filled, Color topLeft, Color topRight, Color bottomRight, Color bottomLeft,
+    public Rectangle(boolean filled, Color color,
                      float rotationDegrees, float lineWidth, JoinType joinType)
     {
-        this(filled, rotationDegrees, lineWidth, joinType, null, topRight, topLeft, bottomLeft, bottomRight);
+        this(filled, color, color, color, color, rotationDegrees, lineWidth, joinType);
     }
 
-    // Main constructor for rectangles with COLORs
-    public Rectangle(boolean filled, Color color, float rotationDegrees, float lineWidth, JoinType joinType) {
-        this(filled, rotationDegrees, lineWidth, joinType, color, null, null, null, null);
-    }
-
-    // Secondary constructor for rectangles with GRADIENTs
-    public Rectangle(boolean filled, Color topLeft, Color topRight, Color bottomRight, Color bottomLeft) {
-        this(filled, topLeft, topRight, bottomRight, bottomLeft,
+    public Rectangle(boolean filled, Color topLeftColor, Color topRightColor,
+                     Color bottomRightColor, Color bottomLeftColor)
+    {
+        this(filled, topLeftColor, topRightColor, bottomRightColor, bottomLeftColor,
                 DEF_ROTATION_DEGREES, DEF_LINE_WIDTH, DEF_JOIN_TYPE);
     }
 
-    // Secondary constructor for rectangles with COLORs
     public Rectangle(boolean filled, Color color) {
-        this(filled, color, DEF_ROTATION_DEGREES, DEF_LINE_WIDTH, DEF_JOIN_TYPE);
+        this(filled, color, color, color, color, DEF_ROTATION_DEGREES, DEF_LINE_WIDTH, DEF_JOIN_TYPE);
     }
 
 
@@ -97,32 +75,87 @@ public class Rectangle extends Shape<Rectangle> {
     public void render(ShapeDrawer drawer) {
         if (!this.visible) return;
         if (this.width <= 0 || this.height <= 0) return;
+        if (this.width <= this.lineWidth) return; // adjW will fail
+        if (this.height <= this.lineWidth) return; // adjH will fail
 
         final float rotationRadians = this.rotationDegrees * MathUtils.degreesToRadians;
 
-        if (filled) {
-            Color c1 = prioritySelect(this.topRightColor, this.color, DEF_COLOR);
-            Color c2 = prioritySelect(this.topLeftColor, this.color, DEF_COLOR);
-            Color c3 = prioritySelect(this.bottomLeftColor, this.color, DEF_COLOR);
-            Color c4 = prioritySelect(this.bottomRightColor, this.color, DEF_COLOR);
+        final Color cTL = prioritySelect(this.topLeftColor, DEF_COLOR);
+        final Color cTR = prioritySelect(this.topRightColor, DEF_COLOR);
+        final Color cBR = prioritySelect(this.bottomRightColor, DEF_COLOR);
+        final Color cBL = prioritySelect(this.bottomLeftColor, DEF_COLOR);
 
-            drawer.filledRectangle(absX, absY, width, height, rotationRadians, c1, c2, c3, c4);
+        // [MAIN PATH 1/2] Filled rects only need one render call
+        if (filled) {
+            drawer.filledRectangle(absX, absY, width, height, rotationRadians, cTR, cTL, cBL, cBR);
+            return;
+        }
+
+        // [FAST PATH] Single color, unrotated, not-filled rects only need one render call too
+        final boolean isSingleColor = cTL.equals(cTR) && cTR.equals(cBR) && cBR.equals(cBL);
+        final boolean isNotRotated = TMath.equalsf(rotationRadians, 0f);
+
+        final float halfLine = lineWidth / 2f;
+        final float adjX = absX + halfLine;
+        final float adjY = absY + halfLine;
+        final float adjW = width - lineWidth;
+        final float adjH = height - lineWidth;
+
+        if (isSingleColor && isNotRotated) {
+            final float oldColor = drawer.setColor(cTL);
+            drawer.rectangle(adjX, adjY, adjW, adjH, lineWidth, 0f, joinType);
+            drawer.setColor(oldColor);
+            return;
+        }
+
+        // [MAIN PATH 2/2] Multi-color, not-filled rects need 4 render calls to preserve their gradients
+        float x1, y1, x2, y2, x3, y3, x4, y4;
+
+        // For some reason, multi-color not-filled rectangles with 1px lineWidth are always
+        // missing 1 pixel at their top left corner. So we subtract 1f from x2 to fix that. :P
+        // This if statement also avoids float addition of halfLine (=1f/2f=0.5f) to our x,y values.
+        if (lineWidth <= 1f) {
+            x1 = absX;                 y1 = absY;
+            x2 = absX - 1f;            y2 = absY + height - 1f;
+            x3 = absX + width - 1f;    y3 = absY + height - 1f;
+            x4 = absX + width - 1f;    y4 = absY;
         }
         else {
-            // prevent spilling because of lineWidth variable
-            final float halfLine = lineWidth / 2f;
-            final float adjX = absX + halfLine;
-            final float adjY = absY + halfLine;
-            final float adjW = width - lineWidth;
-            final float adjH = height - lineWidth;
-
-            // Finally render the rectangle
-            Color outlineColor = prioritySelect(this.color, DEF_COLOR);
-
-            final float oldColor = drawer.setColor(outlineColor);
-            drawer.rectangle(adjX, adjY, adjW, adjH, lineWidth, rotationRadians, joinType);
-            drawer.setColor(oldColor);
+            x1 = adjX;            y1 = adjY;
+            x2 = adjX;            y2 = adjY + adjH;
+            x3 = adjX + adjW;     y3 = adjY + adjH;
+            x4 = adjX + adjW;     y4 = adjY;
         }
+
+        // Apply rotation around the center of the rectangle if needed (this will cause bleeding)
+        if (!isNotRotated) { // if isRotated
+            final float cos = MathUtils.cos(rotationRadians),
+                        sin = MathUtils.sin(rotationRadians);
+
+            final float cx = absX + width / 2f,
+                        cy = absY + height / 2f;
+
+            float rx1 = cx + (x1 - cx) * cos - (y1 - cy) * sin;
+            float ry1 = cy + (x1 - cx) * sin + (y1 - cy) * cos;
+            x1 = rx1; y1 = ry1;
+
+            float rx2 = cx + (x2 - cx) * cos - (y2 - cy) * sin;
+            float ry2 = cy + (x2 - cx) * sin + (y2 - cy) * cos;
+            x2 = rx2; y2 = ry2;
+
+            float rx3 = cx + (x3 - cx) * cos - (y3 - cy) * sin;
+            float ry3 = cy + (x3 - cx) * sin + (y3 - cy) * cos;
+            x3 = rx3; y3 = ry3;
+
+            float rx4 = cx + (x4 - cx) * cos - (y4 - cy) * sin;
+            float ry4 = cy + (x4 - cx) * sin + (y4 - cy) * cos;
+            x4 = rx4; y4 = ry4;
+        }
+
+        drawer.line(x2, y2, x3, y3, this.lineWidth, false, cTL, cTR); // Top edge
+        drawer.line(x3, y3, x4, y4, this.lineWidth, false, cTR, cBR); // Right edge
+        drawer.line(x4, y4, x1, y1, this.lineWidth, false, cBR, cBL); // Bottom edge
+        drawer.line(x1, y1, x2, y2, this.lineWidth, false, cBL, cTL); // Left edge
     }
 
 
@@ -130,14 +163,10 @@ public class Rectangle extends Shape<Rectangle> {
     /*///////////////////////////  GETTERS & SETTERS  ///////////////////////////*/
     /*///////////////////////////////////////////////////////////////////////////*/
 
+    /*////////////////  SETTERS WITH NO SIDE EFFECTS  ////////////////*/
 
     public Rectangle setRotationDegrees(float rotationDegrees) {
         this.rotationDegrees = rotationDegrees;
-        return this;
-    }
-
-    public Rectangle setJoinType(JoinType joinType) {
-        this.joinType = joinType;
         return this;
     }
 
@@ -146,58 +175,57 @@ public class Rectangle extends Shape<Rectangle> {
         return this;
     }
 
+    public Rectangle setJoinType(JoinType joinType) {
+        this.joinType = joinType;
+        return this;
+    }
+
+    /*////////////////  UTILITY SETTERS  ////////////////*/
+
+    @Override
     public Rectangle setColor(Color color) {
-        this.color = color;
+        this.topLeftColor = color;
+        this.topRightColor = color;
+        this.bottomRightColor = color;
+        this.bottomLeftColor = color;
         return this;
     }
 
-    public Rectangle setColor(int rgba) {
-        if (this.color == null) this.color = new Color();
-        this.color.set(rgba);
+    public Rectangle setColor(Color topLeftColor, Color topRightColor,
+                              Color bottomRightColor, Color bottomLeftColor)
+    {
+        this.topLeftColor = topLeftColor;
+        this.topRightColor = topRightColor;
+        this.bottomRightColor = bottomRightColor;
+        this.bottomLeftColor = bottomLeftColor;
         return this;
     }
 
-    public Rectangle setGradient(Color topLeft, Color topRight, Color bottomRight, Color bottomLeft) {
-        this.topLeftColor = topLeft;
-        this.topRightColor = topRight;
-        this.bottomRightColor = bottomRight;
-        this.bottomLeftColor = bottomLeft;
-        return this;
+    // Just an alias to setColor(Color, Color, Color, Color)
+    public Rectangle setFullGradient(Color topLeftColor, Color topRightColor,
+                                     Color bottomRightColor, Color bottomLeftColor)
+    {
+        return this.setColor(topLeftColor, topRightColor, bottomRightColor, bottomLeftColor);
     }
 
-    public Rectangle setGradient(int topLeftRgba, int topRightRgba, int bottomRightRgba, int bottomLeftRgba) {
-        if (this.topLeftColor == null) this.topLeftColor = new Color();
-        if (this.topRightColor == null) this.topRightColor = new Color();
-        if (this.bottomRightColor == null) this.bottomRightColor = new Color();
-        if (this.bottomLeftColor == null) this.bottomLeftColor = new Color();
-
-        this.topLeftColor.set(topLeftRgba);
-        this.topRightColor.set(topRightRgba);
-        this.bottomRightColor.set(bottomRightRgba);
-        this.bottomLeftColor.set(bottomLeftRgba);
-        return this;
+    public Rectangle setVerticalGradient(Color topColor, Color bottomColor) {
+        return this.setColor(topColor, topColor, bottomColor, bottomColor);
     }
 
-    public Rectangle setVerticalGradient(Color top, Color bottom) {
-        return setGradient(top, top, bottom, bottom);
+    public Rectangle setHorizontalGradient(Color leftColor, Color rightColor) {
+        return this.setColor(leftColor, rightColor, rightColor, leftColor);
     }
 
-    public Rectangle setVerticalGradient(int topRgba, int bottomRgba) {
-        return setGradient(topRgba, topRgba, bottomRgba, bottomRgba);
-    }
+    /*////////////////  ALL GETTERS  ////////////////*/
 
-    public Rectangle setHorizontalGradient(Color left, Color right) {
-        return setGradient(left, right, right, left);
-    }
-
-    public Rectangle setHorizontalGradient(int leftRgba, int rightRgba) {
-        return setGradient(leftRgba, rightRgba, rightRgba, leftRgba);
+    @Override
+    public Color getColor() {
+        return prioritySelect(topLeftColor, topRightColor, bottomRightColor, bottomLeftColor, null);
     }
 
     public float getRotationDegrees() { return rotationDegrees; }
     public float getLineWidth() { return lineWidth; }
     public JoinType getJoinType() { return joinType; }
-    public Color getColor() { return color; }
     public Color getTopRightColor() { return this.topRightColor; }
     public Color getTopLeftColor() { return this.topLeftColor; }
     public Color getBottomLeftColor() { return this.bottomLeftColor; }
@@ -205,3 +233,4 @@ public class Rectangle extends Shape<Rectangle> {
 
 
 }
+

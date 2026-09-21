@@ -19,24 +19,26 @@
 package com.twistral.kithinite.shapes;
 
 
-import com.badlogic.gdx.graphics.Color;
-import com.twistral.kithinite.core.Piece;
-import com.twistral.kithinite.core.Widget;
+import com.badlogic.gdx.graphics.*;
+import com.twistral.kithinite.core.*;
 
 
 public abstract class Shape<T extends Shape<T>> extends Widget<T> {
 
-    // Static variables
     public static final Color DEF_COLOR = Color.WHITE;
     public static final float DEF_LINE_WIDTH = 1f;
     public static final float DEF_ROTATION_DEGREES = 0f;
 
-    // Shape properties
     protected boolean filled;
+
 
     protected Shape(boolean filled) {
         this.filled = filled;
     }
+
+    public abstract T setColor(Color color);
+    public abstract Color getColor();
+
 
     public T setFilled(boolean filled) {
         this.filled = filled;
@@ -44,6 +46,11 @@ public abstract class Shape<T extends Shape<T>> extends Widget<T> {
     }
 
     public boolean isFilled() { return filled; }
+
+
+    public T setColor(int rgba8888) {
+        return this.setColor(new Color(rgba8888));
+    }
 
 }
 
