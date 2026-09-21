@@ -112,19 +112,26 @@ public class Rectangle extends Shape<Rectangle> {
         float x1, y1, x2, y2, x3, y3, x4, y4;
 
         // For some reason, multi-color not-filled rectangles with 1px lineWidth are always
-        // missing 1 pixel at their top left corner. So we subtract 1f from x2 to fix that. :P
-        // This if statement also avoids float addition of halfLine (=1f/2f=0.5f) to our x,y values.
+        // missing 1 pixel at their top left corner because of float addition of halfLife.
         if (lineWidth <= 1f) {
-            x1 = absX;                 y1 = absY;
-            x2 = absX - 1f;            y2 = absY + height - 1f;
-            x3 = absX + width - 1f;    y3 = absY + height - 1f;
-            x4 = absX + width - 1f;    y4 = absY;
+            // V1 = BOTTOM LEFT
+            // V2 = TOP LEFT
+            // V3 = TOP RIGHT
+            // V4 = BOTTOM RIGHT
+
+            // To fix this bug we move:
+            //   - top edge (V2+V3) 1px down
+            //   - bottom left corner 1px right (without touching V2 since its correctly placed)
+            x1 = absX + 1f;            y1 = absY;
+            x2 = absX;                 y2 = absY + height - 1f;
+            x3 = absX + width;         y3 = absY + height - 1f;
+            x4 = absX + width;         y4 = absY;
         }
         else {
-            x1 = adjX;            y1 = adjY;
-            x2 = adjX;            y2 = adjY + adjH;
-            x3 = adjX + adjW;     y3 = adjY + adjH;
-            x4 = adjX + adjW;     y4 = adjY;
+            x1 = adjX;                 y1 = adjY;
+            x2 = adjX;                 y2 = adjY + adjH;
+            x3 = adjX + adjW;          y3 = adjY + adjH;
+            x4 = adjX + adjW;          y4 = adjY;
         }
 
         // Apply rotation around the center of the rectangle if needed (this will cause bleeding)
