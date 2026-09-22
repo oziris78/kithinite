@@ -49,6 +49,7 @@ public class TriangleVerifier extends ApplicationAdapter {
     private Layer layer;
     private Rectangle rectangle;
     private Triangle triangle;
+    private String currentType = "";
 
     private static int logCount = 1;
 
@@ -103,6 +104,7 @@ public class TriangleVerifier extends ApplicationAdapter {
             Color c = verifyRenderedPixels();
             if (c == IMPERFECT_COLOR) System.out.println(logCount++ + "- IMPERFECT");
             if (c == BLEED_COLOR) System.out.println(logCount++ + "- BLEED");
+            if (c != CORRECT_COLOR) System.out.println("Type: " + currentType);
             rectangle.setColor(c);
         }
     }
@@ -128,21 +130,57 @@ public class TriangleVerifier extends ApplicationAdapter {
     private void randomizeTriangleSize() {
         rectangle.setColor(RECT_COLOR);
 
+        final int category = rng.nextInt(0, 5);
+        switch (category) {
+            case 0: {
+                currentType = "Fully randomized";
+                triangle.setVertices(
+                    rng.nextFloat(), rng.nextFloat(), rng.nextFloat(),
+                    rng.nextFloat(), rng.nextFloat(), rng.nextFloat()
+                );
+            } break;
+
+            case 1: {
+                currentType = "Right-angled triangles";
+                float[][] templates = {
+                    {0f, 0f, 0f, 1f, 1f, 0f},
+                    {0f, 0f, 1f, 0f, 0f, 1f},
+                    {0f, 1f, 0f, 0f, 1f, 1f},
+                    {0f, 1f, 1f, 1f, 0f, 0f},
+                    {1f, 0f, 0f, 0f, 1f, 1f},
+                    {1f, 0f, 1f, 1f, 0f, 0f}
+                };
+                float[] t = templates[rng.nextInt(0, templates.length)];
+                triangle.setVertices(t[0], t[1], t[2], t[3], t[4], t[5]);
+            } break;
+
+            case 2: {
+                currentType = "Bounding-box anchored triangles";
+                triangle.setVertices( // at least 1 vertex on minX/maxX/minY/maxY
+                    rng.nextBoolean() ? 0f : rng.nextFloat(), rng.nextBoolean() ? 0f : rng.nextFloat(),
+                    rng.nextBoolean() ? 1f : rng.nextFloat(), rng.nextBoolean() ? 1f : rng.nextFloat(),
+                    rng.nextFloat(), rng.nextFloat()
+                );
+            } break;
+
+            case 3: {
+                currentType = "Equilateral-ish templates with <1px jitter";
+                final float jitter = rng.nextFloat(-0.05f, 0.05f);
+                triangle.setVertices(0f + jitter, 0f, 0.5f + jitter, 1f + jitter, 1f + jitter, 0f);
+            } break;
+
+            case 4: {
+                currentType = "Negative valued vertices";
+                triangle.setVertices(
+                    rng.nextFloat(-0.2f, 1.2f), rng.nextFloat(-0.2f, 1.2f),
+                    rng.nextFloat(-0.2f, 1.2f), rng.nextFloat(-0.2f, 1.2f),
+                    rng.nextFloat(-0.2f, 1.2f), rng.nextFloat(-0.2f, 1.2f)
+                );
+            } break;
+        }
+
         final float ORIG_TRI_W = WIN_SIZE - 2 * WIN_PAD;
         final float ORIG_TRI_H = WIN_SIZE - 2 * WIN_PAD;
-
-        int select = rng.nextInt(0, 3);
-        if(select == 0) {
-            triangle.setVertices(0f, 0f, 1f, rng.nextFloat(), rng.nextFloat(), 1f);
-        }
-        if(select == 1){
-            triangle.setVertices(rng.nextFloat(), rng.nextFloat(), rng.nextFloat(),
-                    rng.nextFloat(), rng.nextFloat(), rng.nextFloat());
-        }
-        if(select == 2) {
-            triangle.setVertices(0f, 0f, 0f, rng.nextFloat(), rng.nextFloat(), 0f);
-        }
-
         triangle.setXY(WIN_PAD, WIN_PAD).setSize(ORIG_TRI_W, ORIG_TRI_H);
 
         // Randomly setSize to 0,0 and unset it back
