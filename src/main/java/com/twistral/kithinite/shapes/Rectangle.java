@@ -93,7 +93,7 @@ public class Rectangle extends Shape<Rectangle> {
 
         // [FAST PATH] Single color, unrotated, not-filled rects only need one render call too
         final boolean isSingleColor = cTL.equals(cTR) && cTR.equals(cBR) && cBR.equals(cBL);
-        final boolean isNotRotated = TMath.equalsf(rotationRadians, 0f);
+        final boolean isRotated = !TMath.equalsf(rotationRadians, 0f);
 
         final float halfLine = lineWidth / 2f;
         final float adjX = absX + halfLine;
@@ -101,7 +101,7 @@ public class Rectangle extends Shape<Rectangle> {
         final float adjW = width - lineWidth;
         final float adjH = height - lineWidth;
 
-        if (isSingleColor && isNotRotated) {
+        if (isSingleColor && !isRotated) {
             final float oldColor = drawer.setColor(cTL);
             drawer.rectangle(adjX, adjY, adjW, adjH, lineWidth, 0f, joinType);
             drawer.setColor(oldColor);
@@ -135,7 +135,7 @@ public class Rectangle extends Shape<Rectangle> {
         }
 
         // Apply rotation around the center of the rectangle if needed (this will cause bleeding)
-        if (!isNotRotated) { // if isRotated
+        if (isRotated) {
             final float cos = MathUtils.cos(rotationRadians),
                         sin = MathUtils.sin(rotationRadians);
 
