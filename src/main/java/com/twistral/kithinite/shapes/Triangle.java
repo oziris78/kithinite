@@ -19,7 +19,10 @@ package com.twistral.kithinite.shapes;
 
 
 import com.badlogic.gdx.graphics.*;
+import com.badlogic.gdx.math.MathUtils;
 import com.twistral.kithinite.core.*;
+import com.twistral.tephrium.core.functions.TMath;
+import com.twistral.tephrium.core.vectors.TVec2;
 import space.earlygrey.shapedrawer.*;
 import static com.twistral.kithinite.KithiniteUtils.*;
 
@@ -36,25 +39,42 @@ public class Triangle extends Shape<Triangle> {
     // Triangle related variables
     private float v1x, v1y, v2x, v2y, v3x, v3y;
     private Color v1Color, v2Color, v3Color;
+    private float rotationDegrees;
 
     // [INTERNAL] normalized vertices for proper width/height scaling
     private float nv1x, nv1y, nv2x, nv2y, nv3x, nv3y;
 
 
-    public Triangle(boolean filled, float v1x, float v1y, float v2x, float v2y,
-                    float v3x, float v3y, Color v1Color, Color v2Color, Color v3Color)
+    public Triangle(boolean filled, float v1x, float v1y, float v2x, float v2y, float v3x,
+                    float v3y, Color v1Color, Color v2Color, Color v3Color, float rotationDegrees)
     {
         super(filled);
         setVertices(v1x, v1y, v2x, v2y, v3x, v3y);
         setColor(v1Color, v2Color, v3Color);
+        this.rotationDegrees = rotationDegrees;
     }
 
 
-    public Triangle(boolean filled, float v1x, float v1y, float v2x, float v2y,
-                    float v3x, float v3y, Color color)
+    public Triangle(boolean filled, float v1x, float v1y, float v2x, float v2y, float v3x,
+                    float v3y, Color color, float rotationDegrees)
     {
-        this(filled, v1x, v1y, v2x, v2y, v3x, v3y, color, color, color);
+        this(filled, v1x, v1y, v2x, v2y, v3x, v3y, color, color, color, rotationDegrees);
     }
+
+
+    public Triangle(boolean filled, float v1x, float v1y, float v2x, float v2y, float v3x,
+                    float v3y, Color v1Color, Color v2Color, Color v3Color)
+    {
+        this(filled, v1x, v1y, v2x, v2y, v3x, v3y, v1Color, v2Color, v3Color, DEF_ROTATION_DEGREES);
+    }
+
+
+    public Triangle(boolean filled, float v1x, float v1y, float v2x, float v2y, float v3x,
+                    float v3y, Color color)
+    {
+        this(filled, v1x, v1y, v2x, v2y, v3x, v3y, color, color, color, DEF_ROTATION_DEGREES);
+    }
+
 
 
     /*/////////////////////////////////////////////////////////////////*/
@@ -78,12 +98,33 @@ public class Triangle extends Shape<Triangle> {
         final float nesterAbsX = this.nester.getAbsX(),
                     nesterAbsY = this.nester.getAbsY();
 
-        final float x1 = nesterAbsX + this.v1x,
-                    y1 = nesterAbsY + this.v1y;
-        final float x2 = nesterAbsX + this.v2x,
-                    y2 = nesterAbsY + this.v2y;
-        final float x3 = nesterAbsX + this.v3x,
-                    y3 = nesterAbsY + this.v3y;
+        float x1 = nesterAbsX + this.v1x, y1 = nesterAbsY + this.v1y;
+        float x2 = nesterAbsX + this.v2x, y2 = nesterAbsY + this.v2y;
+        float x3 = nesterAbsX + this.v3x, y3 = nesterAbsY + this.v3y;
+
+        final float rotationRadians = this.rotationDegrees * MathUtils.degreesToRadians;
+        final boolean isRotated = !TMath.equalsf(rotationRadians, 0f);
+
+        // Apply rotation around the center of mass if needed
+        if (isRotated) {
+            final float cos = MathUtils.cos(rotationRadians),
+                        sin = MathUtils.sin(rotationRadians);
+
+            final float cx = nesterAbsX + (this.v1x + this.v2x + this.v3x) / 3f,
+                        cy = nesterAbsY + (this.v1y + this.v2y + this.v3y) / 3f;
+
+            float rx1 = cx + (x1 - cx) * cos - (y1 - cy) * sin;
+            float ry1 = cy + (x1 - cx) * sin + (y1 - cy) * cos;
+            x1 = rx1; y1 = ry1;
+
+            float rx2 = cx + (x2 - cx) * cos - (y2 - cy) * sin;
+            float ry2 = cy + (x2 - cx) * sin + (y2 - cy) * cos;
+            x2 = rx2; y2 = ry2;
+
+            float rx3 = cx + (x3 - cx) * cos - (y3 - cy) * sin;
+            float ry3 = cy + (x3 - cx) * sin + (y3 - cy) * cos;
+            x3 = rx3; y3 = ry3;
+        }
 
         // Fill the core polygon
         if (filled) {
@@ -211,6 +252,11 @@ public class Triangle extends Shape<Triangle> {
 
     /*////////////////  SETTERS WITH NO SIDE EFFECTS  ////////////////*/
 
+    public Triangle setRotationDegrees(float rotationDegrees) {
+        this.rotationDegrees = rotationDegrees;
+        return this;
+    }
+
     public Triangle setV1Color(Color v1Color) {
         this.v1Color = v1Color;
         return this;
@@ -270,6 +316,7 @@ public class Triangle extends Shape<Triangle> {
         return prioritySelect(this.v1Color, this.v2Color, this.v3Color, null);
     }
 
+    public float getRotationDegrees() { return this.rotationDegrees; }
     public float getV1x() { return this.v1x; }
     public float getV1y() { return this.v1y; }
     public float getV2x() { return this.v2x; }
