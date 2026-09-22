@@ -131,7 +131,18 @@ public class TriangleVerifier extends ApplicationAdapter {
         final float ORIG_TRI_W = WIN_SIZE - 2 * WIN_PAD;
         final float ORIG_TRI_H = WIN_SIZE - 2 * WIN_PAD;
 
-        triangle.setVertices(0f, 0f, 1f, rng.nextFloat(), rng.nextFloat(), 1f);
+        int select = rng.nextInt(0, 3);
+        if(select == 0) {
+            triangle.setVertices(0f, 0f, 1f, rng.nextFloat(), rng.nextFloat(), 1f);
+        }
+        if(select == 1){
+            triangle.setVertices(rng.nextFloat(), rng.nextFloat(), rng.nextFloat(),
+                    rng.nextFloat(), rng.nextFloat(), rng.nextFloat());
+        }
+        if(select == 2) {
+            triangle.setVertices(0f, 0f, 0f, rng.nextFloat(), rng.nextFloat(), 0f);
+        }
+
         triangle.setXY(WIN_PAD, WIN_PAD).setSize(ORIG_TRI_W, ORIG_TRI_H);
 
         // Randomly setSize to 0,0 and unset it back

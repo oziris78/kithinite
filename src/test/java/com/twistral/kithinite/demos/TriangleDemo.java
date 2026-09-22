@@ -27,16 +27,16 @@ import com.twistral.kithinite.shapes.Triangle;
 
 public class TriangleDemo extends ApplicationAdapter {
 
-    private static final int SCALE = 12;
+    private static final Color c1 = Color.CORAL, c2 = Color.LIME, c3 = Color.ROYAL;
+    private static final Color ac1 = new Color(1f, 0f, 0.5f, 0.4f),
+            ac2 = new Color(0.4f, 1f, 0.2f, 0.4f),
+            ac3 = new Color(0f, 0.4f, 1f, 0.4f);
 
-    private static final float TRI_WIDTH = 12 * SCALE, TRI_HEIGHT = 10 * SCALE;
-    private static final float PADDING = 25;
+    private static final float PADDING = 25f;
+    private static final float RA = 180; // rotation angle
     private static final int MAX_PER_ROW = 4;
-
-    private static final Color C1 = Color.GOLD, C2 = Color.ORANGE, C3 = Color.PURPLE,
-                               AC1 = new Color(1f, 0f, 0f, 0.4f),
-                               AC2 = new Color(0f, 1f, 0f, 0.4f),
-                               AC3 = new Color(0f, 0f, 1f, 0.4f);
+    private static final int SCALE = 15;
+    private static final float TRI_W = 10 * SCALE, TRI_H = 8 * SCALE;
 
     private Layer layer;
     private static int row = 0, col = 0;
@@ -45,45 +45,65 @@ public class TriangleDemo extends ApplicationAdapter {
     @Override
     public void create() {
         TestUtils.setTitleFromClass(this);
-        Gdx.graphics.setWindowedMode(600, 600);
+        Gdx.graphics.setWindowedMode(1100, 650);
 
         layer = new Layer();
 
         layer.getRoot().add(
-                // All color tests
-                tri(true).setColor(C1),
-                tri(true).setColor(C1, C2, C3),
-                tri(false).setColor(C1),
-                tri(false).setColor(C1, C2, C3),
+                // Right angled
+                tri('r', true).setColor(c1),
+                tri('r', true).setColor(c1, c2, c3),
+                tri('r', false).setColor(c1),
+                tri('r', false).setColor(c1, c2, c3),
+
+                // Equilateral-ish
+                tri('e', true).setColor(c1),
+                tri('e', true).setColor(c1, c2, c3),
+                tri('e', false).setColor(c1),
+                tri('e', false).setColor(c1, c2, c3),
+
+                // Custom / Scalene
+                tri('c', true).setColor(c1),
+                tri('c', true).setColor(c1, c2, c3),
+                tri('c', false).setColor(c1),
+                tri('c', false).setColor(c1, c2, c3),
 
                 // Showcase opacity (should be not full supported for filled triangles)
                 // NOTE: it should work completely fine for outlined triangles even with 3 colors
-                tri(true).setColor(AC1),
-                tri(true).setColor(AC1, AC2, AC3),
-                tri(false).setColor(AC1),
-                tri(false).setColor(AC1, AC2, AC3),
+                tri('c', true).setColor(ac1),
+                tri('c', true).setColor(ac1, ac2, ac3),
+                tri('c', false).setColor(ac1),
+                tri('c', false).setColor(ac1, ac2, ac3),
 
                 // Fixed width/height test
-                tri(true).setColor(C1).setSize(0f, 0f).setSize(TRI_WIDTH, TRI_HEIGHT),
-                tri(true).setColor(C2).setSize(0f, TRI_HEIGHT).setSize(TRI_WIDTH, TRI_HEIGHT),
-                tri(true).setColor(C3).setSize(TRI_WIDTH, 0f).setSize(TRI_WIDTH, TRI_HEIGHT),
-                tri(true).setColor(C1).setSize(TRI_WIDTH, TRI_HEIGHT).setSize(TRI_WIDTH, TRI_HEIGHT)
+                tri('c', true).setColor(c1).setSize(0f, 0f).setSize(TRI_W, TRI_H),
+                tri('c', true).setColor(c1, c2, c3).setSize(0f, TRI_H).setSize(TRI_W, TRI_H),
+                tri('c', false).setColor(c1).setSize(TRI_W, 0f).setSize(TRI_W, TRI_H),
+                tri('c', false).setColor(c1, c2, c3).setSize(TRI_W, TRI_H).setSize(TRI_W, TRI_H),
+
+                // Rotated triangles
+                tri('r', true).setColor(c1).setRotationDegrees(15f),
+                tri('e', true).setColor(c1, c2, c3).setRotationDegrees(90f),
+                tri('e', false).setColor(c1).setRotationDegrees(180f),
+                tri('c', true).setColor(c1, c2, c3).setRotationDegrees(360f)
         );
+
     }
 
 
-    private Triangle tri(boolean filled) {
-        Triangle triangle = new Triangle(
-            filled,
-            0f, 0f,
-            TRI_WIDTH / 2f, TRI_HEIGHT,
-            TRI_WIDTH, 0f,
-            null
-        );
+    private Triangle tri(char type, boolean filled) {
+        Triangle triangle = new Triangle(filled, 0f, 0f, 0f, 0f, 0f, 0f, null);
+
+        if (type == 'e')
+            triangle.setVertices(0f, 0f, TRI_W / 2f, TRI_H, TRI_W, 0f);
+        else if (type == 'r')
+            triangle.setVertices(0f, 0f, 0f, TRI_H, TRI_W, 0f);
+        else if (type == 'c')
+            triangle.setVertices(0f, 0f, TRI_W * 0.5f, TRI_H, TRI_W, TRI_H * 0.2f);
 
         triangle.setXY(
-            PADDING + (PADDING + TRI_WIDTH) * row,
-            PADDING + (PADDING + TRI_HEIGHT) * col
+            PADDING + (PADDING + TRI_W) * row,
+            PADDING + (PADDING + TRI_H) * col
         );
 
         if (++col >= MAX_PER_ROW) {
@@ -101,19 +121,17 @@ public class TriangleDemo extends ApplicationAdapter {
         layer.render();
     }
 
-
     @Override
     public void resize(int width, int height) {
         layer.resize(width, height);
     }
-
 
     @Override
     public void dispose() {
         layer.dispose();
     }
 
-}
 
+}
 
 
