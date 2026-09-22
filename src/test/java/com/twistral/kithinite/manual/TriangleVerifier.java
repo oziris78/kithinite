@@ -195,31 +195,20 @@ public class TriangleVerifier extends ApplicationAdapter {
             triangle.setSize(ORIG_TRI_W, ORIG_TRI_H);
         }
 
-        // Randomly swap V1 and V2  -> v2 v1 v3
-        if (rng.nextBoolean()) {
-            triangle.setVertices(
-                triangle.getV2x(), triangle.getV2y(), triangle.getV2Color(),
-                triangle.getV1x(), triangle.getV1y(), triangle.getV1Color(),
-                triangle.getV3x(), triangle.getV3y(), triangle.getV3Color()
-            );
-        }
+        // Permute all 6 vertex index orderings (V1, V2, V3)
+        int perm = rng.nextInt(0, 6);
+        float v1x = triangle.getV1x(), v1y = triangle.getV1y();
+        float v2x = triangle.getV2x(), v2y = triangle.getV2y();
+        float v3x = triangle.getV3x(), v3y = triangle.getV3y();
+        Color c1 = triangle.getV1Color(), c2 = triangle.getV2Color(), c3 = triangle.getV3Color();
 
-        // Randomly swap V1 and V3  -> v3 v2 v1
-        if (rng.nextBoolean()) {
-            triangle.setVertices(
-                triangle.getV3x(), triangle.getV3y(), triangle.getV3Color(),
-                triangle.getV2x(), triangle.getV2y(), triangle.getV2Color(),
-                triangle.getV1x(), triangle.getV1y(), triangle.getV1Color()
-            );
-        }
-
-        // Randomly swap V3 and V2  -> v1 v3 v2
-        if (rng.nextBoolean()) {
-            triangle.setVertices(
-                triangle.getV1x(), triangle.getV1y(), triangle.getV1Color(),
-                triangle.getV3x(), triangle.getV3y(), triangle.getV3Color(),
-                triangle.getV2x(), triangle.getV2y(), triangle.getV2Color()
-            );
+        switch (perm) {
+            case 0: triangle.setVertices(v1x, v1y, c1, v3x, v3y, c3, v2x, v2y, c2); break; // 1 3 2
+            case 1: triangle.setVertices(v2x, v2y, c2, v1x, v1y, c1, v3x, v3y, c3); break; // 2 1 3
+            case 2: triangle.setVertices(v2x, v2y, c2, v3x, v3y, c3, v1x, v1y, c1); break; // 2 3 1
+            case 3: triangle.setVertices(v3x, v3y, c3, v1x, v1y, c1, v2x, v2y, c2); break; // 3 1 2
+            case 4: triangle.setVertices(v3x, v3y, c3, v2x, v2y, c2, v1x, v1y, c1); break; // 3 2 1
+            case 5: break; // 1 2 3
         }
     }
 
