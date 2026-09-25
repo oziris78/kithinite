@@ -46,6 +46,13 @@ public class TriangleVerifier extends ApplicationAdapter {
     private static final int PACKED_RECT_COLOR = Color.rgba8888(RECT_COLOR),
                              PACKED_BG_COLOR = Color.rgba8888(BG_COLOR);
 
+    private final static float[][] rightAngleTemps = {
+            {0f, 0f, 0f, 1f, 1f, 0f},
+            {0f, 0f, 0f, 1f, 1f, 1f},
+            {0f, 0f, 1f, 0f, 1f, 1f},
+            {0f, 1f, 1f, 0f, 1f, 1f}
+    };
+
     private Layer layer;
     private Rectangle rectangle;
     private Triangle triangle;
@@ -86,7 +93,11 @@ public class TriangleVerifier extends ApplicationAdapter {
         if (Gdx.input.isKeyJustPressed(Input.Keys.NUM_3)) makeTriOutlined();
 
         // Randomize only the vertices
-        if (Gdx.input.isKeyPressed(Input.Keys.Q)) randomizeTriangleSize();
+        if (Gdx.input.isKeyPressed(Input.Keys.Q)) {
+            if (rectangle.getColor() == RECT_COLOR || rectangle.getColor() == CORRECT_COLOR) {
+                randomizeTriangleSize();
+            }
+        }
 
         // Randomize EVERYTHING
         if (Gdx.input.isKeyPressed(Input.Keys.R)) {
@@ -142,15 +153,7 @@ public class TriangleVerifier extends ApplicationAdapter {
 
             case 1: {
                 currentType = "Right-angled triangles";
-                float[][] templates = {
-                    {0f, 0f, 0f, 1f, 1f, 0f},
-                    {0f, 0f, 1f, 0f, 0f, 1f},
-                    {0f, 1f, 0f, 0f, 1f, 1f},
-                    {0f, 1f, 1f, 1f, 0f, 0f},
-                    {1f, 0f, 0f, 0f, 1f, 1f},
-                    {1f, 0f, 1f, 1f, 0f, 0f}
-                };
-                float[] t = templates[rng.nextInt(0, templates.length)];
+                float[] t = rightAngleTemps[rng.nextInt(0, rightAngleTemps.length)];
                 triangle.setVertices(t[0], t[1], t[2], t[3], t[4], t[5]);
             } break;
 
