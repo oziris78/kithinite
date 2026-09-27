@@ -164,6 +164,22 @@ public class Rectangle extends Shape<Rectangle> {
     }
 
 
+    @Override
+    public Rectangle flipVertically() {
+        this.setColor(bottomLeftColor, bottomRightColor, topRightColor, topLeftColor);
+        this.rotationDegrees = -this.rotationDegrees;
+        return this;
+    }
+
+
+    @Override
+    public Rectangle flipHorizontally() {
+        this.setColor(topRightColor, topLeftColor, bottomLeftColor, bottomRightColor);
+        this.rotationDegrees = -this.rotationDegrees;
+        return this;
+    }
+
+
     /*///////////////////////////////////////////////////////////////////////////*/
     /*///////////////////////////  GETTERS & SETTERS  ///////////////////////////*/
     /*///////////////////////////////////////////////////////////////////////////*/

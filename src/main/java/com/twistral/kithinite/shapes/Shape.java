@@ -41,6 +41,9 @@ public abstract class Shape<T extends Shape<T>> extends Widget<T> {
     public abstract T setColor(Color color);
     public abstract Color getColor();
 
+    public abstract T flipVertically();
+    public abstract T flipHorizontally();
+
 
     public T setFilled(boolean filled) {
         this.filled = filled;

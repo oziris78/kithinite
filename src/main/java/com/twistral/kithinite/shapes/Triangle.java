@@ -28,7 +28,7 @@ import static com.twistral.kithinite.KithiniteUtils.*;
 
 /**
  * Represents a 2D triangle widget defined by three vertices relative to its bounding box. <br>
- * Supports both filled and and outlined (not filled) rendering modes. <br>
+ * Supports both filled and outlined (not filled) rendering modes. <br>
  * <b>NOTE: Custom lineWidth values are NOT supported due to pixel imperfections.</b>
  * <b>NOTE: Custom opacity values (alpha < 1f) are NOT supported on filled triangles to prevent
  * edge double blending leftovers. Alpha values are clamped to 1f during render for filled triangles.</b>
@@ -83,14 +83,6 @@ public class Triangle extends Shape<Triangle> {
     public void render(ShapeDrawer drawer) {
         if (!this.visible) return;
         if (this.width <= 0 || this.height <= 0) return;
-
-        final Color c1 = prioritySelect(this.v1Color, DEF_COLOR);
-        final Color c2 = prioritySelect(this.v2Color, DEF_COLOR);
-        final Color c3 = prioritySelect(this.v3Color, DEF_COLOR);
-
-        final float c1Bits = getFloatBits(c1.r, c1.g, c1.b, 1f);
-        final float c2Bits = getFloatBits(c2.r, c2.g, c2.b, 1f);
-        final float c3Bits = getFloatBits(c3.r, c3.g, c3.b, 1f);
 
         final float nesterAbsX = this.nester.getAbsX(),
                     nesterAbsY = this.nester.getAbsY();
@@ -171,6 +163,14 @@ public class Triangle extends Shape<Triangle> {
             }
         }
 
+        final Color c1 = prioritySelect(this.v1Color, DEF_COLOR);
+        final Color c2 = prioritySelect(this.v2Color, DEF_COLOR);
+        final Color c3 = prioritySelect(this.v3Color, DEF_COLOR);
+
+        final float c1Bits = getFloatBits(c1.r, c1.g, c1.b, 1f);
+        final float c2Bits = getFloatBits(c2.r, c2.g, c2.b, 1f);
+        final float c3Bits = getFloatBits(c3.r, c3.g, c3.b, 1f);
+
         // Fill the core polygon
         if (filled) {
             drawer.filledTriangle(x1, y1, x2, y2, x3, y3, c1Bits, c2Bits, c3Bits);
@@ -181,6 +181,28 @@ public class Triangle extends Shape<Triangle> {
         drawer.line(x1, y1, x2, y2, 1f, false, c1Bits, c2Bits);
         drawer.line(x2, y2, x3, y3, 1f, false, c2Bits, c3Bits);
         drawer.line(x3, y3, x1, y1, 1f, false, c3Bits, c1Bits);
+    }
+
+
+    @Override
+    public Triangle flipVertically() {
+        this.nv1y = 1f - this.nv1y;
+        this.nv2y = 1f - this.nv2y;
+        this.nv3y = 1f - this.nv3y;
+        recalculateYFromNorm();
+        this.rotationDegrees = -this.rotationDegrees;
+        return this;
+    }
+
+
+    @Override
+    public Triangle flipHorizontally() {
+        this.nv1x = 1f - this.nv1x;
+        this.nv2x = 1f - this.nv2x;
+        this.nv3x = 1f - this.nv3x;
+        recalculateXFromNorm();
+        this.rotationDegrees = -this.rotationDegrees;
+        return this;
     }
 
 
@@ -217,7 +239,7 @@ public class Triangle extends Shape<Triangle> {
     @Override
     public Triangle setWidth(float newWidth) {
         super.setWidth(newWidth);
-        recalculateVerticesFromNorm();
+        recalculateXFromNorm();
         return this;
     }
 
@@ -225,18 +247,8 @@ public class Triangle extends Shape<Triangle> {
     @Override
     public Triangle setHeight(float newHeight) {
         super.setHeight(newHeight);
-        recalculateVerticesFromNorm();
+        recalculateYFromNorm();
         return this;
-    }
-
-
-    private void recalculateVerticesFromNorm() {
-        this.v1x = this.x + (this.nv1x * this.width);
-        this.v1y = this.y + (this.nv1y * this.height);
-        this.v2x = this.x + (this.nv2x * this.width);
-        this.v2y = this.y + (this.nv2y * this.height);
-        this.v3x = this.x + (this.nv3x * this.width);
-        this.v3y = this.y + (this.nv3y * this.height);
     }
 
 
@@ -365,6 +377,24 @@ public class Triangle extends Shape<Triangle> {
     public Color getV1Color() { return this.v1Color; }
     public Color getV2Color() { return this.v2Color; }
     public Color getV3Color() { return this.v3Color; }
+
+
+    /*//////////////////////////////////////////////////////////////////////////*/
+    /*///////////////////////////  HELPER FUNCTIONS  ///////////////////////////*/
+    /*//////////////////////////////////////////////////////////////////////////*/
+
+
+    private void recalculateXFromNorm() {
+        this.v1x = this.x + (this.nv1x * this.width);
+        this.v2x = this.x + (this.nv2x * this.width);
+        this.v3x = this.x + (this.nv3x * this.width);
+    }
+
+    private void recalculateYFromNorm() {
+        this.v1y = this.y + (this.nv1y * this.height);
+        this.v2y = this.y + (this.nv2y * this.height);
+        this.v3y = this.y + (this.nv3y * this.height);
+    }
 
 
 }

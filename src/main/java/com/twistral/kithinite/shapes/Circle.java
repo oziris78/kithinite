@@ -92,6 +92,18 @@ public class Circle extends Shape<Circle> {
     }
 
 
+    @Override
+    public Circle flipVertically() {
+        return this; // flipping vertically causes no visual change
+    }
+
+
+    @Override
+    public Circle flipHorizontally() {
+        return this; // flipping horizontally causes no visual change
+    }
+
+
     /*///////////////////////////////////////////////////////////////////////////*/
     /*///////////////////////////  GETTERS & SETTERS  ///////////////////////////*/
     /*///////////////////////////////////////////////////////////////////////////*/

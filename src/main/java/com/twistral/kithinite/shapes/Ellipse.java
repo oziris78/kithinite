@@ -100,6 +100,20 @@ public class Ellipse extends Shape<Ellipse> {
     }
 
 
+    @Override
+    public Ellipse flipVertically() {
+        this.rotationDegrees = -this.rotationDegrees;
+        return this;
+    }
+
+
+    @Override
+    public Ellipse flipHorizontally() {
+        this.rotationDegrees = -this.rotationDegrees;
+        return this;
+    }
+
+
     /*///////////////////////////////////////////////////////////////////////////*/
     /*///////////////////////////  GETTERS & SETTERS  ///////////////////////////*/
     /*///////////////////////////////////////////////////////////////////////////*/
