@@ -22,7 +22,6 @@ import com.badlogic.gdx.graphics.*;
 import com.badlogic.gdx.math.MathUtils;
 import com.twistral.kithinite.core.*;
 import com.twistral.tephrium.core.functions.TMath;
-import com.twistral.tephrium.core.vectors.TVec2;
 import space.earlygrey.shapedrawer.*;
 import static com.twistral.kithinite.KithiniteUtils.*;
 
@@ -124,6 +123,54 @@ public class Triangle extends Shape<Triangle> {
             float rx3 = cx + (x3 - cx) * cos - (y3 - cy) * sin;
             float ry3 = cy + (x3 - cx) * sin + (y3 - cy) * cos;
             x3 = rx3; y3 = ry3;
+        }
+
+        // Fix the weird 1px bleeding bug that happens on right angle triangles
+        final float minX = min(x1, x2, x3);
+        final float minY = min(y1, y2, y3);
+        // final float maxX = max(x1, x2, x3); // not used
+        final float maxY = max(y1, y2, y3);
+
+        final float v12x = x2 - x1, v12y = y2 - y1;
+        final float v13x = x3 - x1, v13y = y3 - y1;
+        final float v23x = x3 - x2, v23y = y3 - y2;
+
+        final float dot1 = v12x * v13x + v12y * v13y;
+        final float dot2 = (-v12x) * v23x + (-v12y) * v23y;
+        final float dot3 = v13x * v23x + v13y * v23y;
+
+        final boolean rightAngleAtV1 = Math.abs(dot1) < 0.01f;
+        final boolean rightAngleAtV2 = Math.abs(dot2) < 0.01f;
+        final boolean rightAngleAtV3 = Math.abs(dot3) < 0.01f;
+
+        if (rightAngleAtV1 || rightAngleAtV2 || rightAngleAtV3) {
+            final float rx = rightAngleAtV1 ? x1 : (rightAngleAtV2 ? x2 : x3);
+            final float ry = rightAngleAtV1 ? y1 : (rightAngleAtV2 ? y2 : y3);
+
+            final boolean isLeft = Math.abs(rx - minX) < 0.01f;
+            final boolean isBottom = Math.abs(ry - minY) < 0.01f;
+
+            if (isBottom && isLeft) { // BOTTOM LEFT
+                if(x1 == minX) x1++;
+                if(x2 == minX) x2++;
+                if(x3 == minX) x3++;
+            }
+
+            if (!isBottom && isLeft) { // TOP LEFT
+                if (y1 == minY) x1++;
+                else if (y2 == minY) x2++;
+                else if (y3 == minY) x3++;
+
+                if (y1 == maxY) y1--;
+                if (y2 == maxY) y2--;
+                if (y3 == maxY) y3--;
+            }
+
+            if (!isBottom && !isLeft) { // TOP RIGHT
+                if (y1 == maxY) y1--;
+                if (y2 == maxY) y2--;
+                if (y3 == maxY) y3--;
+            }
         }
 
         // Fill the core polygon
