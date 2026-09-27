@@ -27,7 +27,6 @@ import static com.twistral.kithinite.KithiniteUtils.*;
 public class Ellipse extends Shape<Ellipse> {
 
     private float radiusX, radiusY;
-    private float rotationDegrees;
     private float lineWidth;
     private Color innerColor, outerColor;
 
@@ -35,11 +34,10 @@ public class Ellipse extends Shape<Ellipse> {
     public Ellipse(boolean filled, float radiusX, float radiusY, Color innerColor, Color outerColor,
                    float rotationDegrees, float lineWidth)
     {
-        super(filled);
+        super(filled, rotationDegrees);
         setRadiusX(radiusX); // auto update width
         setRadiusY(radiusY); // auto update height
         setColor(innerColor, outerColor);
-        this.rotationDegrees = rotationDegrees;
         this.lineWidth = lineWidth;
     }
 
@@ -136,11 +134,6 @@ public class Ellipse extends Shape<Ellipse> {
 
     /*////////////////  SETTERS WITH NO SIDE EFFECTS  ////////////////*/
 
-    public Ellipse setRotationDegrees(float rotationDegrees) {
-        this.rotationDegrees = rotationDegrees;
-        return this;
-    }
-
     public Ellipse setLineWidth(float lineWidth) {
         this.lineWidth = lineWidth;
         return this;
@@ -194,7 +187,6 @@ public class Ellipse extends Shape<Ellipse> {
 
     public float getRadiusX() { return this.radiusX; }
     public float getRadiusY() { return this.radiusY; }
-    public float getRotationDegrees() { return this.rotationDegrees; }
     public float getLineWidth() { return this.lineWidth; }
     public Color getInnerColor() { return this.innerColor; }
     public Color getOuterColor() { return this.outerColor; }

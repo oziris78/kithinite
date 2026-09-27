@@ -31,7 +31,7 @@ public class Circle extends Shape<Circle> {
 
 
     public Circle(boolean filled, float radius, Color innerColor, Color outerColor, float lineWidth) {
-        super(filled);
+        super(filled, 0f);
         setRadius(radius); // auto update width & height
         setColor(innerColor, outerColor);
         this.lineWidth = lineWidth;

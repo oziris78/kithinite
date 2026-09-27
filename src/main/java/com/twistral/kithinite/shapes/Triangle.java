@@ -38,7 +38,6 @@ public class Triangle extends Shape<Triangle> {
     // Triangle related variables
     private float v1x, v1y, v2x, v2y, v3x, v3y;
     private Color v1Color, v2Color, v3Color;
-    private float rotationDegrees;
 
     // [INTERNAL] normalized vertices for proper width/height scaling
     private float nv1x, nv1y, nv2x, nv2y, nv3x, nv3y;
@@ -47,10 +46,9 @@ public class Triangle extends Shape<Triangle> {
     public Triangle(boolean filled, float v1x, float v1y, float v2x, float v2y, float v3x,
                     float v3y, Color v1Color, Color v2Color, Color v3Color, float rotationDegrees)
     {
-        super(filled);
+        super(filled, rotationDegrees);
         setVertices(v1x, v1y, v2x, v2y, v3x, v3y);
         setColor(v1Color, v2Color, v3Color);
-        this.rotationDegrees = rotationDegrees;
     }
 
 
@@ -299,11 +297,6 @@ public class Triangle extends Shape<Triangle> {
 
     /*////////////////  SETTERS WITH NO SIDE EFFECTS  ////////////////*/
 
-    public Triangle setRotationDegrees(float rotationDegrees) {
-        this.rotationDegrees = rotationDegrees;
-        return this;
-    }
-
     public Triangle setV1Color(Color v1Color) {
         this.v1Color = v1Color;
         return this;
@@ -363,7 +356,6 @@ public class Triangle extends Shape<Triangle> {
         return prioritySelect(this.v1Color, this.v2Color, this.v3Color, null);
     }
 
-    public float getRotationDegrees() { return this.rotationDegrees; }
     public float getV1x() { return this.v1x; }
     public float getV1y() { return this.v1y; }
     public float getV2x() { return this.v2x; }

@@ -31,7 +31,6 @@ public class Rectangle extends Shape<Rectangle> {
     public static final JoinType DEF_JOIN_TYPE = JoinType.POINTY;
 
     // Rectangle related variables
-    private float rotationDegrees;
     private float lineWidth;
     private JoinType joinType;
     private Color topLeftColor, topRightColor, bottomRightColor, bottomLeftColor;
@@ -41,9 +40,8 @@ public class Rectangle extends Shape<Rectangle> {
                      Color bottomRightColor, Color bottomLeftColor,
                      float rotationDegrees, float lineWidth, JoinType joinType)
     {
-        super(filled);
+        super(filled, rotationDegrees);
         setColor(topLeftColor, topRightColor, bottomRightColor, bottomLeftColor);
-        this.rotationDegrees = rotationDegrees;
         this.lineWidth = lineWidth;
         this.joinType = joinType;
     }
@@ -172,11 +170,6 @@ public class Rectangle extends Shape<Rectangle> {
 
     /*////////////////  SETTERS WITH NO SIDE EFFECTS  ////////////////*/
 
-    public Rectangle setRotationDegrees(float rotationDegrees) {
-        this.rotationDegrees = rotationDegrees;
-        return this;
-    }
-
     public Rectangle setLineWidth(float lineWidth) {
         this.lineWidth = lineWidth;
         return this;
@@ -230,7 +223,6 @@ public class Rectangle extends Shape<Rectangle> {
         return prioritySelect(topLeftColor, topRightColor, bottomRightColor, bottomLeftColor, null);
     }
 
-    public float getRotationDegrees() { return rotationDegrees; }
     public float getLineWidth() { return lineWidth; }
     public JoinType getJoinType() { return joinType; }
     public Color getTopRightColor() { return this.topRightColor; }

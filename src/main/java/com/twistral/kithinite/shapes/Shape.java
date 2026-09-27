@@ -21,6 +21,7 @@ package com.twistral.kithinite.shapes;
 
 import com.badlogic.gdx.graphics.*;
 import com.twistral.kithinite.core.*;
+import com.twistral.tephrium.core.functions.TMath;
 
 
 public abstract class Shape<T extends Shape<T>> extends Widget<T> {
@@ -30,10 +31,11 @@ public abstract class Shape<T extends Shape<T>> extends Widget<T> {
     public static final float DEF_ROTATION_DEGREES = 0f;
 
     protected boolean filled;
+    protected float rotationDegrees;
 
-
-    protected Shape(boolean filled) {
+    protected Shape(boolean filled, float rotationDegrees) {
         this.filled = filled;
+        this.rotationDegrees = rotationDegrees;
     }
 
     public abstract T setColor(Color color);
@@ -45,8 +47,13 @@ public abstract class Shape<T extends Shape<T>> extends Widget<T> {
         return self();
     }
 
-    public boolean isFilled() { return filled; }
+    public T setRotationDegrees(float rotationDegrees) {
+        this.rotationDegrees = rotationDegrees;
+        return self();
+    }
 
+    public boolean isFilled() { return filled; }
+    public float getRotationDegrees() { return rotationDegrees; }
 
     public T setColor(int rgba8888) {
         return this.setColor(new Color(rgba8888));
