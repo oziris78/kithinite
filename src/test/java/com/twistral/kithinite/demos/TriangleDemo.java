@@ -35,8 +35,8 @@ public class TriangleDemo extends ApplicationAdapter {
     private static final float PADDING = 25f;
     private static final float RA = 180; // rotation angle
     private static final int MAX_PER_ROW = 4;
-    private static final int SCALE = 15;
-    private static final float TRI_W = 10 * SCALE, TRI_H = 8 * SCALE;
+    private static final int SCALE = 12;
+    private static final float TRI_W = 8 * SCALE, TRI_H = 10 * SCALE;
 
     private Layer layer;
     private static int row = 0, col = 0;
@@ -45,47 +45,80 @@ public class TriangleDemo extends ApplicationAdapter {
     @Override
     public void create() {
         TestUtils.setTitleFromClass(this);
-        Gdx.graphics.setWindowedMode(1100, 650);
+        Gdx.graphics.setWindowedMode(1500, 650);
 
         layer = new Layer();
 
         layer.getRoot().add(
-                // Right angled
-                tri('r', true).setColor(c1),
-                tri('r', true).setColor(c1, c2, c3),
-                tri('r', false).setColor(c1),
-                tri('r', false).setColor(c1, c2, c3),
+            // Right angled
+            tri('r', true).setColor(c1),
+            tri('r', true).setColor(c1, c2, c3),
+            tri('r', false).setColor(c1),
+            tri('r', false).setColor(c1, c2, c3),
 
-                // Equilateral-ish
-                tri('e', true).setColor(c1),
-                tri('e', true).setColor(c1, c2, c3),
-                tri('e', false).setColor(c1),
-                tri('e', false).setColor(c1, c2, c3),
+            // Equilateral-ish
+            tri('e', true).setColor(c1),
+            tri('e', true).setColor(c1, c2, c3),
+            tri('e', false).setColor(c1),
+            tri('e', false).setColor(c1, c2, c3),
 
-                // Custom / Scalene
-                tri('c', true).setColor(c1),
-                tri('c', true).setColor(c1, c2, c3),
-                tri('c', false).setColor(c1),
-                tri('c', false).setColor(c1, c2, c3),
+            // Custom / Scalene
+            tri('c', true).setColor(c1),
+            tri('c', true).setColor(c1, c2, c3),
+            tri('c', false).setColor(c1),
+            tri('c', false).setColor(c1, c2, c3),
 
-                // Showcase opacity (should be not full supported for filled triangles)
-                // NOTE: it should work completely fine for outlined triangles even with 3 colors
-                tri('c', true).setColor(ac1),
-                tri('c', true).setColor(ac1, ac2, ac3),
-                tri('c', false).setColor(ac1),
-                tri('c', false).setColor(ac1, ac2, ac3),
+            // FLIPPED HORIZONTALLY for all 3 types
+            tri('r', true).setColor(c1).flipHorizontally(),
+            tri('r', true).setColor(c1, c2, c3).flipHorizontally(),
+            tri('r', false).setColor(c1).flipHorizontally(),
+            tri('r', false).setColor(c1, c2, c3).flipHorizontally(),
 
-                // Fixed width/height test
-                tri('c', true).setColor(c1).setSize(0f, 0f).setSize(TRI_W, TRI_H),
-                tri('c', true).setColor(c1, c2, c3).setSize(0f, TRI_H).setSize(TRI_W, TRI_H),
-                tri('c', false).setColor(c1).setSize(TRI_W, 0f).setSize(TRI_W, TRI_H),
-                tri('c', false).setColor(c1, c2, c3).setSize(TRI_W, TRI_H).setSize(TRI_W, TRI_H),
+            tri('e', true).setColor(c1).flipHorizontally(),
+            tri('e', true).setColor(c1, c2, c3).flipHorizontally(),
+            tri('e', false).setColor(c1).flipHorizontally(),
+            tri('e', false).setColor(c1, c2, c3).flipHorizontally(),
 
-                // Rotated triangles
-                tri('r', true).setColor(c1).setRotationDegrees(15f),
-                tri('e', true).setColor(c1, c2, c3).setRotationDegrees(90f),
-                tri('e', false).setColor(c1).setRotationDegrees(180f),
-                tri('c', true).setColor(c1, c2, c3).setRotationDegrees(360f)
+            tri('c', true).setColor(c1).flipHorizontally(),
+            tri('c', true).setColor(c1, c2, c3).flipHorizontally(),
+            tri('c', false).setColor(c1).flipHorizontally(),
+            tri('c', false).setColor(c1, c2, c3).flipHorizontally(),
+
+            // FLIPPED VERTICALLY for all 3 types
+            tri('r', true).setColor(c1).flipVertically(),
+            tri('r', true).setColor(c1, c2, c3).flipVertically(),
+            tri('r', false).setColor(c1).flipVertically(),
+            tri('r', false).setColor(c1, c2, c3).flipVertically(),
+
+            tri('e', true).setColor(c1).flipVertically(),
+            tri('e', true).setColor(c1, c2, c3).flipVertically(),
+            tri('e', false).setColor(c1).flipVertically(),
+            tri('e', false).setColor(c1, c2, c3).flipVertically(),
+
+            tri('c', true).setColor(c1).flipVertically(),
+            tri('c', true).setColor(c1, c2, c3).flipVertically(),
+            tri('c', false).setColor(c1).flipVertically(),
+            tri('c', false).setColor(c1, c2, c3).flipVertically(),
+
+
+            // Showcase opacity (should be not full supported for filled triangles)
+            // NOTE: it should work completely fine for outlined triangles even with 3 colors
+            tri('c', true).setColor(ac1),
+            tri('c', true).setColor(ac1, ac2, ac3),
+            tri('c', false).setColor(ac1),
+            tri('c', false).setColor(ac1, ac2, ac3),
+
+            // Fixed width/height test
+            tri('c', true).setColor(c1).setSize(0f, 0f).setSize(TRI_W, TRI_H),
+            tri('c', true).setColor(c1, c2, c3).setSize(0f, TRI_H).setSize(TRI_W, TRI_H),
+            tri('c', false).setColor(c1).setSize(TRI_W, 0f).setSize(TRI_W, TRI_H),
+            tri('c', false).setColor(c1, c2, c3).setSize(TRI_W, TRI_H).setSize(TRI_W, TRI_H),
+
+            // Rotated triangles
+            tri('r', true).setColor(c1).setRotationDegrees(15f),
+            tri('e', true).setColor(c1, c2, c3).setRotationDegrees(60f),
+            tri('e', false).setColor(c1).setRotationDegrees(180f),
+            tri('c', true).setColor(c1, c2, c3).setRotationDegrees(360f)
         );
 
     }

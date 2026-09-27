@@ -27,8 +27,11 @@ import com.twistral.kithinite.TestUtils;
 
 public class EllipseDemo extends ApplicationAdapter {
 
-    private static final float RAD_A = 60, RAD_B = 40, PADDING = 25;
-    private static final int MAX_PER_ROW = 4;
+    private static final Color c1 = Color.GOLD, c2 = Color.ORANGE, c3 = Color.PURPLE;
+    private static final int SCALE = 15;
+    private static final int MAX_PER_ROW = 8;
+
+    private static final float RAD_A = 5*SCALE, RAD_B = 2*SCALE, PADDING = 1.25f*SCALE;
 
     private Layer layer;
 
@@ -36,46 +39,78 @@ public class EllipseDemo extends ApplicationAdapter {
     @Override
     public void create() {
         TestUtils.setTitleFromClass(this);
-        Gdx.graphics.setWindowedMode(900, 450);
+        Gdx.graphics.setWindowedMode(1500, 700);
 
         layer = new Layer();
 
-        final Color color1 = Color.GOLD;
-        final Color color2 = Color.ORANGE;
-        final Color color3 = Color.PURPLE;
-
         layer.getRoot().add(
-            // filled + color settings test
-            ellipse(true).setColor(color1),
-            ellipse(true).setColor(color2, color3),
-            ellipse(false).setColor(color1),
-            ellipse(false).setColor(color2, color3),
+            // filled + color settings + lineWidth test
+            ellipse(true).setColor(c1),
+            ellipse(true).setColor(c2, c3),
+            ellipse(false).setColor(c1),
+            ellipse(false).setColor(c2, c3),
+            ellipse(true).setColor(c1).setLineWidth(4f),
+            ellipse(true).setColor(c2, c3).setLineWidth(4f),
+            ellipse(false).setColor(c1).setLineWidth(4f),
+            ellipse(false).setColor(c2, c3).setLineWidth(4f),
 
-            // lineWidth test with all the above
-            ellipse(true).setColor(color1).setLineWidth(4f),
-            ellipse(true).setColor(color2, color3).setLineWidth(4f),
-            ellipse(false).setColor(color1).setLineWidth(4f),
-            ellipse(false).setColor(color2, color3).setLineWidth(4f),
+            ellipse(true).setColor(c1).setLineWidth(8f),
+            ellipse(true).setColor(c2, c3).setLineWidth(8f),
+            ellipse(false).setColor(c1).setLineWidth(8f),
+            ellipse(false).setColor(c2, c3).setLineWidth(8f),
+            ellipse(true).setColor(c1).setLineWidth(20f),
+            ellipse(true).setColor(c2, c3).setLineWidth(20f),
+            ellipse(false).setColor(c1).setLineWidth(20f),
+            ellipse(false).setColor(c2, c3).setLineWidth(20f),
 
-            ellipse(true).setColor(color1).setLineWidth(8f),
-            ellipse(true).setColor(color2, color3).setLineWidth(8f),
-            ellipse(false).setColor(color1).setLineWidth(8f),
-            ellipse(false).setColor(color2, color3).setLineWidth(8f),
+            // Flipping vertically test
+            ellipse(true).setColor(c1).flipVertically(),
+            ellipse(true).setColor(c2, c3).flipVertically(),
+            ellipse(false).setColor(c1).flipVertically(),
+            ellipse(false).setColor(c2, c3).flipVertically(),
+            ellipse(true).setColor(c1).setLineWidth(4f).flipVertically(),
+            ellipse(true).setColor(c2, c3).setLineWidth(4f).flipVertically(),
+            ellipse(false).setColor(c1).setLineWidth(4f).flipVertically(),
+            ellipse(false).setColor(c2, c3).setLineWidth(4f).flipVertically(),
 
-            ellipse(true).setColor(color1).setLineWidth(20f),
-            ellipse(true).setColor(color2, color3).setLineWidth(20f),
-            ellipse(false).setColor(color1).setLineWidth(20f),
-            ellipse(false).setColor(color2, color3).setLineWidth(20f),
+            // Flipping horizontally test
+            ellipse(true).setColor(c1).flipHorizontally(),
+            ellipse(true).setColor(c2, c3).flipHorizontally(),
+            ellipse(false).setColor(c1).flipHorizontally(),
+            ellipse(false).setColor(c2, c3).flipHorizontally(),
+            ellipse(true).setColor(c1).setLineWidth(4f).flipHorizontally(),
+            ellipse(true).setColor(c2, c3).setLineWidth(4f).flipHorizontally(),
+            ellipse(false).setColor(c1).setLineWidth(4f).flipHorizontally(),
+            ellipse(false).setColor(c2, c3).setLineWidth(4f).flipHorizontally(),
 
             // rotation test (should spill)
-            ellipse(true).setColor(color1).setRotationDegrees(30f),
-            ellipse(true).setColor(color2, color3).setRotationDegrees(30f),
-            ellipse(false).setColor(color1).setRotationDegrees(30f),
-            ellipse(false).setColor(color2, color3).setRotationDegrees(30f),
+            ellipse(true).setColor(c1).setRotationDegrees(15f),
+            ellipse(true).setColor(c2, c3).setRotationDegrees(15f),
+            ellipse(false).setColor(c1).setRotationDegrees(15f),
+            ellipse(false).setColor(c2, c3).setRotationDegrees(15f),
+            ellipse(true).setColor(c1).setLineWidth(4f).setRotationDegrees(15f),
+            ellipse(true).setColor(c2, c3).setLineWidth(4f).setRotationDegrees(15f),
+            ellipse(false).setColor(c1).setLineWidth(4f).setRotationDegrees(15f),
+            ellipse(false).setColor(c2, c3).setLineWidth(4f).setRotationDegrees(15f),
 
-            // vertical ellipse test
-            ellipse(true).setColor(color1).setRadiusX(RAD_B).setRadiusY(RAD_A).addY(PADDING),
-            ellipse(false).setColor(color1).setRadiusX(RAD_B).setRadiusY(RAD_A).addY(5f*PADDING)
+            // Rotation + Flipping vertically test (should spill)
+            ellipse(true).setColor(c1).setRotationDegrees(15f).flipVertically(),
+            ellipse(true).setColor(c2, c3).setRotationDegrees(15f).flipVertically(),
+            ellipse(false).setColor(c1).setRotationDegrees(15f).flipVertically(),
+            ellipse(false).setColor(c2, c3).setRotationDegrees(15f).flipVertically(),
+            ellipse(true).setColor(c1).setLineWidth(4f).setRotationDegrees(15f).flipVertically(),
+            ellipse(true).setColor(c2, c3).setLineWidth(4f).setRotationDegrees(15f).flipVertically(),
+            ellipse(false).setColor(c1).setLineWidth(4f).setRotationDegrees(15f).flipVertically(),
+            ellipse(false).setColor(c2, c3).setLineWidth(4f).setRotationDegrees(15f).flipVertically(),
+
+            // Rotation + Flipping horizontally test (should spill)
+            ellipse(true).setColor(c1).setRotationDegrees(15f).flipHorizontally(),
+            ellipse(true).setColor(c2, c3).setRotationDegrees(15f).flipHorizontally(),
+            ellipse(false).setColor(c1).setRotationDegrees(15f).flipHorizontally(),
+            ellipse(false).setColor(c2, c3).setRotationDegrees(15f).flipHorizontally(),
+            ellipse(true).setColor(c1).setLineWidth(4f).setRotationDegrees(15f).flipHorizontally(),
+            ellipse(true).setColor(c2, c3).setLineWidth(4f).setRotationDegrees(15f).flipHorizontally(),
+            ellipse(false).setColor(c1).setLineWidth(4f).setRotationDegrees(15f).flipHorizontally()
         );
     }
 

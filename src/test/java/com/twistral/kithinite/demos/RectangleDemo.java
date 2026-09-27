@@ -24,6 +24,8 @@ import com.twistral.kithinite.shapes.Rectangle;
 import com.twistral.kithinite.TestUtils;
 import space.earlygrey.shapedrawer.JoinType;
 
+import static space.earlygrey.shapedrawer.JoinType.*;
+
 
 public class RectangleDemo extends ApplicationAdapter {
 
@@ -49,115 +51,107 @@ public class RectangleDemo extends ApplicationAdapter {
         // LINEWIDTH => 1F, 4F, 8F
         layer.getRoot().add(
             // POINTY 1F
-            rect(true).setColor(c1).setJoinType(JoinType.POINTY).setLineWidth(1f),
-            rect(true).setVerticalGradient(c2, c3).setJoinType(JoinType.POINTY).setLineWidth(1f),
-            rect(true).setHorizontalGradient(c3, c2).setJoinType(JoinType.POINTY).setLineWidth(1f),
-            rect(true).setFullGradient(c1, c4, c3, c2).setJoinType(JoinType.POINTY).setLineWidth(1f),
-            rect(false).setColor(c1).setJoinType(JoinType.POINTY).setLineWidth(1f),
-            rect(false).setVerticalGradient(c2, c3).setJoinType(JoinType.POINTY).setLineWidth(1f),
-            rect(false).setHorizontalGradient(c3, c2).setJoinType(JoinType.POINTY).setLineWidth(1f),
-            rect(false).setFullGradient(c1, c4, c3, c2).setJoinType(JoinType.POINTY).setLineWidth(1f),
-
-            // POINTY 4F
-            rect(true).setColor(c1).setJoinType(JoinType.POINTY).setLineWidth(4f),
-            rect(true).setVerticalGradient(c2, c3).setJoinType(JoinType.POINTY).setLineWidth(4f),
-            rect(true).setHorizontalGradient(c3, c2).setJoinType(JoinType.POINTY).setLineWidth(4f),
-            rect(true).setFullGradient(c1, c4, c3, c2).setJoinType(JoinType.POINTY).setLineWidth(4f),
-            rect(false).setColor(c1).setJoinType(JoinType.POINTY).setLineWidth(4f),
-            rect(false).setVerticalGradient(c2, c3).setJoinType(JoinType.POINTY).setLineWidth(4f),
-            rect(false).setHorizontalGradient(c3, c2).setJoinType(JoinType.POINTY).setLineWidth(4f),
-            rect(false).setFullGradient(c1, c4, c3, c2).setJoinType(JoinType.POINTY).setLineWidth(4f),
+            rect(true, POINTY).setColor(c1).setLineWidth(1f),
+            rect(true, POINTY).setVerticalGradient(c2, c3).setLineWidth(1f),
+            rect(true, POINTY).setHorizontalGradient(c3, c2).setLineWidth(1f),
+            rect(true, POINTY).setFullGradient(c1, c4, c3, c2).setLineWidth(1f),
+            rect(false, POINTY).setColor(c1).setLineWidth(1f),
+            rect(false, POINTY).setVerticalGradient(c2, c3).setLineWidth(1f),
+            rect(false, POINTY).setHorizontalGradient(c3, c2).setLineWidth(1f),
+            rect(false, POINTY).setFullGradient(c1, c4, c3, c2).setLineWidth(1f),
 
             // POINTY 8F
-            rect(true).setColor(c1).setJoinType(JoinType.POINTY).setLineWidth(8f),
-            rect(true).setVerticalGradient(c2, c3).setJoinType(JoinType.POINTY).setLineWidth(8f),
-            rect(true).setHorizontalGradient(c3, c2).setJoinType(JoinType.POINTY).setLineWidth(8f),
-            rect(true).setFullGradient(c1, c4, c3, c2).setJoinType(JoinType.POINTY).setLineWidth(8f),
-            rect(false).setColor(c1).setJoinType(JoinType.POINTY).setLineWidth(8f),
-            rect(false).setVerticalGradient(c2, c3).setJoinType(JoinType.POINTY).setLineWidth(8f),
-            rect(false).setHorizontalGradient(c3, c2).setJoinType(JoinType.POINTY).setLineWidth(8f),
-            rect(false).setFullGradient(c1, c4, c3, c2).setJoinType(JoinType.POINTY).setLineWidth(8f),
+            rect(true, POINTY).setColor(c1).setLineWidth(8f),
+            rect(true, POINTY).setVerticalGradient(c2, c3).setLineWidth(8f),
+            rect(true, POINTY).setHorizontalGradient(c3, c2).setLineWidth(8f),
+            rect(true, POINTY).setFullGradient(c1, c4, c3, c2).setLineWidth(8f),
+            rect(false, POINTY).setColor(c1).setLineWidth(8f),
+            rect(false, POINTY).setVerticalGradient(c2, c3).setLineWidth(8f),
+            rect(false, POINTY).setHorizontalGradient(c3, c2).setLineWidth(8f),
+            rect(false, POINTY).setFullGradient(c1, c4, c3, c2).setLineWidth(8f),
 
             // SMOOTH 1F
-            rect(true).setColor(c1).setJoinType(JoinType.SMOOTH).setLineWidth(1f),
-            rect(true).setVerticalGradient(c2, c3).setJoinType(JoinType.SMOOTH).setLineWidth(1f),
-            rect(true).setHorizontalGradient(c3, c2).setJoinType(JoinType.SMOOTH).setLineWidth(1f),
-            rect(true).setFullGradient(c1, c4, c3, c2).setJoinType(JoinType.SMOOTH).setLineWidth(1f),
-            rect(false).setColor(c1).setJoinType(JoinType.SMOOTH).setLineWidth(1f),
-            rect(false).setVerticalGradient(c2, c3).setJoinType(JoinType.SMOOTH).setLineWidth(1f),
-            rect(false).setHorizontalGradient(c3, c2).setJoinType(JoinType.SMOOTH).setLineWidth(1f),
-            rect(false).setFullGradient(c1, c4, c3, c2).setJoinType(JoinType.SMOOTH).setLineWidth(1f),
-
-            // SMOOTH 4F
-            rect(true).setColor(c1).setJoinType(JoinType.SMOOTH).setLineWidth(4f),
-            rect(true).setVerticalGradient(c2, c3).setJoinType(JoinType.SMOOTH).setLineWidth(4f),
-            rect(true).setHorizontalGradient(c3, c2).setJoinType(JoinType.SMOOTH).setLineWidth(4f),
-            rect(true).setFullGradient(c1, c4, c3, c2).setJoinType(JoinType.SMOOTH).setLineWidth(4f),
-            rect(false).setColor(c1).setJoinType(JoinType.SMOOTH).setLineWidth(4f),
-            rect(false).setVerticalGradient(c2, c3).setJoinType(JoinType.SMOOTH).setLineWidth(4f),
-            rect(false).setHorizontalGradient(c3, c2).setJoinType(JoinType.SMOOTH).setLineWidth(4f),
-            rect(false).setFullGradient(c1, c4, c3, c2).setJoinType(JoinType.SMOOTH).setLineWidth(4f),
+            rect(true, SMOOTH).setColor(c1).setLineWidth(1f),
+            rect(true, SMOOTH).setVerticalGradient(c2, c3).setLineWidth(1f),
+            rect(true, SMOOTH).setHorizontalGradient(c3, c2).setLineWidth(1f),
+            rect(true, SMOOTH).setFullGradient(c1, c4, c3, c2).setLineWidth(1f),
+            rect(false, SMOOTH).setColor(c1).setLineWidth(1f),
+            rect(false, SMOOTH).setVerticalGradient(c2, c3).setLineWidth(1f),
+            rect(false, SMOOTH).setHorizontalGradient(c3, c2).setLineWidth(1f),
+            rect(false, SMOOTH).setFullGradient(c1, c4, c3, c2).setLineWidth(1f),
 
             // SMOOTH 8F
-            rect(true).setColor(c1).setJoinType(JoinType.SMOOTH).setLineWidth(8f),
-            rect(true).setVerticalGradient(c2, c3).setJoinType(JoinType.SMOOTH).setLineWidth(8f),
-            rect(true).setHorizontalGradient(c3, c2).setJoinType(JoinType.SMOOTH).setLineWidth(8f),
-            rect(true).setFullGradient(c1, c4, c3, c2).setJoinType(JoinType.SMOOTH).setLineWidth(8f),
-            rect(false).setColor(c1).setJoinType(JoinType.SMOOTH).setLineWidth(8f),
-            rect(false).setVerticalGradient(c2, c3).setJoinType(JoinType.SMOOTH).setLineWidth(8f),
-            rect(false).setHorizontalGradient(c3, c2).setJoinType(JoinType.SMOOTH).setLineWidth(8f),
-            rect(false).setFullGradient(c1, c4, c3, c2).setJoinType(JoinType.SMOOTH).setLineWidth(8f),
+            rect(true, SMOOTH).setColor(c1).setLineWidth(8f),
+            rect(true, SMOOTH).setVerticalGradient(c2, c3).setLineWidth(8f),
+            rect(true, SMOOTH).setHorizontalGradient(c3, c2).setLineWidth(8f),
+            rect(true, SMOOTH).setFullGradient(c1, c4, c3, c2).setLineWidth(8f),
+            rect(false, SMOOTH).setColor(c1).setLineWidth(8f),
+            rect(false, SMOOTH).setVerticalGradient(c2, c3).setLineWidth(8f),
+            rect(false, SMOOTH).setHorizontalGradient(c3, c2).setLineWidth(8f),
+            rect(false, SMOOTH).setFullGradient(c1, c4, c3, c2).setLineWidth(8f),
 
             // NONE 1F
-            rect(true).setColor(c1).setJoinType(JoinType.NONE).setLineWidth(1f),
-            rect(true).setVerticalGradient(c2, c3).setJoinType(JoinType.NONE).setLineWidth(1f),
-            rect(true).setHorizontalGradient(c3, c2).setJoinType(JoinType.NONE).setLineWidth(1f),
-            rect(true).setFullGradient(c1, c4, c3, c2).setJoinType(JoinType.NONE).setLineWidth(1f),
-            rect(false).setColor(c1).setJoinType(JoinType.NONE).setLineWidth(1f),
-            rect(false).setVerticalGradient(c2, c3).setJoinType(JoinType.NONE).setLineWidth(1f),
-            rect(false).setHorizontalGradient(c3, c2).setJoinType(JoinType.NONE).setLineWidth(1f),
-            rect(false).setFullGradient(c1, c4, c3, c2).setJoinType(JoinType.NONE).setLineWidth(1f),
-
-            // NONE 4F
-            rect(true).setColor(c1).setJoinType(JoinType.NONE).setLineWidth(4f),
-            rect(true).setVerticalGradient(c2, c3).setJoinType(JoinType.NONE).setLineWidth(4f),
-            rect(true).setHorizontalGradient(c3, c2).setJoinType(JoinType.NONE).setLineWidth(4f),
-            rect(true).setFullGradient(c1, c4, c3, c2).setJoinType(JoinType.NONE).setLineWidth(4f),
-            rect(false).setColor(c1).setJoinType(JoinType.NONE).setLineWidth(4f),
-            rect(false).setVerticalGradient(c2, c3).setJoinType(JoinType.NONE).setLineWidth(4f),
-            rect(false).setHorizontalGradient(c3, c2).setJoinType(JoinType.NONE).setLineWidth(4f),
-            rect(false).setFullGradient(c1, c4, c3, c2).setJoinType(JoinType.NONE).setLineWidth(4f),
+            rect(true, NONE).setColor(c1).setJoinType(JoinType.NONE).setLineWidth(1f),
+            rect(true, NONE).setVerticalGradient(c2, c3).setJoinType(JoinType.NONE).setLineWidth(1f),
+            rect(true, NONE).setHorizontalGradient(c3, c2).setJoinType(JoinType.NONE).setLineWidth(1f),
+            rect(true, NONE).setFullGradient(c1, c4, c3, c2).setJoinType(JoinType.NONE).setLineWidth(1f),
+            rect(false, NONE).setColor(c1).setJoinType(JoinType.NONE).setLineWidth(1f),
+            rect(false, NONE).setVerticalGradient(c2, c3).setJoinType(JoinType.NONE).setLineWidth(1f),
+            rect(false, NONE).setHorizontalGradient(c3, c2).setJoinType(JoinType.NONE).setLineWidth(1f),
+            rect(false, NONE).setFullGradient(c1, c4, c3, c2).setJoinType(JoinType.NONE).setLineWidth(1f),
 
             // NONE 8F
-            rect(true).setColor(c1).setJoinType(JoinType.NONE).setLineWidth(8f),
-            rect(true).setVerticalGradient(c2, c3).setJoinType(JoinType.NONE).setLineWidth(8f),
-            rect(true).setHorizontalGradient(c3, c2).setJoinType(JoinType.NONE).setLineWidth(8f),
-            rect(true).setFullGradient(c1, c4, c3, c2).setJoinType(JoinType.NONE).setLineWidth(8f),
-            rect(false).setColor(c1).setJoinType(JoinType.NONE).setLineWidth(8f),
-            rect(false).setVerticalGradient(c2, c3).setJoinType(JoinType.NONE).setLineWidth(8f),
-            rect(false).setHorizontalGradient(c3, c2).setJoinType(JoinType.NONE).setLineWidth(8f),
-            rect(false).setFullGradient(c1, c4, c3, c2).setJoinType(JoinType.NONE).setLineWidth(8f),
+            rect(true, NONE).setColor(c1).setJoinType(JoinType.NONE).setLineWidth(8f),
+            rect(true, NONE).setVerticalGradient(c2, c3).setJoinType(JoinType.NONE).setLineWidth(8f),
+            rect(true, NONE).setHorizontalGradient(c3, c2).setJoinType(JoinType.NONE).setLineWidth(8f),
+            rect(true, NONE).setFullGradient(c1, c4, c3, c2).setJoinType(JoinType.NONE).setLineWidth(8f),
+            rect(false, NONE).setColor(c1).setJoinType(JoinType.NONE).setLineWidth(8f),
+            rect(false, NONE).setVerticalGradient(c2, c3).setJoinType(JoinType.NONE).setLineWidth(8f),
+            rect(false, NONE).setHorizontalGradient(c3, c2).setJoinType(JoinType.NONE).setLineWidth(8f),
+            rect(false, NONE).setFullGradient(c1, c4, c3, c2).setJoinType(JoinType.NONE).setLineWidth(8f),
+
+            // SMOOTH 8F FLIP_VERTICALLY
+            rect(true, SMOOTH).setColor(c1).setLineWidth(8f).flipVertically(),
+            rect(true, SMOOTH).setVerticalGradient(c2, c3).setLineWidth(8f).flipVertically(),
+            rect(true, SMOOTH).setHorizontalGradient(c3, c2).setLineWidth(8f).flipVertically(),
+            rect(true, SMOOTH).setFullGradient(c1, c4, c3, c2).setLineWidth(8f).flipVertically(),
+            rect(false, SMOOTH).setColor(c1).setLineWidth(8f).flipVertically(),
+            rect(false, SMOOTH).setVerticalGradient(c2, c3).setLineWidth(8f).flipVertically(),
+            rect(false, SMOOTH).setHorizontalGradient(c3, c2).setLineWidth(8f).flipVertically(),
+            rect(false, SMOOTH).setFullGradient(c1, c4, c3, c2).setLineWidth(8f).flipVertically(),
+
+            // SMOOTH 8F FLIP_HORIZONTALLY
+            rect(true, SMOOTH).setColor(c1).setLineWidth(8f).flipHorizontally(),
+            rect(true, SMOOTH).setVerticalGradient(c2, c3).setLineWidth(8f).flipHorizontally(),
+            rect(true, SMOOTH).setHorizontalGradient(c3, c2).setLineWidth(8f).flipHorizontally(),
+            rect(true, SMOOTH).setFullGradient(c1, c4, c3, c2).setLineWidth(8f).flipHorizontally(),
+            rect(false, SMOOTH).setColor(c1).setLineWidth(8f).flipHorizontally(),
+            rect(false, SMOOTH).setVerticalGradient(c2, c3).setLineWidth(8f).flipHorizontally(),
+            rect(false, SMOOTH).setHorizontalGradient(c3, c2).setLineWidth(8f).flipHorizontally(),
+            rect(false, SMOOTH).setFullGradient(c1, c4, c3, c2).setLineWidth(8f).flipHorizontally(),
 
             // EXTRA ROTATION TESTS
-            rect(true).setColor(c1, c4, c3, c2).setLineWidth(2f).setRotationDegrees(20),
-            rect(true).setColor(c1, c4, c3, c2).setLineWidth(4f).setRotationDegrees(-20),
-            rect(true).setColor(c1, c4, c3, c2).setLineWidth(8f).setRotationDegrees(180),
-            rect(true).setColor(c1, c4, c3, c2).setLineWidth(1f).setRotationDegrees(360),
-            rect(false).setColor(c1, c4, c3, c2).setLineWidth(2f).setRotationDegrees(20),
-            rect(false).setColor(c1, c4, c3, c2).setLineWidth(4f).setRotationDegrees(-20),
-            rect(false).setColor(c1, c4, c3, c2).setLineWidth(8f).setRotationDegrees(180),
-            rect(false).setColor(c1, c4, c3, c2).setLineWidth(1f).setRotationDegrees(360)
+            rect(true, POINTY).setColor(c1, c4, c3, c2).setLineWidth(2f).setRotationDegrees(20),
+            rect(true, POINTY).setColor(c1, c4, c3, c2).setLineWidth(4f).setRotationDegrees(-20),
+            rect(true, POINTY).setColor(c1, c4, c3, c2).setLineWidth(8f).setRotationDegrees(180),
+            rect(true, POINTY).setColor(c1, c4, c3, c2).setLineWidth(1f).setRotationDegrees(360),
+            rect(false, POINTY).setColor(c1, c4, c3, c2).setLineWidth(2f).setRotationDegrees(20),
+            rect(false, POINTY).setColor(c1, c4, c3, c2).setLineWidth(4f).setRotationDegrees(-20),
+            rect(false, POINTY).setColor(c1, c4, c3, c2).setLineWidth(8f).setRotationDegrees(180),
+            rect(false, POINTY).setColor(c1, c4, c3, c2).setLineWidth(1f).setRotationDegrees(360)
         );
     }
 
 
     private static int row = 0, col = 0;
 
-    private Rectangle rect(boolean filled) {
+    private Rectangle rect(boolean filled, JoinType joinType) {
         Rectangle rectangle = new Rectangle(filled, Rectangle.DEF_COLOR);
         rectangle.setX(PADDING + (PADDING+RECT_WIDTH) * row)
                 .setY(PADDING + (PADDING+RECT_HEIGHT) * col)
                 .setSize(RECT_WIDTH, RECT_HEIGHT);
+
+        rectangle.setJoinType(joinType);
 
         if (++col >= MAX_PER_ROW) {
             col = 0;

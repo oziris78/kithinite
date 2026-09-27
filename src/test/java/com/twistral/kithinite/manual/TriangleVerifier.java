@@ -192,6 +192,12 @@ public class TriangleVerifier extends ApplicationAdapter {
             triangle.setSize(ORIG_TRI_W, ORIG_TRI_H);
         }
 
+        // Randomly do flipping
+        for (int i = 0; i < 2; i++) {
+            if (rng.nextBoolean()) triangle.flipHorizontally();
+            if (rng.nextBoolean()) triangle.flipVertically();
+        }
+
         // Make sure resizing never fucks up the original size etc.
         for (int unused = 0; unused < 15; unused++) {
             triangle.setSize(rng.nextInt(-200, 2000), rng.nextInt(-200, 2000));
