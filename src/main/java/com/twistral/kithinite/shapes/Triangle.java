@@ -91,6 +91,13 @@ public class Triangle extends Shape<Triangle> {
         float x2 = nesterAbsX + this.v2x, y2 = nesterAbsY + this.v2y;
         float x3 = nesterAbsX + this.v3x, y3 = nesterAbsY + this.v3y;
 
+        x1 = Math.round(x1 * 100f) / 100f;
+        x2 = Math.round(x2 * 100f) / 100f;
+        x3 = Math.round(x3 * 100f) / 100f;
+        y1 = Math.round(y1 * 100f) / 100f;
+        y2 = Math.round(y2 * 100f) / 100f;
+        y3 = Math.round(y3 * 100f) / 100f;
+
         final float rotationRadians = this.rotationDegrees * MathUtils.degreesToRadians;
         final boolean isRotated = !TMath.equalsf(rotationRadians, 0f);
 
@@ -183,7 +190,9 @@ public class Triangle extends Shape<Triangle> {
             final boolean hasBottomMidVertex = (maxX > x1 && x1 > minX && y1 == minY) ||
                     (maxX > x2 && x2 > minX && y2 == minY) || (maxX > x3 && x3 > minX && y3 == minY);
 
-            if (hasTopLeftCorner && hasTopRightCorner && hasBottomMidVertex) {
+            final boolean needsBottomMidFix = hasTopLeftCorner && hasTopRightCorner && hasBottomMidVertex;
+
+            if (needsBottomMidFix) {
                 if(isTopLeft1) y1--;
                 else if(isTopLeft2) y2--;
                 else if(isTopLeft3) y3--;
@@ -191,6 +200,26 @@ public class Triangle extends Shape<Triangle> {
                 if(isTopRight1) y1--;
                 else if(isTopRight2) y2--;
                 else if(isTopRight3) y3--;
+            }
+
+            final boolean isBottomLeft1 = (x1 == minX && y1 == minY);
+            final boolean isBottomLeft2 = (x2 == minX && y2 == minY);
+            final boolean isBottomLeft3 = (x3 == minX && y3 == minY);
+            final boolean hasBottomLeftCorner = isBottomLeft1 || isBottomLeft2 || isBottomLeft3;
+
+            final boolean hasRightMidVertex = (maxY > y1 && y1 > minY && x1 == maxX) ||
+                    (maxY > y2 && y2 > minY && x2 == maxX) || (maxY > y3 && y3 > minY && x3 == maxX);
+
+            final boolean needsRightMidFix = hasTopLeftCorner && hasBottomLeftCorner && hasRightMidVertex;
+
+            if (needsRightMidFix) {
+                if (isTopLeft1) x1++;
+                if (isTopLeft2) x2++;
+                if (isTopLeft3) x3++;
+
+                if (isBottomLeft1) x1++;
+                if (isBottomLeft2) x2++;
+                if (isBottomLeft3) x3++;
             }
         }
 
