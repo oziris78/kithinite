@@ -116,11 +116,6 @@ public class Triangle extends Shape<Triangle> {
         }
 
         // Fix the weird 1px bleeding bug that happens on right angle triangles
-        final float minX = min(x1, x2, x3);
-        final float minY = min(y1, y2, y3);
-        // final float maxX = max(x1, x2, x3); // not used
-        final float maxY = max(y1, y2, y3);
-
         final float v12x = x2 - x1, v12y = y2 - y1;
         final float v13x = x3 - x1, v13y = y3 - y1;
         final float v23x = x3 - x2, v23y = y3 - y2;
@@ -133,7 +128,12 @@ public class Triangle extends Shape<Triangle> {
         final boolean rightAngleAtV2 = Math.abs(dot2) < 0.01f;
         final boolean rightAngleAtV3 = Math.abs(dot3) < 0.01f;
 
-        if (rightAngleAtV1 || rightAngleAtV2 || rightAngleAtV3) {
+        final boolean needsRightAngleFix = rightAngleAtV1 || rightAngleAtV2 || rightAngleAtV3;
+        if (needsRightAngleFix) {
+            final float minX = min(x1, x2, x3);
+            final float minY = min(y1, y2, y3);
+            final float maxY = max(y1, y2, y3);
+
             final float rx = rightAngleAtV1 ? x1 : (rightAngleAtV2 ? x2 : x3);
             final float ry = rightAngleAtV1 ? y1 : (rightAngleAtV2 ? y2 : y3);
 
@@ -163,6 +163,37 @@ public class Triangle extends Shape<Triangle> {
             }
         }
 
+        // Fix the weird upside down equilateral-ish triangle bleed bug
+        if (!needsRightAngleFix) {
+            final float minX = min(x1, x2, x3);
+            final float minY = min(y1, y2, y3);
+            final float maxX = max(x1, x2, x3);
+            final float maxY = max(y1, y2, y3);
+
+            final boolean isTopLeft1 = (x1 == minX && y1 == maxY);
+            final boolean isTopLeft2 = (x2 == minX && y2 == maxY);
+            final boolean isTopLeft3 = (x3 == minX && y3 == maxY);
+            final boolean hasTopLeftCorner = isTopLeft1 || isTopLeft2 || isTopLeft3;
+
+            final boolean isTopRight1 = (x1 == maxX && y1 == maxY);
+            final boolean isTopRight2 = (x2 == maxX && y2 == maxY);
+            final boolean isTopRight3 = (x3 == maxX && y3 == maxY);
+            final boolean hasTopRightCorner = isTopRight1 || isTopRight2 || isTopRight3;
+
+            final boolean hasBottomMidVertex = (maxX > x1 && x1 > minX && y1 == minY) ||
+                    (maxX > x2 && x2 > minX && y2 == minY) || (maxX > x3 && x3 > minX && y3 == minY);
+
+            if (hasTopLeftCorner && hasTopRightCorner && hasBottomMidVertex) {
+                if(isTopLeft1) y1--;
+                else if(isTopLeft2) y2--;
+                else if(isTopLeft3) y3--;
+
+                if(isTopRight1) y1--;
+                else if(isTopRight2) y2--;
+                else if(isTopRight3) y3--;
+            }
+        }
+
         final Color c1 = prioritySelect(this.v1Color, DEF_COLOR);
         final Color c2 = prioritySelect(this.v2Color, DEF_COLOR);
         final Color c3 = prioritySelect(this.v3Color, DEF_COLOR);
@@ -186,22 +217,24 @@ public class Triangle extends Shape<Triangle> {
 
     @Override
     public Triangle flipVertically() {
-        this.nv1y = 1f - this.nv1y;
-        this.nv2y = 1f - this.nv2y;
-        this.nv3y = 1f - this.nv3y;
-        recalculateYFromNorm();
         this.rotationDegrees = -this.rotationDegrees;
+        this.v1y = 2f * this.y + this.height - this.v1y;
+        this.v2y = 2f * this.y + this.height - this.v2y;
+        this.v3y = 2f * this.y + this.height - this.v3y;
+
+        recalcYNorms();
         return this;
     }
 
 
     @Override
     public Triangle flipHorizontally() {
-        this.nv1x = 1f - this.nv1x;
-        this.nv2x = 1f - this.nv2x;
-        this.nv3x = 1f - this.nv3x;
-        recalculateXFromNorm();
         this.rotationDegrees = -this.rotationDegrees;
+        this.v1x = 2f * this.x + this.width - this.v1x;
+        this.v2x = 2f * this.x + this.width - this.v2x;
+        this.v3x = 2f * this.x + this.width - this.v3x;
+
+        recalcXNorms();
         return this;
     }
 
@@ -239,7 +272,9 @@ public class Triangle extends Shape<Triangle> {
     @Override
     public Triangle setWidth(float newWidth) {
         super.setWidth(newWidth);
-        recalculateXFromNorm();
+        this.v1x = this.x + (this.nv1x * this.width);
+        this.v2x = this.x + (this.nv2x * this.width);
+        this.v3x = this.x + (this.nv3x * this.width);
         return this;
     }
 
@@ -247,7 +282,9 @@ public class Triangle extends Shape<Triangle> {
     @Override
     public Triangle setHeight(float newHeight) {
         super.setHeight(newHeight);
-        recalculateYFromNorm();
+        this.v1y = this.y + (this.nv1y * this.height);
+        this.v2y = this.y + (this.nv2y * this.height);
+        this.v3y = this.y + (this.nv3y * this.height);
         return this;
     }
 
@@ -293,17 +330,8 @@ public class Triangle extends Shape<Triangle> {
         this.width = maxX - minX;
         this.height = maxY - minY;
 
-        if (this.width > 0f) {
-            this.nv1x = (v1x - minX) / this.width;
-            this.nv2x = (v2x - minX) / this.width;
-            this.nv3x = (v3x - minX) / this.width;
-        }
-
-        if (this.height > 0f) {
-            this.nv1y = (v1y - minY) / this.height;
-            this.nv2y = (v2y - minY) / this.height;
-            this.nv3y = (v3y - minY) / this.height;
-        }
+        recalcXNorms();
+        recalcYNorms();
     }
 
 
@@ -384,16 +412,20 @@ public class Triangle extends Shape<Triangle> {
     /*//////////////////////////////////////////////////////////////////////////*/
 
 
-    private void recalculateXFromNorm() {
-        this.v1x = this.x + (this.nv1x * this.width);
-        this.v2x = this.x + (this.nv2x * this.width);
-        this.v3x = this.x + (this.nv3x * this.width);
+    private void recalcXNorms() {
+        if (this.width > 0f) {
+            this.nv1x = (this.v1x - this.x) / this.width;
+            this.nv2x = (this.v2x - this.x) / this.width;
+            this.nv3x = (this.v3x - this.x) / this.width;
+        }
     }
 
-    private void recalculateYFromNorm() {
-        this.v1y = this.y + (this.nv1y * this.height);
-        this.v2y = this.y + (this.nv2y * this.height);
-        this.v3y = this.y + (this.nv3y * this.height);
+    private void recalcYNorms() {
+        if (this.height > 0f) {
+            this.nv1y = (this.v1y - this.y) / this.height;
+            this.nv2y = (this.v2y - this.y) / this.height;
+            this.nv3y = (this.v3y - this.y) / this.height;
+        }
     }
 
 
