@@ -22,6 +22,7 @@ import com.badlogic.gdx.graphics.*;
 import com.badlogic.gdx.math.MathUtils;
 import com.twistral.kithinite.core.*;
 import com.twistral.tephrium.core.functions.TMath;
+import com.twistral.tephrium.core.functions.TRange;
 import space.earlygrey.shapedrawer.*;
 import static com.twistral.kithinite.KithiniteUtils.*;
 
@@ -87,16 +88,13 @@ public class Triangle extends Shape<Triangle> {
         final float nesterAbsX = this.nester.getAbsX(),
                     nesterAbsY = this.nester.getAbsY();
 
-        float x1 = nesterAbsX + this.v1x, y1 = nesterAbsY + this.v1y;
-        float x2 = nesterAbsX + this.v2x, y2 = nesterAbsY + this.v2y;
-        float x3 = nesterAbsX + this.v3x, y3 = nesterAbsY + this.v3y;
+        float x1 = round2(nesterAbsX + this.v1x),
+              x2 = round2(nesterAbsX + this.v2x),
+              x3 = round2(nesterAbsX + this.v3x);
 
-        x1 = Math.round(x1 * 100f) / 100f;
-        x2 = Math.round(x2 * 100f) / 100f;
-        x3 = Math.round(x3 * 100f) / 100f;
-        y1 = Math.round(y1 * 100f) / 100f;
-        y2 = Math.round(y2 * 100f) / 100f;
-        y3 = Math.round(y3 * 100f) / 100f;
+        float y1 = round2(nesterAbsY + this.v1y),
+              y2 = round2(nesterAbsY + this.v2y),
+              y3 = round2(nesterAbsY + this.v3y);
 
         final float rotationRadians = this.rotationDegrees * MathUtils.degreesToRadians;
         final boolean isRotated = !TMath.equalsf(rotationRadians, 0f);
@@ -134,8 +132,8 @@ public class Triangle extends Shape<Triangle> {
         final boolean rightAngleAtV1 = Math.abs(dot1) < 0.01f;
         final boolean rightAngleAtV2 = Math.abs(dot2) < 0.01f;
         final boolean rightAngleAtV3 = Math.abs(dot3) < 0.01f;
-
         final boolean needsRightAngleFix = rightAngleAtV1 || rightAngleAtV2 || rightAngleAtV3;
+
         if (needsRightAngleFix) {
             final float minX = min(x1, x2, x3);
             final float minY = min(y1, y2, y3);

@@ -22,7 +22,7 @@ import com.badlogic.gdx.graphics.Color;
 
 public final class KithiniteUtils {
 
-    private static  final Color tempColor = new Color();
+    private static final Color tempColor = new Color();
 
     // No constructor
     private KithiniteUtils() {}
@@ -51,6 +51,10 @@ public final class KithiniteUtils {
         if (t3 != null) return t3;
         if (t4 != null) return t4;
         return t5;
+    }
+
+    public static float round2(float x) {
+        return Math.round(x * 100f) * 0.01f;
     }
 
     public static float min(float a, float b, float c) { return Math.min(Math.min(a, b), c); }
