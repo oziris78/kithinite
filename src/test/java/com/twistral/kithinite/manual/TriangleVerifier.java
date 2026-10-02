@@ -18,23 +18,43 @@
 package com.twistral.kithinite.manual;
 
 
-import com.badlogic.gdx.ApplicationAdapter;
-import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.Input;
-import com.badlogic.gdx.graphics.Color;
-import com.badlogic.gdx.graphics.Pixmap;
-import com.twistral.kithinite.core.Layer;
-import com.twistral.kithinite.shapes.Rectangle;
-import com.twistral.kithinite.TestUtils;
-import com.twistral.kithinite.shapes.Triangle;
-import com.twistral.tempest.TempestUtils;
-import com.twistral.tephrium.prng.SplitMix64Random;
+import com.badlogic.gdx.*;
+import com.badlogic.gdx.graphics.*;
+import com.twistral.kithinite.*;
+import com.twistral.kithinite.core.*;
+import com.twistral.kithinite.shapes.*;
+import com.twistral.tempest.*;
+import com.twistral.tephrium.prng.*;
+import java.util.*;
+import java.util.function.*;
 
 
+
+/**
+ * Mode switches:                                     <br>
+ * Z - Mode on/off for "random size"                  <br>
+ * X - Mode on/off for "automatic testing"            <br>
+ * C - Cycle specific test case (-1 to case.length)   <br>
+ *                                                    <br>
+ * Color modes:                                       <br>
+ * 1 - Randomize color "filled 1"                     <br>
+ * 2 - Randomize color "filled 3"                     <br>
+ * 3 - Randomize color "outlined"                     <br>
+ *                                                    <br>
+ * Testing:                                           <br>
+ * E - Randomize case                                 <br>
+ * R - Randomize everything                           <br>
+ *                                                    <br>
+ * Debugging:                                         <br>
+ * D- log triangle to console                         <br>
+ * F- log results to console                          <br>
+ */
 public class TriangleVerifier extends ApplicationAdapter {
 
-    private static final int WIN_SIZE = 600, WIN_PAD = 20;
-    private SplitMix64Random rng = new SplitMix64Random();
+    private static final int WIN_SIZE = 700, WIN_PAD = 20;
+    private static final int RECT_MAX_W = 650, RECT_MAX_H = 650;
+
+    private static SplitMix64Random rng = new SplitMix64Random();
 
     private static final Color BLEED_COLOR = new Color(0xdd000077),
                                IMPERFECT_COLOR = new Color(0xdddd0077),
@@ -47,15 +67,16 @@ public class TriangleVerifier extends ApplicationAdapter {
                              PACKED_BG_COLOR = Color.rgba8888(BG_COLOR);
 
     private boolean automaticMode = false;
+    private boolean randomizeSize = false;
 
     private Layer layer;
     private Rectangle rectangle;
     private Triangle triangle;
-    private String currentType = "";
 
     private static int errorCount = 0;
     private static int triangleCount = 0;
-
+    private static int caseIndex = -1; // -1 for rand, [0, case.length) for specific
+    private static int activeCaseIndex = 0;
 
     @Override
     public void create() {
@@ -66,12 +87,8 @@ public class TriangleVerifier extends ApplicationAdapter {
         layer.setBgColor(BG_COLOR);
 
         rectangle = new Rectangle(true, RECT_COLOR);
-        rectangle.setXY(WIN_PAD, WIN_PAD).setSize(WIN_SIZE - 2*WIN_PAD, WIN_SIZE - 2*WIN_PAD);
-
-        triangle = new Triangle(
-            rng.nextBoolean(), 0f, 0f, 1f, rng.nextFloat(), rng.nextFloat(), 1f, null
-        );
-        triangle.setXY(WIN_PAD, WIN_PAD).setSize(WIN_SIZE - 2*WIN_PAD, WIN_SIZE - 2*WIN_PAD);
+        triangle = new Triangle(true, 0f, 0f, 1f, rng.nextFloat(), rng.nextFloat(), 1f, null);
+        randomizeCase();
         randomizeTriColors();
 
         layer.getRoot().add(rectangle, triangle);
@@ -83,43 +100,46 @@ public class TriangleVerifier extends ApplicationAdapter {
     public void render() {
         TempestUtils.clear();
 
-        if (Gdx.input.isKeyJustPressed(Input.Keys.SPACE))
+        // Mode switches
+        if (Gdx.input.isKeyJustPressed(Input.Keys.Z)) {
+            randomizeSize = !randomizeSize;
+            System.out.printf(">> Toggled rand size mode to: %s\n", randomizeSize ? "ON" : "OFF");
+        }
+        if (Gdx.input.isKeyJustPressed(Input.Keys.X)) {
             automaticMode = !automaticMode;
-
+            System.out.printf(">> Toggled automatic mode to: %s\n", automaticMode ? "ON" : "OFF");
+        }
+        if (Gdx.input.isKeyJustPressed(Input.Keys.C)) {
+            caseIndex = (caseIndex + 2) % (caseFuncs.size() + 1) - 1;
+            System.out.printf(">> Locked Case: %s\n",
+                    caseIndex == -1 ? "RANDOM" : caseTypes.get(caseIndex));
+        }
 
         // Randomize EVERYTHING until you find a mistake
         if (automaticMode) {
-            if (rectangle.getColor() == RECT_COLOR || rectangle.getColor() == CORRECT_COLOR) {
-                randomizeTriangleSize();
-                randomizeTriColors();
-            }
+            randomizeCase();
+            randomizeTriColors();
         }
         else {
-            // Color modes
             if (Gdx.input.isKeyJustPressed(Input.Keys.NUM_1)) makeTriFilled1Color();
             if (Gdx.input.isKeyJustPressed(Input.Keys.NUM_2)) makeTriFilled3Color();
             if (Gdx.input.isKeyJustPressed(Input.Keys.NUM_3)) makeTriOutlined();
 
-            // Randomize only the vertices
-            if (Gdx.input.isKeyPressed(Input.Keys.Q)) randomizeTriangleSize();
-
+            if (Gdx.input.isKeyPressed(Input.Keys.E)) randomizeCase();
 
             // Randomize EVERYTHING
             if (Gdx.input.isKeyPressed(Input.Keys.R)) {
                 if (rectangle.getColor() == RECT_COLOR || rectangle.getColor() == CORRECT_COLOR) {
-                    randomizeTriangleSize();
+                    randomizeCase();
                     randomizeTriColors();
                 }
             }
 
         }
 
-        if (Gdx.input.isKeyJustPressed(Input.Keys.F))
-            System.out.printf("Tested %d triangles so far (found %d errors)\n", triangleCount, errorCount);
-
-        if (Gdx.input.isKeyJustPressed(Input.Keys.D))
-            logInfo();
-
+        // Debugging
+        if (Gdx.input.isKeyJustPressed(Input.Keys.F)) logTestResults();
+        if (Gdx.input.isKeyJustPressed(Input.Keys.D)) logInfo();
 
         layer.update(Gdx.graphics.getDeltaTime());
         layer.render();
@@ -132,7 +152,7 @@ public class TriangleVerifier extends ApplicationAdapter {
                 final String errorType = (color == BLEED_COLOR) ? "BLEED" : "IMPERFECT";
                 System.out.printf(
                     "[%d, %s] %s (failed for %dth)\n",
-                    errorCount++, errorType, currentType, triangleCount
+                    errorCount++, errorType, caseTypes.get(activeCaseIndex), triangleCount
                 );
                 logInfo(); // Instantly dump coordinates on failure
             }
@@ -197,6 +217,13 @@ public class TriangleVerifier extends ApplicationAdapter {
     }
 
 
+    private void logTestResults() {
+        System.out.printf(
+            "Tested %5d triangles so far (found %d errors) [AUTO: %s, RAND_SIZE: %s]\n",
+            triangleCount, errorCount, automaticMode ? "ON" : "OFF", randomizeSize ? "ON" : "OFF"
+        );
+    }
+
     private void logInfo() {
         System.out.println("--------------------------------");
         System.out.printf(
@@ -223,29 +250,27 @@ public class TriangleVerifier extends ApplicationAdapter {
     /*//////////////////////////////////////////////////////////////////////////*/
 
 
-    private final Runnable[] cases = new Runnable[] {
-        this::case0, this::case1, this::case2, this::case3, this::case4,
-        this::case5, this::case6, this::case7, this::case8, this::case9,
-        this::case10, this::case11, this::case12, this::case13
-    };
-
-
-    private void randomizeTriangleSize() {
+    private void randomizeCase() {
         triangleCount++;
         rectangle.setColor(RECT_COLOR);
 
         // Run random case
-        Runnable randomCase = cases[rng.nextInt(0, cases.length)];
-        randomCase.run();
+        activeCaseIndex = (caseIndex != -1) ? caseIndex : rng.nextInt(0, caseFuncs.size());
+        caseFuncs.get(activeCaseIndex).accept(triangle);
 
-        final float ORIG_TRI_W = WIN_SIZE - 2 * WIN_PAD;
-        final float ORIG_TRI_H = WIN_SIZE - 2 * WIN_PAD;
-        triangle.setXY(WIN_PAD, WIN_PAD).setSize(ORIG_TRI_W, ORIG_TRI_H);
+        final int randCaseID = (caseIndex != -1) ? caseIndex : rng.nextInt(0, caseFuncs.size());
+        caseFuncs.get(randCaseID).accept(triangle);
+
+        // Randomize size of rect and triangle (if randomizeSize is enabled)
+        final float RAND_W = (randomizeSize ? rng.nextInt(50, RECT_MAX_W) : WIN_SIZE) - 2 * WIN_PAD;
+        final float RAND_H = (randomizeSize ? rng.nextInt(50, RECT_MAX_H) : WIN_SIZE) - 2 * WIN_PAD;
+        rectangle.setXY(WIN_PAD, WIN_PAD).setSize(RAND_W, RAND_H);
+        triangle.setXY(WIN_PAD, WIN_PAD).setSize(RAND_W, RAND_H);
 
         // Randomly setSize to 0,0 and unset it back
         if (rng.nextBoolean()) {
             triangle.setSize(0f, 0f);
-            triangle.setSize(ORIG_TRI_W, ORIG_TRI_H);
+            triangle.setSize(RAND_W, RAND_H);
         }
 
         // Randomly do flipping
@@ -257,7 +282,7 @@ public class TriangleVerifier extends ApplicationAdapter {
         // Make sure resizing never fucks up the original size etc.
         for (int unused = 0; unused < 15; unused++) {
             triangle.setSize(rng.nextInt(-200, 2000), rng.nextInt(-200, 2000));
-            triangle.setSize(ORIG_TRI_W, ORIG_TRI_H);
+            triangle.setSize(RAND_W, RAND_H);
         }
 
         // Permute all 6 vertex index orderings (V1, V2, V3)
@@ -331,8 +356,33 @@ public class TriangleVerifier extends ApplicationAdapter {
     /*////////////////////////////////////////////////////////////////////*/
 
 
-    private void case0() {
-        currentType = "[CASE-0] Fully randomized";
+    private static final List<Consumer<Triangle>> caseFuncs = new ArrayList<>(32);
+    private static final List<String> caseTypes = new ArrayList<>(32);
+
+    private static void defineCase(String type, Consumer<Triangle> func) {
+        caseTypes.add(type);
+        caseFuncs.add(func);
+    }
+
+    static {
+        defineCase("[CASE-0] Fully randomized", TriangleVerifier::case0);
+        defineCase("[CASE-1] Right angled template", TriangleVerifier::case1);
+        defineCase("[CASE-2] Single point degenerate", TriangleVerifier::case2);
+        defineCase("[CASE-3] Negative valued", TriangleVerifier::case3);
+        defineCase("[CASE-4] Sliver (Vertical)", TriangleVerifier::case4);
+        defineCase("[CASE-5] Sliver (Horizontal)", TriangleVerifier::case5);
+        defineCase("[CASE-6] Out of bounds coords", TriangleVerifier::case6);
+        defineCase("[CASE-7] Bounding box anchored", TriangleVerifier::case7);
+        defineCase("[CASE-8] Collinear line degenerate", TriangleVerifier::case8);
+        defineCase("[CASE-9] Upside down obtuse", TriangleVerifier::case9);
+        defineCase("[CASE-10] Needle", TriangleVerifier::case10);
+        defineCase("[CASE-11] Floating point jitter", TriangleVerifier::case11);
+        defineCase("[CASE-12] Diagonal slit", TriangleVerifier::case12);
+    }
+
+
+    // "[CASE-0] Fully randomized"
+    private static void case0(Triangle triangle) {
         triangle.setVertices(
             rng.nextFloat(), rng.nextFloat(), rng.nextFloat(),
             rng.nextFloat(), rng.nextFloat(), rng.nextFloat()
@@ -340,10 +390,9 @@ public class TriangleVerifier extends ApplicationAdapter {
     }
 
 
-    private void case1() {
-        currentType = "[CASE-1] Right-angled triangles";
-
-        float[][] rightAngleTemps = {
+    // "[CASE-1] Right angled template"
+    private static void case1(Triangle triangle) {
+        final float[][] rightAngleTemps = {
             {0f, 0f, 0f, 1f, 1f, 0f},
             {0f, 0f, 0f, 1f, 1f, 1f},
             {0f, 0f, 1f, 0f, 1f, 1f},
@@ -355,117 +404,98 @@ public class TriangleVerifier extends ApplicationAdapter {
     }
 
 
-    private void case2() {
-        currentType = "[CASE-2] Bounding-box anchored triangles";
+    // "[CASE-2] Single point degenerate"
+    private static void case2(Triangle triangle) {
+        float x = rng.nextFloat(), y = rng.nextFloat();
+        triangle.setVertices(x, y, x, y, x, y);
+    }
+
+
+    // "[CASE-3] Negative valued"
+    private static void case3(Triangle triangle) {
+        triangle.setVertices(
+            rng.nextFloat(-2f, 2f), rng.nextFloat(-2f, 2f),
+            rng.nextFloat(-2f, 2f), rng.nextFloat(-2f, 2f),
+            rng.nextFloat(-2f, 2f), rng.nextFloat(-2f, 2f)
+        );
+    }
+
+
+    // "[CASE-4] Sliver (Vertical)"
+    private static void case4(Triangle triangle) {
+        triangle.setVertices(
+            0f, 0f, rng.nextFloat(0.001f, 0.01f), 1f, rng.nextFloat(0.002f, 0.02f), 0f
+        );
+    }
+
+
+    // "[CASE-5] Sliver (Horizontal)"
+    private static void case5(Triangle triangle) {
+        triangle.setVertices(
+            0f, 0f, 1f, rng.nextFloat(0.001f, 0.01f), 0f, rng.nextFloat(0.002f, 0.02f)
+        );
+    }
+
+
+    // "[CASE-6] Out of bounds coords"
+    private static void case6(Triangle triangle) {
+        float a = rng.nextFloat(-10f, -5f), b = rng.nextFloat(5f, 15f);
+        triangle.setVertices(a, a, b, 0.5f, 0.5f, b);
+    }
+
+
+    // "[CASE-7] Bounding box anchored"
+    private static void case7(Triangle triangle) {
         triangle.setVertices( // at least 1 vertex on minX/maxX/minY/maxY
-                rng.nextBoolean() ? 0f : rng.nextFloat(), rng.nextBoolean() ? 0f : rng.nextFloat(),
-                rng.nextBoolean() ? 1f : rng.nextFloat(), rng.nextBoolean() ? 1f : rng.nextFloat(),
-                rng.nextFloat(), rng.nextFloat()
+            rng.nextBoolean() ? 0f : rng.nextFloat(), rng.nextBoolean() ? 0f : rng.nextFloat(),
+            rng.nextBoolean() ? 1f : rng.nextFloat(), rng.nextBoolean() ? 1f : rng.nextFloat(),
+            rng.nextFloat(), rng.nextFloat()
         );
     }
 
 
-    private void case3() {
-        currentType = "[CASE-3] Equilateral-ish templates with <1px jitter";
-        final float jitter = rng.nextFloat(-0.05f, 0.05f);
-        triangle.setVertices(0f + jitter, 0f, 0.5f + jitter, 1f + jitter, 1f + jitter, 0f);
+    // "[CASE-8] Collinear line degenerate"
+    private static void case8(Triangle triangle) {
+        float t = rng.nextFloat();
+        triangle.setVertices(0f, 0f, 0.5f, 0.5f, t, t);
     }
 
 
-    private void case4() {
-        currentType = "[CASE-4] Negative valued vertices";
-        triangle.setVertices(
-            rng.nextFloat(-0.2f, 1.2f), rng.nextFloat(-0.2f, 1.2f),
-            rng.nextFloat(-0.2f, 1.2f), rng.nextFloat(-0.2f, 1.2f),
-            rng.nextFloat(-0.2f, 1.2f), rng.nextFloat(-0.2f, 1.2f)
-        );
-    }
-
-
-    private void case5() {
-        currentType = "[CASE-5] Isosceles & Equilateral upside-down variants";
-        final float topY = 1f;
-        final float midX = rng.nextFloat(0.1f, 0.9f);
-        triangle.setVertices(0f, topY, 1f, topY, midX, 0f);
-    }
-
-
-    private void case6() {
-        currentType = "[CASE-6] Degenerate thin triangles";
-        float offset = rng.nextFloat(-0.005f, 0.005f);
-        triangle.setVertices(0f, 0f, 0.5f, 0.5f + offset, 1f, 1f);
-    }
-
-
-    private void case7() {
-        currentType = "[CASE-7] Axis-aligned right triangles";
-        int orientation = rng.nextInt(0, 4);
-        switch (orientation) {
-            case 0: triangle.setVertices(0f, 0f, 0f, 1f, 1f, 0f); break; // Bottom Left
-            case 1: triangle.setVertices(0f, 1f, 0f, 0f, 1f, 1f); break; // Top Left
-            case 2: triangle.setVertices(1f, 1f, 0f, 1f, 1f, 0f); break; // Top Right
-            case 3: triangle.setVertices(1f, 0f, 0f, 0f, 1f, 1f); break; // Bottom Right
-        }
-    }
-
-
-    private void case8() {
-        currentType = "[CASE-8] Sub-pixel float boundary noise";
-        float n1 = rng.nextFloat(-0.0005f, 0.0005f);
-        float n2 = rng.nextFloat(-0.0005f, 0.0005f);
-        float n3 = rng.nextFloat(-0.0005f, 0.0005f);
-        triangle.setVertices(0f + n1, 0f + n2, 1f + n3, 0f - n1, 0.5f + n2, 1f + n3);
-    }
-
-
-    private void case9() {
-        currentType = "[CASE-9] Acute center-peaked triangles";
-        float peakX = rng.nextFloat(0.4f, 0.6f);
-        triangle.setVertices(0f, 0f, peakX, 1f, 1f, 0f);
-    }
-
-
-    private void case10() {
-        currentType = "[CASE-10] Obtuse extended triangles";
+    // "[CASE-9] Upside down obtuse"
+    private static void case9(Triangle triangle) {
         if (rng.nextBoolean())
-            triangle.setVertices(0f, 0f, 0.2f, 1f, 1f, 0.1f);
+            triangle.setVertices(0f, 1f, 1f, 1f, rng.nextFloat(0.1f, 0.9f), 0f);
         else
-            triangle.setVertices(0f, 0f, 1f, 0.2f, 0.1f, 1f);
+            triangle.setVertices(0f, 0f, rng.nextFloat(0.2f, 0.4f), 1f, 1f, 0.1f);
     }
 
 
-    private void case11() {
-        currentType = "[CASE-11] Sub-pixel micro triangles";
-        float baseMinX = rng.nextFloat(0.1f, 0.8f);
-        float baseMinY = rng.nextFloat(0.1f, 0.8f);
-        float EPS = 0.001f;
-        triangle.setVertices(
-                baseMinX, baseMinY,
-                baseMinX + EPS, baseMinY + EPS * rng.nextFloat(),
-                baseMinX + EPS * rng.nextFloat(), baseMinY + EPS
-        );
+    // "[CASE-10] Needle"
+    private static void case10(Triangle triangle) {
+        float midX = rng.nextFloat(0.45f, 0.55f);
+        triangle.setVertices(midX - 0.05f, 0f, midX + 0.05f, 0f, midX, 1f);
     }
 
 
-    private void case12() {
-        currentType = "[CASE-12] Not normalized vertices";
-        triangle.setVertices(
-            rng.nextFloat(-0.5f, -0.01f), rng.nextFloat(1.01f, 1.5f),
-            rng.nextFloat(0.2f, 0.8f), rng.nextFloat(-0.5f, -0.01f),
-            rng.nextFloat(1.01f, 1.5f), rng.nextFloat(1.01f, 1.5f)
-        );
-    }
+    // "[CASE-11] Floating point jitter"
+    private static void case11(Triangle triangle) {
+        float scale = rng.nextFloat(0f, 0.1f);
+        float n1 = rng.nextFloat(-scale, scale);
+        float n2 = rng.nextFloat(-scale, scale);
+        float n3 = rng.nextFloat(-scale, scale);
 
-
-    private void case13() {
-        currentType = "[CASE-13] Sliver triangles";
-        if (rng.nextBoolean()) {
-            currentType += " (Vertical)";
-            triangle.setVertices(0f, 0f, 0.001f, 1f, 0.002f, 0f);
-        } else {
-            currentType += " (Horizontal)";
-            triangle.setVertices(0f, 0f, 1f, 0.001f, 0f, 0.002f);
+        switch (rng.nextInt(0, 4)) {
+            case 0: triangle.setVertices(0f + n1, 0f, 0.5f + n2, 1f + n3, 1f + n1, 0f); break;
+            case 1: triangle.setVertices(0f, 0f, 0.5f, 0.5f + n1, 1f, 1f); break;
+            case 2: triangle.setVertices(0f, 0.5f, 1f, 0.5f, 0.5f, 0.5f + Math.max(n1, 1E-6f)); break;
+            case 3: triangle.setVertices(0f + n1, 0f + n2, 1f - n3, 0f + n1, 0.5f + n2, 1f - n3); break;
         }
+    }
+
+
+    // "[CASE-12] Diagonal slit"
+    private static void case12(Triangle triangle) {
+        triangle.setVertices(0f, 0f, 1f, 1f, rng.nextFloat(0.001f, 0.01f), 0f);
     }
 
 
