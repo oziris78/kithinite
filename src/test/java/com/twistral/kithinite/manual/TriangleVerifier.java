@@ -261,8 +261,12 @@ public class TriangleVerifier extends ApplicationAdapter {
         caseFuncs.get(activeCaseIndex).accept(triangle);
 
         // Randomize size of rect and triangle (if randomizeSize is enabled)
-        final float RAND_W = (randomizeSize ? rng.nextInt(TOTAL_PAD+1, RECT_MAX_W) : WIN_SIZE) - TOTAL_PAD;
-        final float RAND_H = (randomizeSize ? rng.nextInt(TOTAL_PAD+1, RECT_MAX_H) : WIN_SIZE) - TOTAL_PAD;
+        final float RAND_W = randomizeSize ? rng.nextInt(1, RECT_MAX_W - TOTAL_PAD)
+                                           : (WIN_SIZE - TOTAL_PAD);
+
+        final float RAND_H = randomizeSize ? rng.nextInt(1, RECT_MAX_H - TOTAL_PAD)
+                                           : (WIN_SIZE - TOTAL_PAD);
+
         rectangle.setXY(WIN_PAD, WIN_PAD).setSize(RAND_W, RAND_H);
         triangle.setXY(WIN_PAD, WIN_PAD).setSize(RAND_W, RAND_H);
 
