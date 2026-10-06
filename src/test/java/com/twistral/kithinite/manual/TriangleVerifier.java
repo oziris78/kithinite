@@ -20,6 +20,7 @@ package com.twistral.kithinite.manual;
 
 import com.badlogic.gdx.*;
 import com.badlogic.gdx.graphics.*;
+import com.badlogic.gdx.math.Vector2;
 import com.twistral.kithinite.*;
 import com.twistral.kithinite.core.*;
 import com.twistral.kithinite.shapes.*;
@@ -28,6 +29,7 @@ import com.twistral.tephrium.prng.*;
 import java.util.*;
 import java.util.function.*;
 
+import static com.twistral.kithinite.TestUtils.vec2f;
 
 
 /**
@@ -258,9 +260,6 @@ public class TriangleVerifier extends ApplicationAdapter {
         activeCaseIndex = (caseIndex != -1) ? caseIndex : rng.nextInt(0, caseFuncs.size());
         caseFuncs.get(activeCaseIndex).accept(triangle);
 
-        final int randCaseID = (caseIndex != -1) ? caseIndex : rng.nextInt(0, caseFuncs.size());
-        caseFuncs.get(randCaseID).accept(triangle);
-
         // Randomize size of rect and triangle (if randomizeSize is enabled)
         final float RAND_W = (randomizeSize ? rng.nextInt(50, RECT_MAX_W) : WIN_SIZE) - 2 * WIN_PAD;
         final float RAND_H = (randomizeSize ? rng.nextInt(50, RECT_MAX_H) : WIN_SIZE) - 2 * WIN_PAD;
@@ -378,6 +377,8 @@ public class TriangleVerifier extends ApplicationAdapter {
         defineCase("[CASE-10] Needle", TriangleVerifier::case10);
         defineCase("[CASE-11] Floating point jitter", TriangleVerifier::case11);
         defineCase("[CASE-12] Diagonal slit", TriangleVerifier::case12);
+        defineCase("[CASE-13] Subpixel micro triangles", TriangleVerifier::case13);
+        defineCase("[CASE-14] Pseudorandom-ish triangles", TriangleVerifier::case14);
     }
 
 
@@ -484,11 +485,12 @@ public class TriangleVerifier extends ApplicationAdapter {
         float n2 = rng.nextFloat(-scale, scale);
         float n3 = rng.nextFloat(-scale, scale);
 
-        switch (rng.nextInt(0, 4)) {
+        switch (rng.nextInt(0, 5)) {
             case 0: triangle.setVertices(0f + n1, 0f, 0.5f + n2, 1f + n3, 1f + n1, 0f); break;
             case 1: triangle.setVertices(0f, 0f, 0.5f, 0.5f + n1, 1f, 1f); break;
             case 2: triangle.setVertices(0f, 0.5f, 1f, 0.5f, 0.5f, 0.5f + Math.max(n1, 1E-6f)); break;
             case 3: triangle.setVertices(0f + n1, 0f + n2, 1f - n3, 0f + n1, 0.5f + n2, 1f - n3); break;
+            case 4: triangle.setVertices(0f + n1, 0f + n2, 1f + n3, 0f - n1, 0.5f + n2, 1f + n3); break;
         }
     }
 
@@ -496,6 +498,63 @@ public class TriangleVerifier extends ApplicationAdapter {
     // "[CASE-12] Diagonal slit"
     private static void case12(Triangle triangle) {
         triangle.setVertices(0f, 0f, 1f, 1f, rng.nextFloat(0.001f, 0.01f), 0f);
+    }
+
+
+    // "[CASE-13] Subpixel micro triangles"
+    private static void case13(Triangle triangle) {
+        final float x = rng.nextFloat(0.1f, 0.8f);
+        final float y = rng.nextFloat(0.1f, 0.8f);
+        final float s = rng.nextFloat(0.001f, 0.1f);
+        final float r = rng.nextFloat();
+        triangle.setVertices(x, y, x + s, y + s * r, x + s * r, y + s);
+    }
+
+
+    // "[CASE-14] Pseudorandom-ish triangles"
+    private static void case14(Triangle triangle) {
+        Supplier<float[]> randCornerFunc = () -> {
+            switch (rng.nextInt(0, 4)) {
+                case 0:  return vec2f(0f, 0f); // BL
+                case 1:  return vec2f(0f, 1f); // TL
+                case 2:  return vec2f(1f, 0f); // BR
+                default: return vec2f(1f, 1f); // TR
+            }
+        };
+
+        Supplier<float[]> randQuadrantFunc = () -> {
+            switch (rng.nextInt(0, 4)) {
+                case 0:  return vec2f(rng.nextFloat(0f, 0.5f), rng.nextFloat(0f, 0.5f)); // BL
+                case 1:  return vec2f(rng.nextFloat(0.5f, 1f), rng.nextFloat(0f, 0.5f)); // BR
+                case 2:  return vec2f(rng.nextFloat(0f, 0.5f), rng.nextFloat(0.5f, 1f)); // TL
+                default: return vec2f(rng.nextFloat(0.5f, 1f), rng.nextFloat(0.5f, 1f)); // TR
+            }
+        };
+
+        Supplier<float[]> randEdgeFunc = () -> {
+            switch (rng.nextInt(0, 4)) {
+                case 0:  return vec2f(rng.nextFloat(), 0f); // B
+                case 1:  return vec2f(rng.nextFloat(), 1f); // T
+                case 2:  return vec2f(0f, rng.nextFloat()); // L
+                default: return vec2f(1f, rng.nextFloat()); // R
+            }
+        };
+
+        float[][] vs = new float[3][2];
+
+        for (int i = 0; i < 3; i++) {
+            Supplier<float[]> randFunc;
+
+            switch (rng.nextInt(0, 3)) {
+                case 0:  randFunc = randCornerFunc; break;
+                case 1:  randFunc = randEdgeFunc; break;
+                default: randFunc = randQuadrantFunc; break;
+            }
+
+            vs[i] = randFunc.get();
+        }
+
+        triangle.setVertices(vs[0][0], vs[0][1], vs[1][0], vs[1][1], vs[2][0], vs[2][1]);
     }
 
 

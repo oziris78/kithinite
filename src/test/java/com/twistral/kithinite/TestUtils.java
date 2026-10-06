@@ -19,10 +19,7 @@ package com.twistral.kithinite;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
-import com.twistral.kithinite.core.Piece;
 import com.twistral.tephrium.prng.SplitMix64Random;
-
-import java.lang.reflect.Method;
 
 
 public final class TestUtils {
@@ -36,6 +33,10 @@ public final class TestUtils {
     public static void setTitleFromClass(Object obj) {
         String title = obj.getClass().getSimpleName().replaceAll("(?<!^)(?=[A-Z])", " ");
         Gdx.graphics.setTitle(title);
+    }
+
+    public static float[] vec2f(float x, float y) {
+        return new float[] { x, y };
     }
 
 }
