@@ -20,7 +20,6 @@ package com.twistral.kithinite.manual;
 
 import com.badlogic.gdx.*;
 import com.badlogic.gdx.graphics.*;
-import com.badlogic.gdx.math.Vector2;
 import com.twistral.kithinite.*;
 import com.twistral.kithinite.core.*;
 import com.twistral.kithinite.shapes.*;
@@ -28,8 +27,6 @@ import com.twistral.tempest.*;
 import com.twistral.tephrium.prng.*;
 import java.util.*;
 import java.util.function.*;
-
-import static com.twistral.kithinite.TestUtils.vec2f;
 
 
 /**
@@ -55,6 +52,8 @@ public class TriangleVerifier extends ApplicationAdapter {
 
     private static final int WIN_SIZE = 700, WIN_PAD = 20;
     private static final int RECT_MAX_W = 650, RECT_MAX_H = 650;
+
+    private static final int TOTAL_PAD = 2 * WIN_PAD;
 
     private static SplitMix64Random rng = new SplitMix64Random();
 
@@ -113,8 +112,9 @@ public class TriangleVerifier extends ApplicationAdapter {
         }
         if (Gdx.input.isKeyJustPressed(Input.Keys.C)) {
             caseIndex = (caseIndex + 2) % (caseFuncs.size() + 1) - 1;
-            System.out.printf(">> Locked Case: %s\n",
-                    caseIndex == -1 ? "RANDOM" : caseTypes.get(caseIndex));
+            System.out.printf(">> Locked Case: %s (%d/%d)\n",
+                    caseIndex == -1 ? "RANDOM" : caseTypes.get(caseIndex),
+                    caseIndex+1, caseTypes.size());
         }
 
         // Randomize EVERYTHING until you find a mistake
@@ -261,8 +261,8 @@ public class TriangleVerifier extends ApplicationAdapter {
         caseFuncs.get(activeCaseIndex).accept(triangle);
 
         // Randomize size of rect and triangle (if randomizeSize is enabled)
-        final float RAND_W = (randomizeSize ? rng.nextInt(50, RECT_MAX_W) : WIN_SIZE) - 2 * WIN_PAD;
-        final float RAND_H = (randomizeSize ? rng.nextInt(50, RECT_MAX_H) : WIN_SIZE) - 2 * WIN_PAD;
+        final float RAND_W = (randomizeSize ? rng.nextInt(TOTAL_PAD+1, RECT_MAX_W) : WIN_SIZE) - TOTAL_PAD;
+        final float RAND_H = (randomizeSize ? rng.nextInt(TOTAL_PAD+1, RECT_MAX_H) : WIN_SIZE) - TOTAL_PAD;
         rectangle.setXY(WIN_PAD, WIN_PAD).setSize(RAND_W, RAND_H);
         triangle.setXY(WIN_PAD, WIN_PAD).setSize(RAND_W, RAND_H);
 
@@ -510,51 +510,65 @@ public class TriangleVerifier extends ApplicationAdapter {
         triangle.setVertices(x, y, x + s, y + s * r, x + s * r, y + s);
     }
 
-
     // "[CASE-14] Pseudorandom-ish triangles"
     private static void case14(Triangle triangle) {
-        Supplier<float[]> randCornerFunc = () -> {
-            switch (rng.nextInt(0, 4)) {
-                case 0:  return vec2f(0f, 0f); // BL
-                case 1:  return vec2f(0f, 1f); // TL
-                case 2:  return vec2f(1f, 0f); // BR
-                default: return vec2f(1f, 1f); // TR
-            }
-        };
+        generateRandomVertex();
+        final float v1x = tx, v1y = ty;
 
-        Supplier<float[]> randQuadrantFunc = () -> {
-            switch (rng.nextInt(0, 4)) {
-                case 0:  return vec2f(rng.nextFloat(0f, 0.5f), rng.nextFloat(0f, 0.5f)); // BL
-                case 1:  return vec2f(rng.nextFloat(0.5f, 1f), rng.nextFloat(0f, 0.5f)); // BR
-                case 2:  return vec2f(rng.nextFloat(0f, 0.5f), rng.nextFloat(0.5f, 1f)); // TL
-                default: return vec2f(rng.nextFloat(0.5f, 1f), rng.nextFloat(0.5f, 1f)); // TR
-            }
-        };
-
-        Supplier<float[]> randEdgeFunc = () -> {
-            switch (rng.nextInt(0, 4)) {
-                case 0:  return vec2f(rng.nextFloat(), 0f); // B
-                case 1:  return vec2f(rng.nextFloat(), 1f); // T
-                case 2:  return vec2f(0f, rng.nextFloat()); // L
-                default: return vec2f(1f, rng.nextFloat()); // R
-            }
-        };
-
-        float[][] vs = new float[3][2];
-
-        for (int i = 0; i < 3; i++) {
-            Supplier<float[]> randFunc;
-
-            switch (rng.nextInt(0, 3)) {
-                case 0:  randFunc = randCornerFunc; break;
-                case 1:  randFunc = randEdgeFunc; break;
-                default: randFunc = randQuadrantFunc; break;
-            }
-
-            vs[i] = randFunc.get();
+        float v2x, v2y;
+        do {
+            generateRandomVertex();
+            v2x = tx;
+            v2y = ty;
         }
+        while (v2x == v1x && v2y == v1y);
 
-        triangle.setVertices(vs[0][0], vs[0][1], vs[1][0], vs[1][1], vs[2][0], vs[2][1]);
+        // Generate V3 (ensure distinct from V1 and V2)
+        float v3x, v3y;
+        do {
+            generateRandomVertex();
+            v3x = tx;
+            v3y = ty;
+        }
+        while ((v3x == v1x && v3y == v1y) || (v3x == v2x && v3y == v2y));
+
+        triangle.setVertices(v1x, v1y, v2x, v2y, v3x, v3y);
+    }
+
+
+    /*//////////////////////////////////////////////////////////////////////////*/
+    /*///////////////////////////  HELPER FUNCTIONS  ///////////////////////////*/
+    /*//////////////////////////////////////////////////////////////////////////*/
+
+    private static float tx, ty;
+
+    private static void generateRandomVertex() {
+        switch (rng.nextInt(0, 3)) {
+            case 0: { // Random Corner
+                switch (rng.nextInt(0, 4)) {
+                    case 0:  { tx = 0f; ty = 0f; } break; // BL
+                    case 1:  { tx = 0f; ty = 1f; } break; // TL
+                    case 2:  { tx = 1f; ty = 0f; } break; // BR
+                    default: { tx = 1f; ty = 1f; } break; // TR
+                }
+            } break;
+            case 1: { // Random Edge
+                switch (rng.nextInt(0, 4)) {
+                    case 0:  { tx = rng.nextFloat(); ty = 0f; } break; // B
+                    case 1:  { tx = rng.nextFloat(); ty = 1f; } break; // T
+                    case 2:  { tx = 0f; ty = rng.nextFloat(); } break; // L
+                    default: { tx = 1f; ty = rng.nextFloat(); } break; // R
+                }
+            } break;
+            default: { // Random Quadrant
+                switch (rng.nextInt(0, 4)) {
+                    case 0:  { tx = rng.nextFloat(0f, 0.5f); ty = rng.nextFloat(0f, 0.5f); } break; // BL
+                    case 1:  { tx = rng.nextFloat(0.5f, 1f); ty = rng.nextFloat(0f, 0.5f); } break; // BR
+                    case 2:  { tx = rng.nextFloat(0f, 0.5f); ty = rng.nextFloat(0.5f, 1f); } break; // TL
+                    default: { tx = rng.nextFloat(0.5f, 1f); ty = rng.nextFloat(0.5f, 1f); } break; // TR
+                }
+            } break;
+        }
     }
 
 
