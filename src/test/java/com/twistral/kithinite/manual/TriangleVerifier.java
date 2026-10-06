@@ -112,9 +112,16 @@ public class TriangleVerifier extends ApplicationAdapter {
         }
         if (Gdx.input.isKeyJustPressed(Input.Keys.C)) {
             caseIndex = (caseIndex + 2) % (caseFuncs.size() + 1) - 1;
-            System.out.printf(">> Locked Case: %s (%d/%d)\n",
-                    caseIndex == -1 ? "RANDOM" : caseTypes.get(caseIndex),
-                    caseIndex+1, caseTypes.size());
+
+            if (caseIndex != -1) {
+                System.out.printf(
+                    ">> Locked Case: %s (%d/%d)\n",
+                    caseTypes.get(caseIndex), caseIndex+1, caseTypes.size()
+                );
+            }
+            else {
+                System.out.println(">> All cases are randomly being picked");
+            }
         }
 
         // Randomize EVERYTHING until you find a mistake
