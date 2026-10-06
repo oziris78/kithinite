@@ -82,8 +82,12 @@ public class Triangle extends Shape<Triangle> {
 
     @Override
     public void render(ShapeDrawer drawer) {
+        // Check to see if the triangle should be rendered
         if (!this.visible) return;
         if (this.width <= 0 || this.height <= 0) return;
+        if (this.v1x == this.v2x && this.v1y == this.v2y) return; // v1 = v2
+        if (this.v1x == this.v3x && this.v1y == this.v3y) return; // v1 = v3
+        if (this.v2x == this.v3x && this.v2y == this.v3y) return; // v2 = v3
 
         final float nesterAbsX = this.nester.getAbsX(),
                     nesterAbsY = this.nester.getAbsY();
@@ -96,16 +100,35 @@ public class Triangle extends Shape<Triangle> {
               y2 = round2(nesterAbsY + this.v2y),
               y3 = round2(nesterAbsY + this.v3y);
 
-        final float rotationRadians = this.rotationDegrees * MathUtils.degreesToRadians;
-        final boolean isRotated = !TMath.equalsf(rotationRadians, 0f);
+        // Fix rendering bug that happens on left edge aligned triangles
+        final float minX = min(x1, x2, x3);
+        final int leftCount = (x1 == minX ? 1 : 0) + (x2 == minX ? 1 : 0) + (x3 == minX ? 1 : 0);
+
+        if (leftCount >= 2) {
+            if (x1 == minX) x1++;
+            if (x2 == minX) x2++;
+            if (x3 == minX) x3++;
+        }
+
+        // Fix rendering bug that happens on top edge aligned triangles
+        final float maxY = max(y1, y2, y3);
+        final int topCount = (y1 == maxY ? 1 : 0) + (y2 == maxY ? 1 : 0) + (y3 == maxY ? 1 : 0);
+
+        if (topCount >= 2) {
+            if (y1 == maxY) y1--;
+            if (y2 == maxY) y2--;
+            if (y3 == maxY) y3--;
+        }
 
         // Apply rotation around the center of mass if needed
-        if (isRotated) {
+        if (!TMath.equalsf(this.rotationDegrees, 0f)) {
+            final float rotationRadians = this.rotationDegrees * MathUtils.degreesToRadians;
+
             final float cos = MathUtils.cos(rotationRadians),
                         sin = MathUtils.sin(rotationRadians);
 
-            final float cx = nesterAbsX + (this.v1x + this.v2x + this.v3x) / 3f,
-                        cy = nesterAbsY + (this.v1y + this.v2y + this.v3y) / 3f;
+            final float cx = (x1 + x2 + x3) / 3f,
+                        cy = (y1 + y2 + y3) / 3f;
 
             float rx1 = cx + (x1 - cx) * cos - (y1 - cy) * sin;
             float ry1 = cy + (x1 - cx) * sin + (y1 - cy) * cos;
@@ -120,107 +143,7 @@ public class Triangle extends Shape<Triangle> {
             x3 = rx3; y3 = ry3;
         }
 
-        // Fix the weird 1px bleeding bug that happens on right angle triangles
-        final float v12x = x2 - x1, v12y = y2 - y1;
-        final float v13x = x3 - x1, v13y = y3 - y1;
-        final float v23x = x3 - x2, v23y = y3 - y2;
-
-        final float dot1 = v12x * v13x + v12y * v13y;
-        final float dot2 = (-v12x) * v23x + (-v12y) * v23y;
-        final float dot3 = v13x * v23x + v13y * v23y;
-
-        final boolean rightAngleAtV1 = Math.abs(dot1) < 0.01f;
-        final boolean rightAngleAtV2 = Math.abs(dot2) < 0.01f;
-        final boolean rightAngleAtV3 = Math.abs(dot3) < 0.01f;
-        final boolean needsRightAngleFix = rightAngleAtV1 || rightAngleAtV2 || rightAngleAtV3;
-
-        if (needsRightAngleFix) {
-            final float minX = min(x1, x2, x3);
-            final float minY = min(y1, y2, y3);
-            final float maxY = max(y1, y2, y3);
-
-            final float rx = rightAngleAtV1 ? x1 : (rightAngleAtV2 ? x2 : x3);
-            final float ry = rightAngleAtV1 ? y1 : (rightAngleAtV2 ? y2 : y3);
-
-            final boolean isLeft = Math.abs(rx - minX) < 0.01f;
-            final boolean isBottom = Math.abs(ry - minY) < 0.01f;
-
-            if (isBottom && isLeft) { // BOTTOM LEFT
-                if(x1 == minX) x1++;
-                if(x2 == minX) x2++;
-                if(x3 == minX) x3++;
-            }
-
-            if (!isBottom && isLeft) { // TOP LEFT
-                if (y1 == minY) x1++;
-                else if (y2 == minY) x2++;
-                else if (y3 == minY) x3++;
-
-                if (y1 == maxY) y1--;
-                if (y2 == maxY) y2--;
-                if (y3 == maxY) y3--;
-            }
-
-            if (!isBottom && !isLeft) { // TOP RIGHT
-                if (y1 == maxY) y1--;
-                if (y2 == maxY) y2--;
-                if (y3 == maxY) y3--;
-            }
-        }
-
-        // Fix the weird upside down equilateral-ish triangle bleed bug
-        if (!needsRightAngleFix) {
-            final float minX = min(x1, x2, x3);
-            final float minY = min(y1, y2, y3);
-            final float maxX = max(x1, x2, x3);
-            final float maxY = max(y1, y2, y3);
-
-            final boolean isTopLeft1 = (x1 == minX && y1 == maxY);
-            final boolean isTopLeft2 = (x2 == minX && y2 == maxY);
-            final boolean isTopLeft3 = (x3 == minX && y3 == maxY);
-            final boolean hasTopLeftCorner = isTopLeft1 || isTopLeft2 || isTopLeft3;
-
-            final boolean isTopRight1 = (x1 == maxX && y1 == maxY);
-            final boolean isTopRight2 = (x2 == maxX && y2 == maxY);
-            final boolean isTopRight3 = (x3 == maxX && y3 == maxY);
-            final boolean hasTopRightCorner = isTopRight1 || isTopRight2 || isTopRight3;
-
-            final boolean hasBottomMidVertex = (maxX > x1 && x1 > minX && y1 == minY) ||
-                    (maxX > x2 && x2 > minX && y2 == minY) || (maxX > x3 && x3 > minX && y3 == minY);
-
-            final boolean needsBottomMidFix = hasTopLeftCorner && hasTopRightCorner && hasBottomMidVertex;
-
-            if (needsBottomMidFix) {
-                if(isTopLeft1) y1--;
-                else if(isTopLeft2) y2--;
-                else if(isTopLeft3) y3--;
-
-                if(isTopRight1) y1--;
-                else if(isTopRight2) y2--;
-                else if(isTopRight3) y3--;
-            }
-
-            final boolean isBottomLeft1 = (x1 == minX && y1 == minY);
-            final boolean isBottomLeft2 = (x2 == minX && y2 == minY);
-            final boolean isBottomLeft3 = (x3 == minX && y3 == minY);
-            final boolean hasBottomLeftCorner = isBottomLeft1 || isBottomLeft2 || isBottomLeft3;
-
-            final boolean hasRightMidVertex = (maxY > y1 && y1 > minY && x1 == maxX) ||
-                    (maxY > y2 && y2 > minY && x2 == maxX) || (maxY > y3 && y3 > minY && x3 == maxX);
-
-            final boolean needsRightMidFix = hasTopLeftCorner && hasBottomLeftCorner && hasRightMidVertex;
-
-            if (needsRightMidFix) {
-                if (isTopLeft1) x1++;
-                if (isTopLeft2) x2++;
-                if (isTopLeft3) x3++;
-
-                if (isBottomLeft1) x1++;
-                if (isBottomLeft2) x2++;
-                if (isBottomLeft3) x3++;
-            }
-        }
-
+        // Prepare the 3 vertex colors for rendering
         final Color c1 = prioritySelect(this.v1Color, DEF_COLOR);
         final Color c2 = prioritySelect(this.v2Color, DEF_COLOR);
         final Color c3 = prioritySelect(this.v3Color, DEF_COLOR);
